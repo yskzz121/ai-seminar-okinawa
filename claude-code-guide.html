@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 解説書｜今日から使える Claude ― 経営者のためのAI入門</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Noto Sans JP',sans-serif;background:#0b1628;color:#e8ecf1;line-height:1.8;overflow-x:hidden}
+
+/* ===== VARS ===== */
+:root{
+  --navy:#0b1628;--navy-light:#101d30;--navy-mid:#1a2a45;
+  --gold:#d4a843;--gold-light:#f0d078;--gold-dim:#8a7030;
+  --blue:#4a90d9;--cyan:#38bdf8;--purple:#a78bfa;--pink:#f472b6;
+  --green:#2ea043;--green-bg:rgba(46,160,67,.12);
+  --red:#f85149;--red-bg:rgba(248,81,73,.12);
+  --text:#e8ecf1;--text-dim:#8b95a5;
+  --card:#132035;--card-border:rgba(212,168,67,.18);
+  --max:1100px;--radius:14px;
+}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(11,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:0 20px;transition:transform .3s}
+.nav.hidden{transform:translateY(-100%)}
+.nav-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px}
+.nav-title{font-size:.82rem;font-weight:700;color:var(--gold);white-space:nowrap}
+.nav-links{display:flex;gap:2px;overflow-x:auto}
+.nav-links a{font-size:.68rem;color:var(--text-dim);text-decoration:none;padding:6px 9px;border-radius:6px;white-space:nowrap;transition:.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(212,168,67,.1)}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer}
+.progress-bar{position:fixed;top:54px;left:0;z-index:999;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--purple));width:0%;transition:width .3s}
+
+/* ===== ACCESSIBILITY ===== */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+
+/* ===== SLIDES ===== */
+.slide{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px 60px;position:relative;overflow:hidden}
+.slide-inner{max-width:var(--max);width:100%;position:relative;z-index:2}
+
+/* ===== FLOATING DECORATIONS ===== */
+.deco{position:absolute;pointer-events:none;z-index:1}
+.deco-circle{border-radius:50%;border:1.5px solid}
+.deco-ring{border-radius:50%;border:2px solid;background:transparent}
+.deco-dot{width:6px;height:6px;border-radius:50%}
+@keyframes float1{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(8deg)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(-6deg)}}
+@keyframes float3{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-22px) scale(1.1)}}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.15)}}
+.float1{animation:float1 6s ease-in-out infinite}
+.float2{animation:float2 5s ease-in-out infinite .5s}
+.float3{animation:float3 7s ease-in-out infinite 1s}
+.pulse-slow{animation:pulse 4s ease-in-out infinite}
+.spin-slow{animation:spin 20s linear infinite}
+
+/* ===== TYPOGRAPHY ===== */
+.slide-label{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;letter-spacing:.15em;color:var(--gold);background:rgba(212,168,67,.1);padding:5px 14px;border-radius:20px;margin-bottom:14px}
+.slide-label .label-icon{font-size:.9rem}
+.slide-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;line-height:1.3;margin-bottom:14px}
+.slide-title .gold{color:var(--gold)}.slide-title .cyan{color:var(--cyan)}.slide-title .purple{color:var(--purple)}
+.slide-subtitle{font-size:clamp(.95rem,2vw,1.15rem);color:var(--text-dim);margin-bottom:32px}
+h3{font-size:1.15rem;font-weight:700;margin-bottom:12px;color:var(--gold-light)}
+
+/* ===== CARDS ===== */
+.card-grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:28px;transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0;transition:opacity .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(212,168,67,.12)}
+.card:hover::before{opacity:1}
+.card-icon{font-size:2.4rem;margin-bottom:12px;display:block}
+.card h4{font-size:1.02rem;font-weight:700;margin-bottom:8px;color:var(--gold-light)}
+.card p,.card li{font-size:.88rem;color:var(--text-dim);line-height:1.7}
+.card ul{padding-left:1.2em}.card li{margin-bottom:4px}
+
+/* ===== ILLUST CARD ===== */
+.illust-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:32px;text-align:center;position:relative;overflow:hidden}
+.illust-card .illust{font-size:4rem;margin-bottom:16px;display:block;filter:drop-shadow(0 4px 12px rgba(212,168,67,.3))}
+.illust-card h4{font-size:1.05rem;font-weight:700;color:var(--gold-light);margin-bottom:6px}
+.illust-card p{font-size:.85rem;color:var(--text-dim)}
+.illust-card::after{content:'';position:absolute;bottom:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.06),transparent);pointer-events:none}
+
+/* ===== ACCORDION ===== */
+.accordion{margin-top:16px;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden}
+.accordion+.accordion{margin-top:10px}
+.accordion-trigger{width:100%;background:rgba(255,255,255,.03);border:none;color:var(--cyan);font-family:inherit;font-size:.84rem;font-weight:500;padding:12px 18px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;transition:.2s}
+.accordion-trigger:hover{background:rgba(255,255,255,.06)}
+.accordion-trigger .arrow{transition:transform .3s;display:inline-block;font-size:.7rem}
+.accordion-trigger.open .arrow{transform:rotate(90deg)}
+.accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 18px;font-size:.84rem;color:var(--text-dim);line-height:1.8}
+.accordion-content.open{max-height:3000px;padding:16px 18px}
+.accordion-content p{margin-bottom:8px}
+.accordion-content ul,.accordion-content ol{padding-left:1.2em}
+.accordion-content li{margin-bottom:4px}
+.accordion-content code{background:rgba(255,255,255,.08);padding:2px 8px;border-radius:4px;font-size:.82rem;color:var(--cyan);font-family:'Courier New',monospace}
+.accordion-content pre{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:16px;overflow-x:auto;margin:10px 0;font-size:.78rem;line-height:1.6;color:var(--text)}
+.accordion-content pre code{background:none;padding:0;font-size:.78rem}
+
+/* ===== STEP FLOW ===== */
+.step-flow{display:flex;gap:0;align-items:stretch;margin:24px 0;overflow-x:auto;padding-bottom:8px}
+.step-item{flex:1;min-width:155px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:20px 14px;text-align:center;position:relative}
+.step-item:not(:last-child)::after{content:'\2192';position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:1.2rem;font-weight:700;z-index:1}
+.step-num-circle{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 2px 12px rgba(212,168,67,.3)}
+.step-item h4{font-size:.88rem;color:var(--gold-light);margin-bottom:5px}
+.step-item p{font-size:.76rem;color:var(--text-dim)}
+
+/* ===== TIMELINE ===== */
+.timeline{position:relative;padding-left:44px;margin:24px 0}
+.timeline::before{content:'';position:absolute;left:17px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--cyan),var(--purple))}
+.timeline-item{position:relative;margin-bottom:28px;padding:18px 22px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;transition:transform .3s}
+.timeline-item:hover{transform:translateX(6px)}
+.timeline-item::before{content:'';position:absolute;left:-35px;top:22px;width:14px;height:14px;border-radius:50%;background:var(--gold);border:3px solid var(--navy);box-shadow:0 0 10px rgba(212,168,67,.4)}
+.timeline-item h4{color:var(--gold-light);font-size:.95rem}
+.timeline-item .year{font-size:.72rem;color:var(--gold);font-weight:700;letter-spacing:.05em}
+.timeline-item p{font-size:.84rem;color:var(--text-dim);margin-top:4px}
+
+/* ===== BADGES ===== */
+.badge{display:inline-block;font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:6px}
+.badge-gold{background:rgba(212,168,67,.15);color:var(--gold)}
+.badge-cyan{background:rgba(56,189,248,.15);color:var(--cyan)}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple)}
+
+/* ===== ANIMATIONS ===== */
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-left{opacity:0;transform:translateX(-40px);transition:opacity .7s,transform .7s}
+.fade-in-left.visible{opacity:1;transform:translateX(0)}
+.fade-in-right{opacity:0;transform:translateX(40px);transition:opacity .7s,transform .7s}
+.fade-in-right.visible{opacity:1;transform:translateX(0)}
+.scale-in{opacity:0;transform:scale(.8);transition:opacity .6s,transform .6s}
+.scale-in.visible{opacity:1;transform:scale(1)}
+.stagger>*{opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s}
+.stagger.visible>*:nth-child(1){opacity:1;transform:translateY(0);transition-delay:0s}
+.stagger.visible>*:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.08s}
+.stagger.visible>*:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.16s}
+.stagger.visible>*:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.24s}
+.stagger.visible>*:nth-child(5){opacity:1;transform:translateY(0);transition-delay:.32s}
+.stagger.visible>*:nth-child(6){opacity:1;transform:translateY(0);transition-delay:.4s}
+.stagger.visible>*:nth-child(7){opacity:1;transform:translateY(0);transition-delay:.48s}
+.stagger.visible>*:nth-child(8){opacity:1;transform:translateY(0);transition-delay:.56s}
+.count-up{font-variant-numeric:tabular-nums}
+
+/* ===== MASCOT (横切り) ===== */
+.mascot-container{position:fixed;bottom:0;left:-200px;z-index:900;pointer-events:none}
+.mascot-container.run{animation:mascotRun 4s ease-in-out forwards}
+@keyframes mascotRun{
+  0%{left:-200px;bottom:20px}
+  15%{bottom:45px}25%{bottom:20px}
+  40%{bottom:45px}50%{bottom:20px}
+  65%{bottom:45px}75%{bottom:20px}
+  100%{left:calc(100vw + 200px);bottom:30px}
+}
+.mascot{width:120px;height:120px;position:relative}
+.mascot-body{width:80px;height:80px;background:linear-gradient(135deg,var(--gold),#e8c168);border-radius:50%;position:absolute;bottom:0;left:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(212,168,67,.4)}
+.mascot-body::after{content:'';position:absolute;width:90px;height:90px;border-radius:50%;border:2px dashed rgba(212,168,67,.3);animation:spin 8s linear infinite}
+.mascot-face{font-size:2rem}
+.mascot-hat{width:30px;height:20px;background:var(--navy);border-radius:4px 4px 0 0;position:absolute;top:6px;left:45px;transform:rotate(-10deg)}
+.mascot-hat::before{content:'>';position:absolute;top:-10px;left:2px;color:var(--gold);font-size:.7rem;font-weight:900;font-family:monospace}
+.mascot-hat::after{content:'_';position:absolute;top:-10px;left:12px;color:var(--cyan);font-size:.7rem;font-weight:900;font-family:monospace;animation:blink 1s infinite}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+.mascot-speech{position:absolute;top:-24px;right:-50px;background:var(--navy-mid);border:1.5px solid var(--gold);border-radius:14px;padding:5px 12px;font-size:.65rem;color:var(--gold);white-space:nowrap;box-shadow:0 2px 12px rgba(212,168,67,.2)}
+
+/* ===== PEEKER ===== */
+.peeker{position:fixed;z-index:950;pointer-events:none;opacity:0;transition:none}
+.peeker img{display:block;width:90px;height:auto;filter:drop-shadow(0 2px 12px rgba(0,0,0,.5))}
+.peeker.from-right{right:-100px;bottom:120px}
+.peeker.from-right.peek{animation:peekRight 5s ease-in-out forwards}
+@keyframes peekRight{
+  0%{right:-100px;opacity:0;transform:rotate(0deg)}
+  8%{opacity:1}
+  15%{right:-20px;transform:rotate(-8deg)}
+  25%{right:-15px;transform:rotate(-5deg)}
+  35%{right:-20px;transform:rotate(-8deg)}
+  70%{right:-20px;transform:rotate(-8deg);opacity:1}
+  78%{right:-20px;transform:rotate(-3deg)}
+  88%{right:-18px;transform:rotate(-10deg);opacity:1}
+  100%{right:-100px;opacity:0;transform:rotate(0deg)}
+}
+.peeker.from-left{left:-100px;bottom:180px}
+.peeker.from-left img{transform:scaleX(-1)}
+.peeker.from-left.peek{animation:peekLeft 5.5s ease-in-out forwards}
+@keyframes peekLeft{
+  0%{left:-100px;opacity:0;transform:rotate(0deg)}
+  8%{opacity:1}
+  15%{left:-20px;transform:rotate(8deg)}
+  25%{left:-15px;transform:rotate(5deg)}
+  35%{left:-20px;transform:rotate(8deg)}
+  70%{left:-20px;transform:rotate(8deg);opacity:1}
+  78%{left:-20px;transform:rotate(3deg)}
+  88%{left:-18px;transform:rotate(10deg);opacity:1}
+  100%{left:-100px;opacity:0;transform:rotate(0deg)}
+}
+.peeker.from-bottom{bottom:-100px;right:60px}
+.peeker.from-bottom.peek{animation:peekBottom 5s ease-in-out forwards}
+@keyframes peekBottom{
+  0%{bottom:-100px;opacity:0}
+  8%{opacity:1}
+  18%{bottom:-30px}
+  28%{bottom:-35px}
+  38%{bottom:-30px}
+  70%{bottom:-30px;opacity:1}
+  80%{bottom:-28px}
+  100%{bottom:-100px;opacity:0}
+}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;padding-top:60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(212,168,67,.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(74,144,217,.05) 0%,transparent 60%),radial-gradient(ellipse at 50% 50%,rgba(167,139,250,.03) 0%,transparent 50%),var(--navy)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(212,168,67,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,168,67,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
+.hero-content{position:relative;z-index:2;text-align:center}
+.hero-date{display:inline-flex;align-items:center;gap:8px;font-size:.84rem;font-weight:700;color:var(--gold);border:1px solid var(--gold-dim);padding:6px 24px;border-radius:30px;margin-bottom:28px;letter-spacing:.1em}
+.hero-main-title{font-size:clamp(2.4rem,7vw,4.5rem);font-weight:900;line-height:1.15;margin-bottom:8px}
+.hero-main-title .line1{color:var(--text)}
+.hero-main-title .line2{background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--cyan));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite}
+@keyframes shimmer{0%,100%{background-position:0% center}50%{background-position:100% center}}
+.hero-sub{font-size:clamp(1rem,2.5vw,1.4rem);color:var(--text-dim);margin:20px 0 36px}
+.hero-meta{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;font-size:.88rem;color:var(--text-dim)}
+.hero-meta span{display:flex;align-items:center;gap:8px}
+.scroll-indicator{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center;animation:scrollBounce 2s infinite}
+.scroll-indicator span{font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:6px}
+.scroll-indicator .arrow-down{font-size:1.4rem;color:var(--gold)}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ===== KEY POINT ===== */
+.key-point{background:rgba(212,168,67,.06);border-left:4px solid var(--gold);padding:16px 20px;border-radius:0 10px 10px 0;margin:16px 0;font-size:.88rem;color:var(--text);position:relative}
+.key-point::before{content:'\1F4A1';position:absolute;left:-16px;top:50%;transform:translateY(-50%);font-size:1.2rem;background:var(--navy);padding:2px}
+
+/* ===== FUN FACT ===== */
+.fun-fact{background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(56,189,248,.05));border:1px solid rgba(167,139,250,.2);border-radius:var(--radius);padding:20px 24px;margin:20px 0;position:relative;overflow:hidden}
+.fun-fact::before{content:'\1F4DA';position:absolute;top:12px;right:16px;font-size:2rem;opacity:.3}
+.fun-fact .fun-label{font-size:.68rem;font-weight:700;color:var(--purple);letter-spacing:.1em;margin-bottom:6px;display:block}
+.fun-fact p{font-size:.88rem;color:var(--text)}
+
+/* ===== GLOW BOX ===== */
+.glow-box{position:relative;border-radius:var(--radius);padding:3px}
+.glow-box::before{content:'';position:absolute;inset:-1px;border-radius:var(--radius);background:linear-gradient(135deg,var(--gold),var(--cyan),var(--purple),var(--gold));background-size:300% 300%;animation:glowRotate 6s linear infinite;z-index:0}
+.glow-box-inner{background:var(--card);border-radius:calc(var(--radius) - 2px);padding:28px;position:relative;z-index:1}
+@keyframes glowRotate{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ===== CHAT MOCK ===== */
+.chat-mock{background:#1a2540;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px;margin-top:14px;max-width:520px}
+.chat-mock-header{display:flex;align-items:center;gap:6px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.chat-mock-dot{width:8px;height:8px;border-radius:50%}
+.chat-bubble{padding:10px 14px;border-radius:14px;font-size:.8rem;line-height:1.6;margin-bottom:8px;max-width:85%;position:relative}
+.chat-bubble.user{background:linear-gradient(135deg,var(--blue),#3a7bd5);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.chat-bubble.ai{background:rgba(255,255,255,.06);color:var(--text);border-bottom-left-radius:4px}
+.chat-bubble .sender{font-size:.62rem;font-weight:700;margin-bottom:3px;display:block}
+.chat-bubble.user .sender{color:rgba(255,255,255,.6)}
+.chat-bubble.ai .sender{color:var(--gold)}
+
+/* ===== STAT CARDS ===== */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:24px 0}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px 16px;text-align:center;position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0;transition:opacity .3s}
+.stat-card:hover::after{opacity:1}
+.stat-card .stat-num{font-size:2.4rem;font-weight:900;color:var(--gold);line-height:1}
+.stat-card .stat-unit{font-size:.9rem;color:var(--gold-light);font-weight:700}
+.stat-card .stat-label{font-size:.72rem;color:var(--text-dim);margin-top:4px}
+
+/* ===== SECTION ILLUST ===== */
+.section-illust{text-align:center;margin:20px 0 28px;position:relative}
+.section-illust .big-emoji{font-size:5rem;display:block;filter:drop-shadow(0 8px 24px rgba(212,168,67,.2));animation:float1 6s ease-in-out infinite}
+.section-illust .orbit{position:absolute;width:120px;height:120px;top:50%;left:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(212,168,67,.15);border-radius:50%;animation:spin 15s linear infinite}
+.section-illust .orbit-dot{position:absolute;width:8px;height:8px;background:var(--gold);border-radius:50%;top:-4px;left:50%;transform:translateX(-50%);box-shadow:0 0 8px rgba(212,168,67,.4)}
+
+/* ===== ABILITY FLOW ===== */
+.ability-flow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
+.ability-card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:18px 26px;text-align:center;transition:transform .3s,box-shadow .3s}
+.ability-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,168,67,.1)}
+.ability-card .icon{font-size:2rem;display:block;margin-bottom:4px}
+.ability-card .label{font-size:.84rem;color:var(--gold-light);font-weight:700}
+.ability-arrow{font-size:1.5rem;color:var(--gold);display:flex;align-items:center}
+
+/* ===== MCP FLOW ===== */
+.mcp-flow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:28px 0}
+.mcp-node{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:18px 24px;text-align:center;min-width:100px}
+.mcp-node.highlight{border-color:var(--gold);background:linear-gradient(135deg,var(--navy-mid),var(--card));box-shadow:0 0 20px rgba(212,168,67,.1)}
+.mcp-node .icon{font-size:2rem;display:block;margin-bottom:4px}
+.mcp-node .label{font-size:.78rem;color:var(--gold-light);font-weight:700}
+.mcp-connector{color:var(--cyan);font-size:1.4rem;font-weight:900}
+.mcp-services{display:flex;flex-direction:column;gap:8px}
+.mcp-services .mcp-node{padding:12px 18px}
+.mcp-services .mcp-node .icon{font-size:1.4rem;margin-bottom:2px}
+.mcp-services .mcp-node .label{font-size:.72rem}
+
+/* ===== FEATURE LIST ===== */
+.feature-list{list-style:none;padding:0}
+.feature-list li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem;color:var(--text-dim);display:flex;align-items:flex-start;gap:10px}
+.feature-list .check{color:var(--green);font-weight:700;flex-shrink:0}
+.feature-list .warn{color:var(--gold);flex-shrink:0}
+.feature-list .x-mark{color:var(--red);font-weight:700;flex-shrink:0}
+
+/* ===== PARTICLES ===== */
+.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.particle{position:absolute;border-radius:50%;opacity:.3}
+
+/* ===== EVOLUTION INFOGRAPHIC ===== */
+.evo-info{display:flex;align-items:stretch;gap:0;margin:28px 0;position:relative}
+.evo-stage{flex:1;position:relative;text-align:center;padding:0 6px}
+.evo-card{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:22px 14px 18px;height:100%;display:flex;flex-direction:column;align-items:center;position:relative;transition:transform .4s,box-shadow .4s}
+.evo-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(212,168,67,.12)}
+.evo-stage:last-child .evo-card{border-color:var(--gold);background:linear-gradient(135deg,var(--navy-mid),rgba(212,168,67,.06));box-shadow:0 0 30px rgba(212,168,67,.1)}
+.evo-icon{font-size:2.6rem;margin-bottom:10px;display:block}
+.evo-year{font-size:.7rem;font-weight:700;color:var(--cyan);letter-spacing:.05em;margin-bottom:6px}
+.evo-name{font-size:.92rem;font-weight:700;color:var(--gold-light);margin-bottom:6px;line-height:1.3}
+.evo-stage:last-child .evo-name{color:var(--gold)}
+.evo-desc{font-size:.72rem;color:var(--text-dim);line-height:1.6;flex:1}
+.evo-title{font-size:1rem;font-weight:700;color:var(--gold-light);margin-bottom:6px;line-height:1.3}
+.evo-stage:last-child .evo-title{color:var(--gold)}
+.evo-level{font-size:.65rem;color:var(--text-dim);margin-top:10px;margin-bottom:3px}
+.evo-badge{margin-top:10px;font-size:.78rem;font-weight:700;color:var(--gold);background:rgba(212,168,67,.1);border:1px solid var(--gold);border-radius:20px;padding:4px 14px;animation:pulse 2s ease-in-out infinite}
+/* connector arrow between stages */
+.evo-arrow{width:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:var(--gold);opacity:.5;font-weight:700}
+/* animated pulse on final stage */
+.evo-stage:last-child .evo-card::before{content:'';position:absolute;inset:-2px;border-radius:15px;background:linear-gradient(135deg,var(--gold),var(--cyan),var(--gold));background-size:300% 300%;animation:glowRotate 6s linear infinite;z-index:-1;opacity:.5}
+.evo-stage:last-child .evo-card::after{content:'';position:absolute;inset:0;border-radius:14px;background:var(--card);z-index:-1}
+/* bar showing automation level */
+.evo-bar-wrap{width:100%;margin-top:10px}
+.evo-bar-label{font-size:.58rem;color:var(--text-dim);margin-bottom:3px;display:flex;justify-content:space-between}
+.evo-bar{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.evo-bar-fill{height:100%;width:var(--fill,0);border-radius:3px;transform-origin:left;transform:scaleX(0);transition:transform 1.2s cubic-bezier(.4,0,.2,1)}
+.evo-info.visible .evo-bar-fill{transform:scaleX(1)}
+/* bottom summary line */
+.evo-summary{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;padding:14px;background:rgba(212,168,67,.04);border:1px solid var(--card-border);border-radius:10px}
+.evo-summary-arrow{color:var(--gold);font-weight:700;font-size:1rem}
+.evo-summary-text{font-size:.82rem;color:var(--text)}
+
+/* ===== FOOTER ===== */
+.footer{text-align:center;padding:48px 24px;border-top:1px solid var(--card-border);font-size:.78rem;color:var(--text-dim)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .nav-links{display:none}.nav-hamburger{display:block}
+  .nav-links.mobile-open{display:flex;flex-direction:column;position:absolute;top:54px;left:0;right:0;background:rgba(11,22,40,.97);padding:12px;border-bottom:1px solid var(--card-border)}
+  .slide{padding:80px 16px 48px}
+  .step-flow{flex-direction:column}
+  .step-item:not(:last-child)::after{content:'\2193';right:auto;left:50%;top:auto;bottom:-18px;transform:translateX(-50%)}
+  .hero-meta{flex-direction:column;gap:10px;align-items:center}
+  .ability-flow{gap:6px}
+  .ability-card{padding:12px 16px}
+  .ability-card .icon{font-size:1.5rem}
+  .mcp-flow{flex-direction:column}
+  .mcp-services{flex-direction:row;flex-wrap:wrap;justify-content:center}
+  .card-grid{grid-template-columns:1fr}
+  .evo-info{flex-direction:column;gap:12px}
+  .evo-arrow{transform:rotate(90deg);width:auto;height:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-title">Claude Code 解説書</div>
+    <button class="nav-hamburger" id="hamburger" aria-label="メニュー">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="#hero">TOP</a>
+      <a href="#what-is-cli">CLIとは</a>
+      <a href="#terminal-history">ターミナル</a>
+      <a href="#coding-history">コーディング</a>
+      <a href="#evolution">AI進化</a>
+      <a href="#what-is-cc">Claude Code</a>
+      <a href="#mcp">MCP</a>
+      <a href="#install">インストール</a>
+      <a href="#verify">動作確認</a>
+    </div>
+  </div>
+</nav>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ===== MASCOT (横切り) ===== -->
+<div class="mascot-container" id="mascot">
+  <div class="mascot">
+    <div class="mascot-hat"></div>
+    <div class="mascot-body"><span class="mascot-face">🤖</span></div>
+    <div class="mascot-speech">Claude Code!</div>
+  </div>
+</div>
+
+<!-- ===== PEEKER ===== -->
+<div class="peeker from-right" id="peeker-right">
+  <img src="claude-code-mascot.jpg" alt="">
+</div>
+<div class="peeker from-left" id="peeker-left">
+  <img src="claude-code-mascot.jpg" alt="">
+</div>
+<div class="peeker from-bottom" id="peeker-bottom">
+  <img src="claude-code-mascot.jpg" alt="">
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="slide hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="deco deco-circle float1" style="width:80px;height:80px;top:15%;left:8%;border-color:rgba(212,168,67,.12)"></div>
+  <div class="deco deco-circle float2" style="width:50px;height:50px;top:25%;right:12%;border-color:rgba(56,189,248,.12)"></div>
+  <div class="deco deco-ring float3" style="width:100px;height:100px;bottom:20%;left:5%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:40%;right:8%;background:var(--gold);opacity:.4"></div>
+  <div class="deco deco-dot pulse-slow" style="top:60%;left:15%;background:var(--cyan);opacity:.3;animation-delay:1s"></div>
+  <div class="deco deco-dot pulse-slow" style="top:30%;left:45%;background:var(--purple);opacity:.2;animation-delay:2s"></div>
+  <svg class="deco spin-slow" style="top:70%;right:15%;width:40px;height:40px;opacity:.15" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--gold)" stroke-width="1"/></svg>
+  <svg class="deco float2" style="top:18%;left:65%;width:30px;height:30px;opacity:.12" viewBox="0 0 30 30"><rect x="5" y="5" width="20" height="20" rx="4" fill="none" stroke="var(--cyan)" stroke-width="1" transform="rotate(15 15 15)"/></svg>
+
+  <div class="slide-inner hero-content">
+    <div class="fade-in" style="margin-bottom:8px">
+      <div class="hero-date"><span class="badge badge-purple" style="margin:0">別添え資料</span> 2026.3.20 勉強会</div>
+    </div>
+    <h1 class="hero-main-title fade-in">
+      <span class="line2">Claude Code</span><br>
+      <span class="line1">解説書</span>
+    </h1>
+    <p class="hero-sub fade-in">AIコーディングツールの最前線を理解する</p>
+    <div class="hero-meta fade-in">
+      <span><span class="badge badge-gold">CLI</span>コマンドライン型AIツール</span>
+      <span><span class="badge badge-cyan">MCP</span>外部サービス連携</span>
+      <span><span class="badge badge-green">Guide</span>インストール手順</span>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>スクロールして開始</span>
+    <div class="arrow-down">↓</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     NEW SECTION: CLIとは何か
+     ============================================================ -->
+<section class="slide" id="what-is-cli" style="background:var(--navy-light)">
+  <div class="deco deco-circle float1" style="width:70px;height:70px;top:12%;right:8%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="deco deco-ring float2" style="width:90px;height:90px;bottom:18%;left:6%;border-color:rgba(56,189,248,.08)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:50%;right:15%;background:var(--purple);opacity:.2"></div>
+  <svg class="deco spin-slow" style="bottom:25%;right:12%;width:40px;height:40px;opacity:.12" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--gold)" stroke-width="1"/></svg>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">💻</span> BASICS</span>
+    <h2 class="slide-title fade-in"><span class="gold">CLI</span>とは何か</h2>
+    <p class="slide-subtitle fade-in">コマンドラインインターフェース ― コンピュータとの「対話」の原点</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">⌨️</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <!-- CLI定義 -->
+    <div class="illust-card fade-in" style="max-width:700px;margin:0 auto 28px;border-color:var(--gold)">
+      <span class="illust">💻</span>
+      <h4>Command Line Interface</h4>
+      <p>CLIとは、<strong style="color:var(--gold)">キーボードからテキストコマンドを入力して、コンピュータに指示を出す</strong>インターフェースのこと。<br>画面に表示される<code style="color:var(--cyan)">$</code>や<code style="color:var(--cyan)">&gt;</code>のあとにコマンドを打ち込み、Enterキーで実行します。</p>
+    </div>
+
+    <!-- たとえ話 -->
+    <h3 class="fade-in">分かりやすい例え</h3>
+    <div class="card-grid stagger" style="margin-bottom:28px">
+      <div class="card">
+        <span class="card-icon">🍽️</span>
+        <h4>GUI = レストランのメニュー表</h4>
+        <p>写真付きメニューから料理を選ぶ。何があるか一目で分かるが、<strong>メニューにない料理は注文できない</strong>。</p>
+        <div style="text-align:center;margin-top:12px;font-size:2.5rem;opacity:.4">📋 👆</div>
+      </div>
+      <div class="card highlight">
+        <span class="card-icon">👨‍🍳</span>
+        <h4>CLI = シェフへの直接オーダー</h4>
+        <p>素材と調理法を直接伝える。自由度は無限だが、<strong style="color:var(--gold)">料理の知識（コマンドの知識）が必要</strong>。</p>
+        <div style="text-align:center;margin-top:12px;font-size:2.5rem;opacity:.4">💬 🔥</div>
+      </div>
+    </div>
+
+    <!-- GUI vs CLI 比較テーブル -->
+    <h3 class="fade-in">GUI vs CLI ― 何が違う？</h3>
+    <div class="fade-in" style="overflow-x:auto;margin-bottom:28px">
+      <table class="compare-table">
+        <thead>
+          <tr><th style="width:24%">項目</th><th style="width:38%">GUI（普段使い）</th><th style="width:38%">CLI（プロ仕様）</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:var(--text)">操作方法</td><td>マウスでクリック</td><td>テキストコマンドを入力</td></tr>
+          <tr><td style="color:var(--text)">学習コスト</td><td><span class="circle">◎</span> 直感的で簡単</td><td><span class="triangle">△</span> コマンドの学習が必要</td></tr>
+          <tr><td style="color:var(--text)">処理速度</td><td><span class="triangle">△</span> 画面描画で遅い</td><td><span class="circle">◎</span> 高速（描画不要）</td></tr>
+          <tr><td style="color:var(--text)">自動化</td><td><span class="cross">✕</span> 困難</td><td><span class="circle">◎</span> スクリプトで容易</td></tr>
+          <tr><td style="color:var(--text)">精密な制御</td><td><span class="triangle">△</span> メニューの範囲内</td><td><span class="circle">◎</span> 細かいオプション指定可</td></tr>
+          <tr><td style="color:var(--text)">代表例</td><td>Windows, macOS, スマホ</td><td>ターミナル, PowerShell</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- なぜ今でもCLI？ -->
+    <div class="glow-box fade-in" style="margin-bottom:28px">
+      <div class="glow-box-inner">
+        <h3 style="margin-bottom:14px">なぜ今でもCLIが使われるのか？</h3>
+        <div class="card-grid" style="gap:14px">
+          <div style="padding:14px;background:rgba(255,255,255,.02);border-radius:10px">
+            <span style="font-size:1.8rem">⚡</span>
+            <p style="font-size:.84rem;color:var(--text);margin-top:4px"><strong style="color:var(--gold)">圧倒的な効率</strong><br>マウスを動かすより、タイプする方がはるかに速い</p>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,.02);border-radius:10px">
+            <span style="font-size:1.8rem">🔄</span>
+            <p style="font-size:.84rem;color:var(--text);margin-top:4px"><strong style="color:var(--gold)">自動化が簡単</strong><br>繰り返し作業をスクリプトに保存し、ワンコマンドで再実行</p>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,.02);border-radius:10px">
+            <span style="font-size:1.8rem">🌐</span>
+            <p style="font-size:.84rem;color:var(--text);margin-top:4px"><strong style="color:var(--gold)">リモート操作</strong><br>サーバーの遠隔操作では、CLIが事実上唯一の選択肢</p>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,.02);border-radius:10px">
+            <span style="font-size:1.8rem">📋</span>
+            <p style="font-size:.84rem;color:var(--text);margin-top:4px"><strong style="color:var(--gold)">再現性</strong><br>コマンド履歴が残り、同じ操作を正確にもう一度できる</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Mock: CLI操作の例 -->
+    <h3 class="fade-in">CLIの操作イメージ</h3>
+    <div class="fade-in" style="display:flex;justify-content:center;margin-bottom:24px">
+      <div class="chat-mock" style="max-width:520px;width:100%">
+        <div class="chat-mock-header">
+          <div class="chat-mock-dot" style="background:#f85149"></div>
+          <div class="chat-mock-dot" style="background:#d4a843"></div>
+          <div class="chat-mock-dot" style="background:#2ea043"></div>
+          <span style="font-size:.68rem;color:var(--text-dim);margin-left:8px">Terminal</span>
+        </div>
+        <div style="padding:8px 0;font-family:'Courier New',monospace;font-size:.78rem;line-height:2">
+          <div><span style="color:var(--cyan)">$</span> <span style="color:var(--text)">ls</span> <span style="color:var(--text-dim)">← ファイル一覧を表示</span></div>
+          <div style="color:var(--text-dim)">Documents  Downloads  Desktop  Pictures</div>
+          <div style="margin-top:6px"><span style="color:var(--cyan)">$</span> <span style="color:var(--text)">cd Desktop</span> <span style="color:var(--text-dim)">← デスクトップに移動</span></div>
+          <div style="margin-top:6px"><span style="color:var(--cyan)">$</span> <span style="color:var(--text)">mkdir my-project</span> <span style="color:var(--text-dim)">← フォルダ作成</span></div>
+          <div style="margin-top:6px"><span style="color:var(--cyan)">$</span> <span style="color:var(--gold);animation:blink 1s infinite">_</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Claude CodeがCLIである意義 -->
+    <div class="key-point fade-in">
+      <strong>Claude CodeがCLIツールである理由</strong>：ターミナルは開発の実務（デプロイ、データベース操作、バージョン管理）が集約される場所。そこにAIを直接統合することで、<strong style="color:var(--gold)">ツールを切り替える手間なく、AIが自律的に作業を完遂できる</strong>のです。
+    </div>
+
+    <div class="accordion fade-in" style="margin-top:16px">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> もう少し詳しく ― CLIの歴史的背景</button>
+      <div class="accordion-content" role="region">
+        <p>CLIは1960年代にコンピュータと人間が対話する唯一の手段として誕生しました。1984年にMacintoshがGUIを普及させた後も、サーバー管理やソフトウェア開発の現場ではCLIが不可欠でした。</p>
+        <p style="margin-top:8px">2025年、Claude Codeの登場により、CLIの役割は大きく変わりました。かつては「コマンドを暗記しないと使えない」のが障壁でしたが、今は<strong>自然言語（日本語）で指示するだけ</strong>でAIがコマンドを実行してくれます。CLIの強みを維持しながら、学習コストを劇的に下げた ―― それがClaude Codeの革新です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     NEW SECTION: ターミナルの変遷
+     ============================================================ -->
+<section class="slide" id="terminal-history">
+  <div class="deco deco-ring float3" style="width:80px;height:80px;top:8%;left:5%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="bottom:30%;right:10%;background:var(--gold);opacity:.3"></div>
+  <div class="deco deco-circle float1" style="width:60px;height:60px;bottom:15%;left:12%;border-color:rgba(56,189,248,.08)"></div>
+  <svg class="deco float2" style="top:20%;right:6%;width:35px;height:35px;opacity:.1" viewBox="0 0 30 30"><rect x="5" y="5" width="20" height="20" rx="4" fill="none" stroke="var(--cyan)" stroke-width="1" transform="rotate(15 15 15)"/></svg>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🖥️</span> TERMINAL HISTORY</span>
+    <h2 class="slide-title fade-in">ターミナルの<span class="purple">変遷</span></h2>
+    <p class="slide-subtitle fade-in">60年以上の進化 ― 物理端末からAI統合ターミナルへ</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🖥️</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <!-- 比喩的な説明 -->
+    <div class="fun-fact fade-in" style="margin-bottom:28px">
+      <span class="fun-label">POINT</span>
+      <p>「ターミナル」とは、コンピュータと人間の<strong>接点（窓口）</strong>のこと。銀行窓口のようなもので、時代と共にその「窓口」の形が進化してきました。</p>
+    </div>
+
+    <div class="timeline fade-in">
+      <!-- 1960s -->
+      <div class="timeline-item">
+        <span class="year">1960年代</span>
+        <h4>テレタイプ端末（TTY）</h4>
+        <p>コンピュータとの最初の対話手段。紙テープとプリンターで入出力を行い、<strong>画面は存在しなかった</strong>。電信用タイプライターをコンピュータに接続したもので、現在Linuxで使われる「TTY」という用語はここに由来します。</p>
+        <span class="badge badge-purple">原点</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>代表的な端末は <strong>ASR-33 Teletype</strong>（1963年）。1分間に10文字しか印字できませんでした。プログラムの結果は紙に印刷され、プログラマーは印刷結果を見てデバッグしていました。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1970s-80s -->
+      <div class="timeline-item">
+        <span class="year">1970〜80年代</span>
+        <h4>ビデオ端末（VT100）</h4>
+        <p>紙の代わりに<strong>ブラウン管画面</strong>に文字を表示。DEC社の <strong style="color:var(--cyan)">VT100</strong>（1978年）が事実上の業界標準となり、現在のターミナルエミュレータの基礎に。</p>
+        <span class="badge badge-cyan">画面の登場</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>VT100はANSIエスケープコードを初めてサポート。文字の色変更やカーソル移動が可能になりました。DECはVTシリーズで累計600万台以上を販売。同時期にBourne Shell（sh, 1979年）が登場し、シェルスクリプトの基礎が築かれました。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1980s-90s -->
+      <div class="timeline-item">
+        <span class="year">1980〜90年代</span>
+        <h4>PC上のターミナルエミュレータ</h4>
+        <p>IBM PCの普及で<strong>MS-DOS</strong>がPCのCLIに。1989年には<strong style="color:var(--gold)">Bash</strong>が誕生し、Linuxの標準シェルとして今も現役。</p>
+        <span class="badge badge-gold">パーソナルに</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>MS-DOS（1981年〜）ではコマンドプロンプトが標準。xterm（1984年）はX Window System用のターミナルエミュレータで、Unix系OSの標準に。PuTTY（1999年）はSSH接続用クライアントとして、サーバー管理の必需品になりました。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2000s -->
+      <div class="timeline-item">
+        <span class="year">2000年代</span>
+        <h4>macOS Terminal・PowerShell</h4>
+        <p>macOSにターミナルが標準搭載。Microsoftは<strong style="color:var(--cyan)">PowerShell</strong>（2006年）を発表。従来のテキスト処理から<strong>オブジェクト指向</strong>の革新的シェルへ。</p>
+        <span class="badge badge-cyan">モダン化</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>macOS Terminal（当時Mac OS X）は内部でBashシェルを採用（後にzshに変更）。PowerShellはJeffrey Snoverが2002年の「Monad Manifesto」で構想を発表し、4年かけて実現。テキストではなくオブジェクトを扱う設計が画期的でした。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2010s -->
+      <div class="timeline-item">
+        <span class="year">2010年代</span>
+        <h4>モダンターミナルの台頭</h4>
+        <p><strong>iTerm2</strong>（macOS, 2010年〜）が開発者の定番に。<strong>Windows Terminal</strong>（2019年）はGPU加速、タブ、分割ペインを搭載しモダン化。</p>
+        <span class="badge badge-green">高機能化</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>iTerm2は分割ペイン、検索、プロファイル管理などmacOS標準Terminalを大幅に超える機能を提供。Hyper（2017年, Vercel開発）はWeb技術ベースのクロスプラットフォーム端末。Alacritty（2017年〜）はRust製で高速描画が特徴です。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2020s -->
+      <div class="timeline-item" style="border-color:var(--gold)">
+        <span class="year">2020年代〜</span>
+        <h4 style="color:var(--gold)">AI統合ターミナルの時代</h4>
+        <p><strong style="color:var(--gold)">Warp</strong>（2022年〜）が自然言語でのコマンド生成を実現。そして<strong style="color:var(--gold)">Claude Code</strong>（2025年〜）がターミナル上でAIが自律的にコーディングする新パラダイムを創出。</p>
+        <span class="badge badge-gold">AI融合</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>WarpはRust製の「エージェント型開発環境」で、各コマンドを「ブロック」として表示する革新的UIを採用。Ghostty（2024年〜）もモダンアーキテクチャで注目を集めています。Claude Codeは「ターミナル内で動くAIコーディングエージェント」として、<strong>ターミナルの概念そのものを再定義</strong>しました。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point fade-in">
+      60年間で「紙に印字するタイプライター」→「画面付き端末」→「PC上のソフト」→「AI搭載の知的端末」へ。ターミナルは常に<strong>人間とコンピュータの最も効率的な接点</strong>であり続けています。
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     NEW SECTION: コーディングの変遷
+     ============================================================ -->
+<section class="slide" id="coding-history" style="background:var(--navy-light)">
+  <div class="deco deco-circle float2" style="width:75px;height:75px;top:10%;right:7%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:40%;left:8%;background:var(--cyan);opacity:.2"></div>
+  <div class="deco deco-ring float1" style="width:55px;height:55px;bottom:20%;right:15%;border-color:rgba(167,139,250,.08)"></div>
+  <svg class="deco spin-slow" style="top:65%;left:10%;width:45px;height:45px;opacity:.1" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--cyan)" stroke-width="1"/></svg>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">📝</span> CODING HISTORY</span>
+    <h2 class="slide-title fade-in">コーディングの<span class="cyan">変遷</span></h2>
+    <p class="slide-subtitle fade-in">パンチカードからAIエージェントまで ― 70年の進化</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">📝</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <!-- ERA 1: パンチカード -->
+    <div class="timeline fade-in">
+      <div class="timeline-item">
+        <span class="year">1950年代</span>
+        <h4>パンチカード・機械語</h4>
+        <p>カードに穴を開けてプログラムを記述し、コンピュータに読み込ませる。<strong>1行間違えると最初からやり直し</strong>。デバッグという概念がほぼ存在しなかった時代。</p>
+        <span class="badge badge-purple">手作業</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>パンチカードは約90年間にわたりエンジニアとマシンのコミュニケーション手段として使われました。1つのタスクに数日かかることもあり、カードの角が少しでも曲がると使えなくなるリスクがありました。アセンブリ言語が登場し、機械語（0と1の列）を人間が読める記号に置き換え始めました。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <span class="year">1960〜70年代</span>
+        <h4>高級言語の登場（FORTRAN, COBOL, C言語）</h4>
+        <p><strong>FORTRAN</strong>（科学技術計算向け）、<strong>COBOL</strong>（ビジネス向け）が「プログラミングの民主化」の先駆けに。1972年には<strong style="color:var(--cyan)">C言語</strong>が誕生し、現在も使われ続けている。</p>
+        <span class="badge badge-cyan">言語の誕生</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>テキストエディタ（ed, vi）でソースコードを書き、コンパイラを別途実行する「編集 → コンパイル → 実行」という分離されたワークフローが確立されました。COBOLは英語に近い構文で書けたため、プログラミングの敷居を大きく下げました。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <span class="year">1980年代</span>
+        <h4>IDE（統合開発環境）の誕生</h4>
+        <p><strong style="color:var(--gold)">Turbo Pascal</strong>（1983年, Borland）がIDE革命の起点。エディタ、コンパイラ、デバッガを<strong>1つのプログラムに統合</strong>し、開発生産性が劇的に向上した最初の転換点。</p>
+        <span class="badge badge-gold">統合の始まり</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>それまでは「エディタで書く → 保存 → 別のツールでコンパイル → 別のツールでデバッグ」と、何度もツールを切り替えていました。Turbo Pascalはこれを一画面で完結させ、プログラマーの効率を飛躍的に高めました。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <span class="year">1990年代</span>
+        <h4>Visual Studio・Eclipse</h4>
+        <p>Microsoftの<strong>Visual Studio</strong>（1997年）が業界初の<strong style="color:var(--cyan)">IntelliSense</strong>（インテリジェントコード補完）を搭載。入力中にコードを提案する ―― <strong>現在のAI補完の原型</strong>がここに。</p>
+        <span class="badge badge-cyan">コード補完の原型</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>Visual Basic（1991年）はドラッグ&ドロップでUIを構築できるGUIビルダーを統合。Eclipse（2001年）はオープンソースでプラグイン対応のクロスプラットフォームIDE。IntelliJ IDEA（2001年）はJava向け高機能IDEとして登場しました。エンタープライズ向け大規模開発を支えるIDE群が出揃った時代です。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <span class="year">2000年代</span>
+        <h4>Web開発ブーム・軽量エディタ</h4>
+        <p>JavaScript, PHP, Rubyなどでブラウザ上アプリが主流に。<strong>Sublime Text</strong>（2008年）が重いIDEと簡素なメモ帳の間を埋め、「軽くて速いエディタ」のニーズを証明。</p>
+        <span class="badge badge-green">軽量化</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>Sublime Textは広告なし・開発者の口コミだけで普及した稀有なエディタ。C++/Python製でほぼ瞬時に起動し、シンタックスハイライト＋プラグイン拡張に対応。この時代に「重いIDE vs 軽いエディタ」の二極化が始まりました。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <span class="year">2010年代</span>
+        <h4>VS Code・GitHub・クラウド開発</h4>
+        <p><strong style="color:var(--cyan)">VS Code</strong>（2015年, Microsoft）が無料・オープンソースで登場し、世界で最も使われるコードエディタに。GitHubでのコラボレーションが当たり前の時代へ。</p>
+        <span class="badge badge-cyan">コラボの時代</span>
+        <div class="accordion" style="margin-top:10px">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳しく見る</button>
+          <div class="accordion-content" role="region">
+            <p>VS Codeは拡張機能エコシステムの充実で、エディタとIDEの良いとこ取りを実現。GitHub Codespaces, Replitなど、ブラウザ上で完全な開発環境を提供するクラウドIDEも登場。Pull Request、コードレビュー、CI/CDの文化が確立されました。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item" style="border-color:var(--gold)">
+        <span class="year">2020年代〜</span>
+        <h4 style="color:var(--gold)">AIコーディングの時代</h4>
+        <p>AIがコーディングのあり方を根本から変革。<strong>「人間がコードを書く」</strong>から<strong style="color:var(--gold)">「人間がAIに意図を伝え、AIがコードを書く」</strong>へのパラダイムシフトが進行中。</p>
+        <span class="badge badge-gold">革命</span>
+      </div>
+    </div>
+
+    <!-- AI時代の詳細：カード型 -->
+    <h3 class="fade-in" style="margin-top:28px">AIコーディング ― 加速する進化</h3>
+    <div class="card-grid stagger" style="margin-bottom:24px">
+      <div class="card">
+        <span class="card-icon">✨</span>
+        <h4>2021年：GitHub Copilot</h4>
+        <p>AIコード補完の先駆者。コード入力中にリアルタイムで次の行を提案。<strong>「AIペアプログラマー」</strong>の概念を確立した。</p>
+        <span class="badge badge-cyan">補完</span>
+      </div>
+      <div class="card">
+        <span class="card-icon">💬</span>
+        <h4>2022年：ChatGPT</h4>
+        <p>対話型AIでコード生成が可能に。コーディング未経験者でもプログラムを作れる時代の幕開け。ただし「コピペ」が必要だった。</p>
+        <span class="badge badge-green">対話型</span>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎯</span>
+        <h4>2024年：Cursor</h4>
+        <p>AI-firstのIDE（VS Codeベース）。AIをエディタに深く統合し、複数ファイルにまたがるエージェント的な編集を実現。</p>
+        <span class="badge badge-purple">AI統合IDE</span>
+      </div>
+      <div class="card highlight">
+        <span class="card-icon">🚀</span>
+        <h4>2025年：Claude Code</h4>
+        <p>ターミナルネイティブのAIエージェント。ファイル操作、コマンド実行、Git操作、テストまで<strong style="color:var(--gold)">自律的に遂行</strong>。200Kトークンのコンテキストでプロジェクト全体を理解。</p>
+        <span class="badge badge-gold">自律型エージェント</span>
+      </div>
+    </div>
+
+    <!-- 3つの歴史の交差点 -->
+    <div class="glow-box fade-in" style="margin-bottom:24px">
+      <div class="glow-box-inner">
+        <h3 style="margin-bottom:14px">3つの歴史の交差点 = Claude Code</h3>
+        <div class="fade-in" style="overflow-x:auto">
+          <table class="compare-table" style="margin:0">
+            <thead><tr><th>時代</th><th>ターミナル</th><th>コーディング</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--text)">1950-60s</td><td>テレタイプ端末</td><td>パンチカード・機械語</td></tr>
+              <tr><td style="color:var(--text)">1970-80s</td><td>VT100ビデオ端末</td><td>テキストエディタ + コンパイラ</td></tr>
+              <tr><td style="color:var(--text)">1980-90s</td><td>DOS/Unixターミナル</td><td>IDEの登場</td></tr>
+              <tr><td style="color:var(--text)">2000-10s</td><td>iTerm2 / Windows Terminal</td><td>VS Code + GitHub + クラウド</td></tr>
+              <tr><td style="color:var(--gold);font-weight:700">2020s</td><td style="color:var(--gold)">AI統合ターミナル</td><td style="color:var(--gold)">AIエージェント型コーディング</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:.84rem;color:var(--text);margin-top:14px;text-align:center">CLIの「軽量性・自動化・精密制御」× AIの「自然言語理解・自律的タスク遂行」<br>＝ <strong style="color:var(--gold)">Claude Code</strong></p>
+      </div>
+    </div>
+
+    <div class="key-point fade-in">
+      パンチカードから始まった70年の歴史は、「<strong>人間が機械の言語を学ぶ</strong>」時代から「<strong style="color:var(--gold)">機械が人間の言語を理解する</strong>」時代へ。Claude Codeはその最先端に立つツールです。
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 1: AIコーディングツールの進化
+     ============================================================ -->
+<section class="slide" id="evolution" style="background:var(--navy-light)">
+  <div class="deco deco-circle float1" style="width:90px;height:90px;top:10%;right:5%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="bottom:20%;left:8%;background:var(--cyan);opacity:.3"></div>
+  <svg class="deco spin-slow" style="bottom:30%;right:10%;width:50px;height:50px;opacity:.1" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--purple)" stroke-width="1"/></svg>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🕰</span> HISTORY</span>
+    <h2 class="slide-title fade-in">AIコーディングツールの<span class="purple">進化</span></h2>
+    <p class="slide-subtitle fade-in">コード補完から自律型エージェントへ ― わずか5年の革命</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">⌨️</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="timeline fade-in">
+      <div class="timeline-item">
+        <span class="year">2020年</span>
+        <h4>GitHub Copilot登場前夜</h4>
+        <p>コード補完の黎明期。AIがコードを書くという概念がまだ一般的ではなかった時代。自動補完は単純なキーワードベースが主流。</p>
+        <span class="badge badge-purple">黎明期</span>
+      </div>
+      <div class="timeline-item">
+        <span class="year">2021年</span>
+        <h4>GitHub Copilot 登場</h4>
+        <p>AIペアプログラミングの始まり。コードの文脈を理解し、次の行を予測して提案。開発者の生産性が劇的に向上。</p>
+        <span class="badge badge-cyan">コード補完</span>
+      </div>
+      <div class="timeline-item">
+        <span class="year">2022-23年</span>
+        <h4>ChatGPT・各社AIコーディング</h4>
+        <p>対話型コード生成の普及。チャットでコードを相談し、コピペして使うスタイルが広まる。しかしプロジェクト全体は理解できなかった。</p>
+        <span class="badge badge-green">対話型</span>
+      </div>
+      <div class="timeline-item">
+        <span class="year">2024年</span>
+        <h4>Cursor, Windsurf等</h4>
+        <p>AI統合IDE（統合開発環境）の登場。エディタの中にAIが組み込まれ、ファイルの編集や提案がシームレスに。</p>
+        <span class="badge badge-gold">AI統合IDE</span>
+      </div>
+      <div class="timeline-item" style="border-color:var(--gold)">
+        <span class="year">2025年</span>
+        <h4 style="color:var(--gold)">Claude Code（エージェント型CLIツール）</h4>
+        <p>プロジェクト全体を理解し、ファイル作成・編集・テスト・デバッグを<strong style="color:var(--gold)">自律的に実行</strong>。人間の指示で一連の作業を完遂する「エージェント」へ進化。</p>
+        <span class="badge badge-gold">ここが画期的</span>
+      </div>
+    </div>
+
+    <!-- 進化インフォグラフィック -->
+    <div class="evo-info fade-in">
+      <!-- Stage 1: コード補完 -->
+      <div class="evo-stage">
+        <div class="evo-card">
+          <div class="evo-icon">✏️</div>
+          <h4 class="evo-title">コード補完</h4>
+          <p class="evo-desc">次の1行を予測して提案。タイピングの延長線上。</p>
+          <div class="evo-year">2021〜</div>
+          <div class="evo-level">自動化レベル</div>
+          <div class="evo-bar"><div class="evo-bar-fill" style="--fill:25%;background:var(--cyan)"></div></div>
+        </div>
+      </div>
+      <!-- Arrow -->
+      <div class="evo-arrow">→</div>
+      <!-- Stage 2: 対話型コード生成 -->
+      <div class="evo-stage">
+        <div class="evo-card">
+          <div class="evo-icon">💬</div>
+          <h4 class="evo-title">対話型コード生成</h4>
+          <p class="evo-desc">チャットで相談してコードを生成。コピペで活用。</p>
+          <div class="evo-year">2022〜</div>
+          <div class="evo-level">自動化レベル</div>
+          <div class="evo-bar"><div class="evo-bar-fill" style="--fill:50%;background:var(--purple)"></div></div>
+        </div>
+      </div>
+      <!-- Arrow -->
+      <div class="evo-arrow">→</div>
+      <!-- Stage 3: AI統合IDE -->
+      <div class="evo-stage">
+        <div class="evo-card">
+          <div class="evo-icon">🖥️</div>
+          <h4 class="evo-title">AI統合IDE</h4>
+          <p class="evo-desc">エディタ内でAIが直接ファイルを編集。Cursor等。</p>
+          <div class="evo-year">2023〜</div>
+          <div class="evo-level">自動化レベル</div>
+          <div class="evo-bar"><div class="evo-bar-fill" style="--fill:75%;background:var(--green)"></div></div>
+        </div>
+      </div>
+      <!-- Arrow -->
+      <div class="evo-arrow">→</div>
+      <!-- Stage 4: 自律型エージェント（ゴールドのグロー） -->
+      <div class="evo-stage">
+        <div class="evo-card">
+          <div class="evo-icon">🤖</div>
+          <h4 class="evo-title">自律型エージェント</h4>
+          <p class="evo-desc">指示だけで設計・実装・テスト・デプロイまで自律実行。</p>
+          <div class="evo-year">2025〜</div>
+          <div class="evo-level">自動化レベル</div>
+          <div class="evo-bar"><div class="evo-bar-fill" style="--fill:100%;background:linear-gradient(90deg,var(--gold),var(--cyan))"></div></div>
+          <div class="evo-badge">← Claude Code</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 2: Claude Code とは何か
+     ============================================================ -->
+<section class="slide" id="what-is-cc">
+  <div class="deco deco-ring float2" style="width:60px;height:60px;top:15%;left:8%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:30%;right:10%;background:var(--purple);opacity:.2"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">⌨️</span> CLAUDE CODE</span>
+    <h2 class="slide-title fade-in"><span class="gold">Claude Code</span>とは何か</h2>
+    <p class="slide-subtitle fade-in">ターミナル（コマンドライン）で動くAIアシスタント ― Anthropic公式ツール</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🤖</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <!-- Key Features -->
+    <div class="card-grid stagger" style="margin-bottom:28px">
+      <div class="card">
+        <span class="card-icon">🤖</span>
+        <h4>エージェント型</h4>
+        <p>自律的にファイル操作・コマンド実行。指示を出せば、必要な手順を自分で判断して進めます。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📁</span>
+        <h4>プロジェクト全体理解</h4>
+        <p>コードベース全体を把握。数百ファイルの構成を理解し、適切な場所に変更を加えます。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔄</span>
+        <h4>マルチステップ実行</h4>
+        <p>複雑なタスクを分解して自動実行。「ログイン機能を追加して」だけで複数ファイルを編集。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🛡️</span>
+        <h4>安全設計</h4>
+        <p>ファイル操作やコマンド実行の前に確認。危険な操作は承認制で、誤操作を防止します。</p>
+      </div>
+    </div>
+
+    <!-- Why revolutionary - Glow Box -->
+    <div class="glow-box fade-in" style="margin-bottom:28px">
+      <div class="glow-box-inner">
+        <h3 style="margin-bottom:16px">何が画期的なのか？</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <p style="font-size:.78rem;font-weight:700;color:var(--text-dim);margin-bottom:8px">従来のAIコーディング</p>
+            <ul style="padding-left:1.2em;font-size:.84rem;color:var(--text-dim)">
+              <li>コード補完・対話でコード片を生成</li>
+              <li>人間がコピペ・統合</li>
+              <li>1ファイルずつ作業</li>
+            </ul>
+          </div>
+          <div>
+            <p style="font-size:.78rem;font-weight:700;color:var(--gold);margin-bottom:8px">Claude Code</p>
+            <ul style="padding-left:1.2em;font-size:.84rem;color:var(--text)">
+              <li>プロジェクト全体を理解</li>
+              <li>ファイル作成・編集・テスト・デバッグを自律実行</li>
+              <li>複数ファイルを横断して作業</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Mock -->
+    <div class="fade-in" style="display:flex;justify-content:center">
+      <div class="chat-mock">
+        <div class="chat-mock-header">
+          <div class="chat-mock-dot" style="background:#f85149"></div>
+          <div class="chat-mock-dot" style="background:#d4a843"></div>
+          <div class="chat-mock-dot" style="background:#2ea043"></div>
+          <span style="font-size:.68rem;color:var(--text-dim);margin-left:8px">Terminal - Claude Code</span>
+        </div>
+        <div class="chat-bubble user">
+          <span class="sender">あなた</span>
+          このプロジェクトにログイン機能を追加して
+        </div>
+        <div class="chat-bubble ai">
+          <span class="sender">Claude</span>
+          プロジェクト構造を確認しました。以下の手順で進めます：<br>
+          1. 認証ルートの作成<br>
+          2. ユーザーモデルの定義<br>
+          3. ログインフォームのUI作成<br>
+          4. セッション管理の実装<br>
+          <br>
+          まず、認証ルートから作成します...
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-grid stagger" style="margin-top:28px">
+      <div class="stat-card">
+        <div class="stat-num"><span class="count-up" data-target="10">0</span><span class="stat-unit">x</span></div>
+        <div class="stat-label">開発速度の向上</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num"><span class="count-up" data-target="100">0</span><span class="stat-unit">+</span></div>
+        <div class="stat-label">同時に把握するファイル数</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num"><span class="count-up" data-target="24">0</span><span class="stat-unit">h</span></div>
+        <div class="stat-label">いつでも開発可能</div>
+      </div>
+    </div>
+
+    <div class="fun-fact fade-in">
+      <span class="fun-label">EXAMPLE</span>
+      <p>この別添え資料のHTMLも、Claude Codeで制作しています。「勉強会の別添え資料を作って」と指示するだけで、デザイン・コード・アニメーションまで一括生成。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3: MCPサーバー
+     ============================================================ -->
+<section class="slide" id="mcp" style="background:var(--navy-light)">
+  <div class="deco deco-circle float3" style="width:70px;height:70px;bottom:15%;right:5%;border-color:rgba(56,189,248,.1)"></div>
+  <div class="deco deco-ring float1" style="width:80px;height:80px;top:10%;left:6%;border-color:rgba(212,168,67,.08)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🔌</span> MCP SERVER</span>
+    <h2 class="slide-title fade-in"><span class="cyan">MCP</span>サーバーとは</h2>
+    <p class="slide-subtitle fade-in">Claudeと外部サービスをつなぐ「拡張機能の仕組み」</p>
+
+    <!-- Illust Card -->
+    <div class="illust-card fade-in" style="max-width:600px;margin:0 auto 28px;border-color:var(--cyan)">
+      <span class="illust">🔌</span>
+      <h4>Model Context Protocol</h4>
+      <p>MCPとは <strong style="color:var(--cyan)">Model Context Protocol</strong> の略。<br>ClaudeとGmail・カレンダー・Slack・データベース等の外部サービスをつなぐ「拡張機能の仕組み」です。</p>
+    </div>
+
+    <!-- MCP Flow Diagram -->
+    <div class="mcp-flow fade-in">
+      <div class="mcp-node highlight">
+        <div class="icon">🤖</div>
+        <div class="label">Claude</div>
+      </div>
+      <div class="mcp-connector">⟷</div>
+      <div class="mcp-node" style="border-color:var(--cyan)">
+        <div class="icon">🔌</div>
+        <div class="label">MCP</div>
+      </div>
+      <div class="mcp-connector">⟷</div>
+      <div class="mcp-services">
+        <div class="mcp-node"><div class="icon">📧</div><div class="label">Gmail</div></div>
+        <div class="mcp-node"><div class="icon">📅</div><div class="label">Calendar</div></div>
+        <div class="mcp-node"><div class="icon">💬</div><div class="label">Slack</div></div>
+        <div class="mcp-node"><div class="icon">🗄️</div><div class="label">DB</div></div>
+      </div>
+    </div>
+
+    <!-- できること -->
+    <h3 class="fade-in" style="margin-top:32px">できること <span class="badge badge-green">可能</span></h3>
+    <div class="card-grid stagger" style="margin-bottom:28px">
+      <div class="card">
+        <span class="card-icon">📧</span>
+        <h4>メール操作</h4>
+        <p>メール送信・受信確認・下書き作成。Gmailの検索や自動返信も可能。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📅</span>
+        <h4>カレンダー管理</h4>
+        <p>予定の作成・変更・確認・空き時間の検索。Googleカレンダーとシームレス連携。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">💬</span>
+        <h4>Slack通知</h4>
+        <p>チャンネルへのメッセージ送信・通知連携。チーム内の情報共有を自動化。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🗄️</span>
+        <h4>データベース操作</h4>
+        <p>データベースのクエリ・更新。社内データの参照や集計を自然言語で指示。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📂</span>
+        <h4>ファイルシステム操作</h4>
+        <p>ファイルの作成・読み取り・編集・削除。ローカルのファイルを直接操作。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🌐</span>
+        <h4>Web検索・情報取得</h4>
+        <p>Webから最新情報を検索・取得。リアルタイムな情報収集が可能。</p>
+      </div>
+    </div>
+
+    <!-- できないこと -->
+    <h3 class="fade-in">できないこと <span class="badge" style="background:var(--red-bg);color:var(--red)">制限</span></h3>
+    <div class="card fade-in" style="margin-bottom:28px;border-color:rgba(248,81,73,.2)">
+      <ul class="feature-list">
+        <li><span class="x-mark">✕</span><div><strong>MCPサーバー未対応サービス</strong><br>MCPサーバーが提供されていないサービスとの連携はできません</div></li>
+        <li><span class="x-mark">✕</span><div><strong>ネットワーク外システム</strong><br>インターネットに接続されていないシステムへのアクセスは不可</div></li>
+        <li><span class="x-mark">✕</span><div><strong>リアルタイム処理</strong><br>常時監視やリアルタイムストリーミングなど、継続的な処理が必要な用途には不向き</div></li>
+        <li><span class="x-mark">✕</span><div><strong>機密データの無断アクセス</strong><br>ユーザーの明示的な許可なしに、機密情報にアクセスすることはありません</div></li>
+      </ul>
+    </div>
+
+    <!-- 活用シーン -->
+    <h3 class="fade-in">活用シーン <span class="badge badge-gold">実例</span></h3>
+    <div class="card-grid stagger" style="margin-bottom:24px">
+      <div class="card">
+        <span class="card-icon">📧</span>
+        <h4>Gmail自動返信・整理</h4>
+        <p>未読メールを要約し、定型返信の下書きを自動作成。メール整理の時間を大幅短縮。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📅</span>
+        <h4>Googleカレンダー管理</h4>
+        <p>「来週の空き時間に打ち合わせを入れて」と言うだけで、空き時間を検索して予定を作成。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">💬</span>
+        <h4>Slack通知連携</h4>
+        <p>定期レポートの自動投稿や、特定条件でのアラート通知をSlackチャンネルに送信。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🗄️</span>
+        <h4>社内DB参照</h4>
+        <p>「先月の売上トップ10を教えて」 ― 自然言語でデータベースを検索・集計。</p>
+      </div>
+    </div>
+
+    <!-- Fun fact - デモとの接続 -->
+    <div class="fun-fact fade-in">
+      <span class="fun-label">勉強会との接続</span>
+      <p>勉強会の<strong style="color:var(--gold)">デモ②（Gmail・Googleカレンダー連携）</strong>はMCPで実現しています！ Claudeがメールを読み、カレンダーに予定を追加するデモは、まさにMCPの実力です。</p>
+    </div>
+
+    <!-- 導入難易度 -->
+    <h3 class="fade-in" style="margin-top:24px">導入難易度</h3>
+    <div class="key-point fade-in">
+      設定ファイル（JSON形式）の編集が必要。エンジニア向けですが、手順書があれば非エンジニアでも対応可能です。
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 設定ファイルの例を見る（JSON）</button>
+      <div class="accordion-content" role="region">
+        <p>MCPサーバーの設定は、以下のようなJSON形式のファイルで行います。</p>
+        <pre><code>{
+  "mcpServers": {
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-gmail"],
+      "env": {
+        "GMAIL_CLIENT_ID": "your-client-id",
+        "GMAIL_CLIENT_SECRET": "your-secret"
+      }
+    },
+    "google-calendar": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-google-calendar"]
+    }
+  }
+}</code></pre>
+        <p>このファイルを <code>~/.claude/settings.json</code> に配置するだけで、ClaudeからGmailやカレンダーにアクセスできるようになります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4: インストール手順
+     ============================================================ -->
+<section class="slide" id="install">
+  <div class="deco deco-circle float1" style="width:70px;height:70px;top:12%;right:8%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="bottom:25%;left:10%;background:var(--purple);opacity:.2"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🔧</span> INSTALL</span>
+    <h2 class="slide-title fade-in"><span class="gold">インストール</span>手順</h2>
+    <p class="slide-subtitle fade-in">5つのステップでClaude Codeを使い始めましょう</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🚀</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="step-flow stagger">
+      <div class="step-item">
+        <div class="step-num-circle">1</div>
+        <h4>Node.js</h4>
+        <p>公式サイトからLTS版をインストール</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">2</div>
+        <h4>ターミナル</h4>
+        <p>ターミナルアプリを開く</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">3</div>
+        <h4>npm install</h4>
+        <p>Claude Codeをインストール</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">4</div>
+        <h4>claude起動</h4>
+        <p>claudeコマンドで起動</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">5</div>
+        <h4>ログイン</h4>
+        <p>Anthropicアカウントで認証</p>
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> Step 1: Node.js インストール</button>
+      <div class="accordion-content" role="region">
+        <p>Claude CodeはNode.js上で動作します。まず Node.js をインストールします。</p>
+        <ol>
+          <li><a href="https://nodejs.org/" style="color:var(--cyan)">https://nodejs.org/</a> にアクセス</li>
+          <li><strong>LTS版（推奨版）</strong>のダウンロードボタンをクリック</li>
+          <li>ダウンロードしたインストーラーを実行</li>
+          <li>画面の指示に従ってインストール完了</li>
+        </ol>
+        <p style="margin-top:8px">確認コマンド：</p>
+        <pre><code>node --version
+# v20.x.x のように表示されればOK</code></pre>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> Step 2: ターミナルを開く</button>
+      <div class="accordion-content" role="region">
+        <p><strong>Mac</strong>: 「アプリケーション」→「ユーティリティ」→「ターミナル」を開く。またはSpotlight（Cmd+Space）で「ターミナル」と検索。</p>
+        <p><strong>Windows</strong>: スタートメニューから「PowerShell」または「コマンドプロンプト」を開く。</p>
+        <p>黒い画面（またはテーマ設定による色の画面）が表示されれば準備完了です。</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> Step 3: Claude Code インストール</button>
+      <div class="accordion-content" role="region">
+        <p>ターミナルで以下のコマンドを実行します。</p>
+        <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+        <p>しばらく待つと、インストールが完了します。エラーが出た場合は、Node.jsが正しくインストールされているか確認してください。</p>
+        <p>Macで権限エラーが出た場合は、先頭に <code>sudo</code> を付けて実行：</p>
+        <pre><code>sudo npm install -g @anthropic-ai/claude-code</code></pre>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> Step 4: Claude Code 起動</button>
+      <div class="accordion-content" role="region">
+        <p>プロジェクトのディレクトリに移動してから起動します。</p>
+        <pre><code>cd ~/my-project
+claude</code></pre>
+        <p>Claude Codeのインターフェースが表示されます。初回起動時はログインが求められます。</p>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> Step 5: ログイン</button>
+      <div class="accordion-content" role="region">
+        <p>初回起動時にブラウザが開き、Anthropicアカウントでのログインを求められます。</p>
+        <ol>
+          <li>ブラウザで表示されるログイン画面でAnthropicアカウントを入力</li>
+          <li>認証が完了すると、ターミナルに「Authenticated!」と表示</li>
+          <li>これでClaude Codeが使えるようになります</li>
+        </ol>
+        <p style="margin-top:8px"><strong>注意：</strong>Claude Code の利用には <strong>Pro以上のプラン</strong>（月額$20〜）が必要です。</p>
+      </div>
+    </div>
+
+    <div class="key-point fade-in" style="margin-top:24px">
+      全体の所要時間は<strong>約10〜15分</strong>。Node.jsさえインストールすれば、あとはコマンド1つでClaude Codeが使えます。
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5: 動作確認
+     ============================================================ -->
+<section class="slide" id="verify" style="background:var(--navy-light)">
+  <div class="deco deco-ring float2" style="width:60px;height:60px;top:15%;right:8%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="bottom:20%;left:12%;background:var(--gold);opacity:.3"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">✅</span> VERIFY</span>
+    <h2 class="slide-title fade-in"><span class="cyan">動作確認</span></h2>
+    <p class="slide-subtitle fade-in">インストールが成功したか確認しましょう</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🔍</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <!-- 確認ステップ -->
+    <div class="card-grid stagger" style="margin-bottom:28px">
+      <div class="card" style="border-color:var(--cyan)">
+        <span class="card-icon">1️⃣</span>
+        <h4>バージョン確認</h4>
+        <pre style="background:rgba(0,0,0,.3);border-radius:8px;padding:12px;margin-top:8px;font-size:.82rem;color:var(--cyan);font-family:'Courier New',monospace">claude --version</pre>
+        <p style="margin-top:8px">バージョン番号が表示されれば、インストール成功です。</p>
+      </div>
+      <div class="card" style="border-color:var(--cyan)">
+        <span class="card-icon">2️⃣</span>
+        <h4>簡単なテスト</h4>
+        <pre style="background:rgba(0,0,0,.3);border-radius:8px;padding:12px;margin-top:8px;font-size:.82rem;color:var(--cyan);font-family:'Courier New',monospace">claude "Hello, what can you do?"</pre>
+        <p style="margin-top:8px">Claudeが機能一覧を返答すれば、正常に動作しています。</p>
+      </div>
+    </div>
+
+    <!-- 成功の確認ポイント -->
+    <h3 class="fade-in">成功の確認ポイント <span class="badge badge-green">チェックリスト</span></h3>
+    <div class="card fade-in" style="margin-bottom:24px">
+      <ul class="feature-list">
+        <li><span class="check">✓</span><div><code>claude --version</code> でバージョン番号が表示される</div></li>
+        <li><span class="check">✓</span><div><code>claude</code> コマンドでインターフェースが起動する</div></li>
+        <li><span class="check">✓</span><div>ログインが完了し、「Authenticated!」と表示される</div></li>
+        <li><span class="check">✓</span><div>質問を入力すると、Claudeが応答を返す</div></li>
+      </ul>
+    </div>
+
+    <!-- Chat Mock - 動作確認の例 -->
+    <div class="fade-in" style="display:flex;justify-content:center;margin-bottom:24px">
+      <div class="chat-mock">
+        <div class="chat-mock-header">
+          <div class="chat-mock-dot" style="background:#f85149"></div>
+          <div class="chat-mock-dot" style="background:#d4a843"></div>
+          <div class="chat-mock-dot" style="background:#2ea043"></div>
+          <span style="font-size:.68rem;color:var(--text-dim);margin-left:8px">Terminal - 動作確認</span>
+        </div>
+        <div class="chat-bubble user">
+          <span class="sender">あなた</span>
+          このフォルダにどんなファイルがある？
+        </div>
+        <div class="chat-bubble ai">
+          <span class="sender">Claude</span>
+          フォルダの内容を確認します。<br><br>
+          📁 src/<br>
+          📁 public/<br>
+          📄 package.json<br>
+          📄 README.md<br><br>
+          Node.jsプロジェクトのようですね。何かお手伝いしましょうか？
+        </div>
+      </div>
+    </div>
+
+    <!-- トラブルシューティング -->
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> トラブルシューティング</button>
+      <div class="accordion-content" role="region">
+        <p><strong>「command not found: claude」と表示される場合</strong></p>
+        <ul>
+          <li>Node.jsが正しくインストールされているか確認：<code>node --version</code></li>
+          <li>npmのグローバルパスが通っているか確認：<code>npm list -g</code></li>
+          <li>ターミナルを再起動してから再度試す</li>
+        </ul>
+        <p style="margin-top:12px"><strong>認証エラーが出る場合</strong></p>
+        <ul>
+          <li>Anthropicアカウントが有効か確認</li>
+          <li>Pro以上のプランに加入しているか確認</li>
+          <li><code>claude logout</code> → <code>claude</code> で再ログイン</li>
+        </ul>
+        <p style="margin-top:12px"><strong>npmインストールでエラーが出る場合</strong></p>
+        <ul>
+          <li>Node.jsのバージョンが18以上か確認</li>
+          <li>Macの場合：<code>sudo npm install -g @anthropic-ai/claude-code</code></li>
+          <li>Windowsの場合：PowerShellを「管理者として実行」</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fun-fact fade-in" style="margin-top:20px">
+      <span class="fun-label">NEXT STEP</span>
+      <p>動作確認ができたら、プロジェクトフォルダで <code>claude</code> を起動して、「このプロジェクトの概要を教えて」と聞いてみましょう。Claude Codeの実力が実感できます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>今日から使える Claude ― 経営者のためのAI入門｜別添え資料</p>
+  <p style="margin-top:8px;font-size:.7rem;color:var(--text-dim)">Claude Code 解説書 - 2026.3.20</p>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  // Accordion ARIA setup
+  document.querySelectorAll('.accordion').forEach((a,i)=>{
+    const btn=a.querySelector('.accordion-trigger');
+    const c=a.querySelector('.accordion-content');
+    if(!btn||!c)return;
+    const id='acc-'+i;
+    c.id=id;c.setAttribute('role','region');
+    c.setAttribute('aria-labelledby','acc-btn-'+i);
+    btn.id='acc-btn-'+i;
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-controls',id);
+  });
+
+  window.toggleAccordion=function(btn){
+    const c=btn.nextElementSibling;
+    const open=!c.classList.contains('open');
+    btn.classList.toggle('open',open);
+    c.classList.toggle('open',open);
+    btn.setAttribute('aria-expanded',String(open));
+  };
+
+  // Animation observer
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+  },{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('.fade-in,.fade-in-left,.fade-in-right,.scale-in,.stagger').forEach(el=>obs.observe(el));
+
+  // Count-up
+  function countUp(el){
+    const t=parseInt(el.dataset.target),d=1500,s=performance.now();
+    (function u(n){const p=Math.min((n-s)/d,1);el.textContent=Math.floor((1-Math.pow(1-p,3))*t);if(p<1)requestAnimationFrame(u)})(s);
+  }
+  document.querySelectorAll('.count-up[data-target]').forEach(el=>{
+    const o=new IntersectionObserver(e=>{if(e[0].isIntersecting){countUp(el);o.disconnect()}},{threshold:.5});
+    o.observe(el);
+  });
+
+  // Mascot (横切り)
+  const mascotEl=document.getElementById('mascot');
+  [{id:'what-is-cli',msg:'CLIって面白い！'},{id:'coding-history',msg:'歴史を学ぼう！'},{id:'what-is-cc',msg:'Claude Code!'},{id:'install',msg:'インストールしよう！'},{id:'verify',msg:'確認してみよう！'}].forEach(({id,msg})=>{
+    const s=document.getElementById(id);if(!s)return;
+    const o=new IntersectionObserver(e=>{if(e[0].isIntersecting){
+      mascotEl.querySelector('.mascot-speech').textContent=msg;
+      mascotEl.classList.remove('run');void mascotEl.offsetWidth;mascotEl.classList.add('run');
+      o.disconnect();
+    }},{threshold:.3});
+    o.observe(s);
+  });
+
+  // Peeker (ひょこっと覗くキャラ)
+  const peekerConfig=[
+    {sectionId:'terminal-history', peekerId:'peeker-right'},
+    {sectionId:'mcp',              peekerId:'peeker-left'},
+    {sectionId:'verify',           peekerId:'peeker-bottom'},
+  ];
+  peekerConfig.forEach(({sectionId,peekerId})=>{
+    const sec=document.getElementById(sectionId);
+    const pk=document.getElementById(peekerId);
+    if(!sec||!pk)return;
+    const po=new IntersectionObserver(e=>{
+      if(e[0].isIntersecting){
+        pk.classList.remove('peek');
+        void pk.offsetWidth;
+        pk.classList.add('peek');
+        po.disconnect();
+      }
+    },{threshold:.4});
+    po.observe(sec);
+  });
+
+  // Unified scroll
+  const pbar=document.getElementById('progressBar'),nav=document.getElementById('nav');
+  const secs=document.querySelectorAll('.slide[id]'),nlinks=document.querySelectorAll('.nav-links a');
+  let last=0,tick=false;
+  function onScroll(){
+    const y=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+    pbar.style.width=(y/h*100)+'%';
+    nav.classList.toggle('hidden',y>last&&y>100);
+    last=y;
+    let cur='';secs.forEach(s=>{if(y>=s.offsetTop-100)cur=s.id});
+    nlinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+cur));
+    tick=false;
+  }
+  window.addEventListener('scroll',()=>{if(!tick){requestAnimationFrame(onScroll);tick=true}},{passive:true});
+
+  // Hamburger
+  document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('mobile-open'));
+  document.querySelectorAll('.nav-links a').forEach(l=>l.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('mobile-open')));
+
+  // Generate particles for hero
+  const hero=document.querySelector('.hero');
+  if(hero){
+    const pc=document.createElement('div');pc.className='particles';
+    const colors=['var(--gold)','var(--cyan)','var(--purple)','var(--pink)'];
+    for(let i=0;i<20;i++){
+      const p=document.createElement('div');p.className='particle';
+      const s=Math.random()*4+2;
+      p.style.cssText='width:'+s+'px;height:'+s+'px;background:'+colors[i%4]+';top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation:float'+(i%3+1)+' '+(Math.random()*4+4)+'s ease-in-out infinite '+(Math.random()*3)+'s';
+      pc.appendChild(p);
+    }
+    hero.appendChild(pc);
+  }
+})();
+</script>
+</body>
+</html>

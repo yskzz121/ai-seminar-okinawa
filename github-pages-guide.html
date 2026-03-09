@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Pages 公開ガイド ― 経営者のためのAI入門 別添え資料</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Noto Sans JP',sans-serif;background:#0b1628;color:#e8ecf1;line-height:1.8;overflow-x:hidden}
+
+/* ===== VARS ===== */
+:root{
+  --navy:#0b1628;--navy-light:#101d30;--navy-mid:#1a2a45;
+  --gold:#d4a843;--gold-light:#f0d078;--gold-dim:#8a7030;
+  --blue:#4a90d9;--cyan:#38bdf8;--purple:#a78bfa;--pink:#f472b6;
+  --green:#2ea043;--green-bg:rgba(46,160,67,.12);
+  --red:#f85149;--red-bg:rgba(248,81,73,.12);
+  --text:#e8ecf1;--text-dim:#8b95a5;
+  --card:#132035;--card-border:rgba(212,168,67,.18);
+  --max:1100px;--radius:14px;
+}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(11,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:0 20px;transition:transform .3s}
+.nav.hidden{transform:translateY(-100%)}
+.nav-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px}
+.nav-title{font-size:.82rem;font-weight:700;color:var(--gold);white-space:nowrap}
+.nav-links{display:flex;gap:2px;overflow-x:auto}
+.nav-links a{font-size:.68rem;color:var(--text-dim);text-decoration:none;padding:6px 9px;border-radius:6px;white-space:nowrap;transition:.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(212,168,67,.1)}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer}
+.progress-bar{position:fixed;top:54px;left:0;z-index:999;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--purple));width:0%;transition:width .3s}
+
+/* ===== ACCESSIBILITY ===== */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+
+/* ===== SECTIONS ===== */
+.slide{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px 60px;position:relative;overflow:hidden}
+.slide-inner{max-width:var(--max);width:100%;position:relative;z-index:2}
+
+/* ===== FLOATING DECORATIONS ===== */
+.deco{position:absolute;pointer-events:none;z-index:1}
+.deco-circle{border-radius:50%;border:1.5px solid}
+.deco-ring{border-radius:50%;border:2px solid;background:transparent}
+.deco-dot{width:6px;height:6px;border-radius:50%}
+@keyframes float1{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(8deg)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(-6deg)}}
+@keyframes float3{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-22px) scale(1.1)}}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.15)}}
+.float1{animation:float1 6s ease-in-out infinite}
+.float2{animation:float2 5s ease-in-out infinite .5s}
+.float3{animation:float3 7s ease-in-out infinite 1s}
+.pulse-slow{animation:pulse 4s ease-in-out infinite}
+.spin-slow{animation:spin 20s linear infinite}
+
+/* ===== TYPOGRAPHY ===== */
+.slide-label{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;letter-spacing:.15em;color:var(--gold);background:rgba(212,168,67,.1);padding:5px 14px;border-radius:20px;margin-bottom:14px}
+.slide-label .label-icon{font-size:.9rem}
+.slide-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;line-height:1.3;margin-bottom:14px}
+.slide-title .gold{color:var(--gold)}.slide-title .cyan{color:var(--cyan)}.slide-title .purple{color:var(--purple)}
+.slide-subtitle{font-size:clamp(.95rem,2vw,1.15rem);color:var(--text-dim);margin-bottom:32px}
+h3{font-size:1.15rem;font-weight:700;margin-bottom:12px;color:var(--gold-light)}
+
+/* ===== CARDS ===== */
+.card-grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:28px;transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0;transition:opacity .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(212,168,67,.12)}
+.card:hover::before{opacity:1}
+.card-icon{font-size:2.4rem;margin-bottom:12px;display:block}
+.card h4{font-size:1.02rem;font-weight:700;margin-bottom:8px;color:var(--gold-light)}
+.card p,.card li{font-size:.88rem;color:var(--text-dim);line-height:1.7}
+.card ul{padding-left:1.2em}.card li{margin-bottom:4px}
+
+/* ===== ILLUSTRATED CARD ===== */
+.illust-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:32px;text-align:center;position:relative;overflow:hidden}
+.illust-card .illust{font-size:4rem;margin-bottom:16px;display:block;filter:drop-shadow(0 4px 12px rgba(212,168,67,.3))}
+.illust-card h4{font-size:1.05rem;font-weight:700;color:var(--gold-light);margin-bottom:6px}
+.illust-card p{font-size:.85rem;color:var(--text-dim)}
+.illust-card::after{content:'';position:absolute;bottom:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.06),transparent);pointer-events:none}
+
+/* ===== ACCORDION ===== */
+.accordion{margin-top:16px;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden}
+.accordion+.accordion{margin-top:8px}
+.accordion-trigger{width:100%;background:rgba(255,255,255,.03);border:none;color:var(--cyan);font-family:inherit;font-size:.84rem;font-weight:500;padding:12px 18px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;transition:.2s}
+.accordion-trigger:hover{background:rgba(255,255,255,.06)}
+.accordion-trigger .arrow{transition:transform .3s;display:inline-block;font-size:.7rem}
+.accordion-trigger.open .arrow{transform:rotate(90deg)}
+.accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 18px;font-size:.84rem;color:var(--text-dim);line-height:1.8}
+.accordion-content.open{max-height:2000px;padding:16px 18px}
+.accordion-content p{margin-bottom:8px}
+.accordion-content ul{padding-left:1.2em}
+.accordion-content li{margin-bottom:4px}
+.accordion-content code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px;font-size:.82rem;color:var(--cyan)}
+
+/* ===== STEP FLOW ===== */
+.step-flow{display:flex;gap:0;align-items:stretch;margin:24px 0;overflow-x:auto;padding-bottom:8px}
+.step-item{flex:1;min-width:155px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:20px 14px;text-align:center;position:relative}
+.step-item:not(:last-child)::after{content:'\2192';position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:1.2rem;font-weight:700;z-index:1}
+.step-num-circle{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 2px 12px rgba(212,168,67,.3)}
+.step-item h4{font-size:.88rem;color:var(--gold-light);margin-bottom:5px}
+.step-item p{font-size:.76rem;color:var(--text-dim)}
+
+/* ===== TIMELINE ===== */
+.timeline{position:relative;padding-left:44px;margin:24px 0}
+.timeline::before{content:'';position:absolute;left:17px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--cyan),var(--purple))}
+.timeline-item{position:relative;margin-bottom:28px;padding:18px 22px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;transition:transform .3s}
+.timeline-item:hover{transform:translateX(6px)}
+.timeline-item::before{content:'';position:absolute;left:-35px;top:22px;width:14px;height:14px;border-radius:50%;background:var(--gold);border:3px solid var(--navy);box-shadow:0 0 10px rgba(212,168,67,.4)}
+.timeline-item h4{color:var(--gold-light);font-size:.95rem}
+.timeline-item p{font-size:.84rem;color:var(--text-dim);margin-top:4px}
+
+/* ===== BADGES ===== */
+.badge{display:inline-block;font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:6px}
+.badge-gold{background:rgba(212,168,67,.15);color:var(--gold)}
+.badge-cyan{background:rgba(56,189,248,.15);color:var(--cyan)}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple)}
+
+/* ===== ANIMATIONS ===== */
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-left{opacity:0;transform:translateX(-40px);transition:opacity .7s,transform .7s}
+.fade-in-left.visible{opacity:1;transform:translateX(0)}
+.fade-in-right{opacity:0;transform:translateX(40px);transition:opacity .7s,transform .7s}
+.fade-in-right.visible{opacity:1;transform:translateX(0)}
+.scale-in{opacity:0;transform:scale(.8);transition:opacity .6s,transform .6s}
+.scale-in.visible{opacity:1;transform:scale(1)}
+.stagger>*{opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s}
+.stagger.visible>*:nth-child(1){opacity:1;transform:translateY(0);transition-delay:0s}
+.stagger.visible>*:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.08s}
+.stagger.visible>*:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.16s}
+.stagger.visible>*:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.24s}
+.stagger.visible>*:nth-child(5){opacity:1;transform:translateY(0);transition-delay:.32s}
+.stagger.visible>*:nth-child(6){opacity:1;transform:translateY(0);transition-delay:.4s}
+
+/* ===== PEEKER ===== */
+.peeker{position:fixed;z-index:950;pointer-events:none;opacity:0;transition:none}
+.peeker img{display:block;width:90px;height:auto;filter:drop-shadow(0 2px 12px rgba(0,0,0,.5))}
+.peeker.from-right{right:-100px;bottom:120px}
+.peeker.from-right.peek{animation:peekRight 5s ease-in-out forwards}
+@keyframes peekRight{
+  0%{right:-100px;opacity:0;transform:rotate(0deg)}
+  8%{opacity:1}
+  15%{right:-20px;transform:rotate(-8deg)}
+  25%{right:-15px;transform:rotate(-5deg)}
+  35%{right:-20px;transform:rotate(-8deg)}
+  70%{right:-20px;transform:rotate(-8deg);opacity:1}
+  78%{right:-20px;transform:rotate(-3deg)}
+  88%{right:-18px;transform:rotate(-10deg);opacity:1}
+  100%{right:-100px;opacity:0;transform:rotate(0deg)}
+}
+.peeker.from-left{left:-100px;bottom:180px}
+.peeker.from-left img{transform:scaleX(-1)}
+.peeker.from-left.peek{animation:peekLeft 5.5s ease-in-out forwards}
+@keyframes peekLeft{
+  0%{left:-100px;opacity:0;transform:rotate(0deg)}
+  8%{opacity:1}
+  15%{left:-20px;transform:rotate(8deg)}
+  25%{left:-15px;transform:rotate(5deg)}
+  35%{left:-20px;transform:rotate(8deg)}
+  70%{left:-20px;transform:rotate(8deg);opacity:1}
+  78%{left:-20px;transform:rotate(3deg)}
+  88%{left:-18px;transform:rotate(10deg);opacity:1}
+  100%{left:-100px;opacity:0;transform:rotate(0deg)}
+}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;padding-top:60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(212,168,67,.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(74,144,217,.05) 0%,transparent 60%),radial-gradient(ellipse at 50% 50%,rgba(167,139,250,.03) 0%,transparent 50%),var(--navy)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(212,168,67,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,168,67,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
+.hero-content{position:relative;z-index:2;text-align:center}
+.hero-date{display:inline-flex;align-items:center;gap:8px;font-size:.84rem;font-weight:700;color:var(--gold);border:1px solid var(--gold-dim);padding:6px 24px;border-radius:30px;margin-bottom:28px;letter-spacing:.1em}
+.hero-main-title{font-size:clamp(2.4rem,7vw,4.5rem);font-weight:900;line-height:1.15;margin-bottom:8px}
+.hero-main-title .line1{color:var(--text)}
+.hero-main-title .line2{background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--cyan));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite}
+@keyframes shimmer{0%,100%{background-position:0% center}50%{background-position:100% center}}
+.hero-sub{font-size:clamp(1rem,2.5vw,1.4rem);color:var(--text-dim);margin:20px 0 36px}
+.scroll-indicator{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center;animation:scrollBounce 2s infinite}
+.scroll-indicator span{font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:6px}
+.scroll-indicator .arrow-down{font-size:1.4rem;color:var(--gold)}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ===== KEY POINT ===== */
+.key-point{background:rgba(212,168,67,.06);border-left:4px solid var(--gold);padding:16px 20px;border-radius:0 10px 10px 0;margin:16px 0;font-size:.88rem;color:var(--text);position:relative}
+.key-point::before{content:'\1F4A1';position:absolute;left:-16px;top:50%;transform:translateY(-50%);font-size:1.2rem;background:var(--navy);padding:2px}
+
+/* ===== FUN FACT BOX ===== */
+.fun-fact{background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(56,189,248,.05));border:1px solid rgba(167,139,250,.2);border-radius:var(--radius);padding:20px 24px;margin:20px 0;position:relative;overflow:hidden}
+.fun-fact::before{content:'\1F4DA';position:absolute;top:12px;right:16px;font-size:2rem;opacity:.3}
+.fun-fact .fun-label{font-size:.68rem;font-weight:700;color:var(--purple);letter-spacing:.1em;margin-bottom:6px;display:block}
+.fun-fact p{font-size:.88rem;color:var(--text)}
+
+/* ===== GLOW BOX ===== */
+.glow-box{position:relative;border-radius:var(--radius);padding:3px}
+.glow-box::before{content:'';position:absolute;inset:-1px;border-radius:var(--radius);background:linear-gradient(135deg,var(--gold),var(--cyan),var(--purple),var(--gold));background-size:300% 300%;animation:glowRotate 6s linear infinite;z-index:0}
+.glow-box-inner{background:var(--card);border-radius:calc(var(--radius) - 2px);padding:28px;position:relative;z-index:1}
+@keyframes glowRotate{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ===== SECTION ILLUSTRATION ===== */
+.section-illust{text-align:center;margin:20px 0 28px;position:relative}
+.section-illust .big-emoji{font-size:5rem;display:block;filter:drop-shadow(0 8px 24px rgba(212,168,67,.2));animation:float1 6s ease-in-out infinite}
+.section-illust .orbit{position:absolute;width:120px;height:120px;top:50%;left:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(212,168,67,.15);border-radius:50%;animation:spin 15s linear infinite}
+.section-illust .orbit-dot{position:absolute;width:8px;height:8px;background:var(--gold);border-radius:50%;top:-4px;left:50%;transform:translateX(-50%);box-shadow:0 0 8px rgba(212,168,67,.4)}
+
+/* ===== PARTICLES ===== */
+.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.particle{position:absolute;border-radius:50%;opacity:.3}
+
+/* ===== DETAIL STEP (手順カード) ===== */
+.detail-step{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.detail-step:last-child{border-bottom:none}
+.detail-num{width:36px;height:36px;min-width:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:.88rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(212,168,67,.3)}
+.detail-body h4{font-size:.95rem;font-weight:700;color:var(--gold-light);margin-bottom:4px}
+.detail-body p{font-size:.84rem;color:var(--text-dim)}
+
+/* ===== URL EXAMPLE ===== */
+.url-example{background:var(--navy-mid);border:1px solid var(--card-border);border-radius:10px;padding:16px 20px;margin:16px 0;font-family:monospace;font-size:.88rem;color:var(--cyan);word-break:break-all}
+.url-example .highlight{color:var(--gold);font-weight:700}
+
+/* ===== CELEBRATION ===== */
+.celebration{text-align:center;font-size:1.3rem;font-weight:900;color:var(--gold-light);margin-bottom:12px}
+.celebration-emoji{font-size:3rem;display:block;margin-bottom:12px}
+
+/* ===== FAQ ===== */
+.faq-item{margin-bottom:8px}
+.faq-item .accordion-trigger{font-weight:700;color:var(--gold-light)}
+.faq-item .accordion-trigger .q-mark{color:var(--cyan);font-weight:900;margin-right:4px}
+
+/* ===== FOOTER ===== */
+.footer{text-align:center;padding:48px 24px;border-top:1px solid var(--card-border);font-size:.78rem;color:var(--text-dim)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .nav-links{display:none}.nav-hamburger{display:block}
+  .nav-links.mobile-open{display:flex;flex-direction:column;position:absolute;top:54px;left:0;right:0;background:rgba(11,22,40,.97);padding:12px;border-bottom:1px solid var(--card-border)}
+  .step-flow{flex-direction:column}
+  .step-item:not(:last-child)::after{content:'\2193';right:auto;left:50%;top:auto;bottom:-18px;transform:translateX(-50%)}
+  .slide{padding:80px 16px 48px}
+  .card-grid{grid-template-columns:1fr}
+  .detail-step{flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav" role="navigation" aria-label="メインナビゲーション">
+  <div class="nav-inner">
+    <div class="nav-title">GitHub Pages ガイド</div>
+    <button class="nav-hamburger" id="hamburger" aria-label="メニューを開く">☰</button>
+    <div class="nav-links" id="navLinks" role="menubar">
+      <a href="#hero" role="menuitem">TOP</a>
+      <a href="#overview" role="menuitem">概要</a>
+      <a href="#step1" role="menuitem">Step 1</a>
+      <a href="#step2" role="menuitem">Step 2</a>
+      <a href="#step3" role="menuitem">Step 3</a>
+      <a href="#step4" role="menuitem">Step 4</a>
+      <a href="#step5" role="menuitem">Step 5</a>
+      <a href="#faq" role="menuitem">FAQ</a>
+    </div>
+  </div>
+</nav>
+<div class="progress-bar" id="progressBar" role="progressbar" aria-label="ページ進捗"></div>
+
+<!-- ===== PEEKER ===== -->
+<div class="peeker from-right" id="peeker-right" aria-hidden="true">
+  <img src="claude-code-mascot.jpg" alt="">
+</div>
+<div class="peeker from-left" id="peeker-left" aria-hidden="true">
+  <img src="claude-code-mascot.jpg" alt="">
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="slide hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <!-- floating decorations -->
+  <div class="deco deco-circle float1" style="width:80px;height:80px;top:15%;left:8%;border-color:rgba(212,168,67,.12)"></div>
+  <div class="deco deco-circle float2" style="width:50px;height:50px;top:25%;right:12%;border-color:rgba(56,189,248,.12)"></div>
+  <div class="deco deco-ring float3" style="width:100px;height:100px;bottom:20%;left:5%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:40%;right:8%;background:var(--gold);opacity:.4"></div>
+  <div class="deco deco-dot pulse-slow" style="top:60%;left:15%;background:var(--cyan);opacity:.3;animation-delay:1s"></div>
+  <svg class="deco spin-slow" style="top:70%;right:15%;width:40px;height:40px;opacity:.15" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--gold)" stroke-width="1"/></svg>
+
+  <div class="slide-inner hero-content">
+    <div class="hero-date">
+      <span class="badge badge-purple">別添え資料</span>
+      <span>2026.3.20 勉強会</span>
+    </div>
+    <h1 class="hero-main-title">
+      <span class="line1">GitHub Pages</span><br>
+      <span class="line2">公開ガイド</span>
+    </h1>
+    <p class="hero-sub">HTMLファイルを世界に公開しよう</p>
+    <p style="font-size:.82rem;color:var(--text-dim)">
+      <span class="badge badge-gold">初心者向け</span>
+      <span class="badge badge-cyan">無料</span>
+      <span class="badge badge-green">所要時間 約10分</span>
+    </p>
+    <div class="scroll-indicator">
+      <span>スクロールして読む</span>
+      <div class="arrow-down">↓</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     OVERVIEW
+     ============================================================ -->
+<section class="slide" id="overview">
+  <div class="deco deco-circle float2" style="width:60px;height:60px;top:10%;right:10%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:80%;left:8%;background:var(--purple);opacity:.3"></div>
+  <div class="slide-inner">
+    <div class="slide-label"><span class="label-icon">📖</span> OVERVIEW</div>
+    <h2 class="slide-title"><span class="gold">GitHub Pages</span>とは？</h2>
+    <p class="slide-subtitle">GitHubが提供する<strong style="color:var(--gold)">無料</strong>のWebホスティングサービスです。HTMLファイルをアップロードするだけで、世界中からアクセスできるWebページを公開できます。</p>
+
+    <div class="card-grid stagger fade-in" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+      <div class="illust-card">
+        <span class="illust">🌐</span>
+        <h4>無料で公開</h4>
+        <p>サーバー費用ゼロ。GitHubアカウントがあれば誰でも無料で使えます</p>
+      </div>
+      <div class="illust-card">
+        <span class="illust">⚡</span>
+        <h4>簡単3ステップ</h4>
+        <p>難しい設定は不要。ファイルをアップするだけで公開完了</p>
+      </div>
+      <div class="illust-card">
+        <span class="illust">🔒</span>
+        <h4>安全・安心</h4>
+        <p>HTTPS対応済み。世界最大のソフトウェア開発プラットフォームが運営</p>
+      </div>
+    </div>
+
+    <div class="key-point fade-in" style="margin-top:28px">
+      <strong>必要なもの：</strong>メールアドレスだけ。クレジットカードの登録は不要です。
+    </div>
+
+    <!-- 全体フロー -->
+    <h3 class="fade-in" style="margin-top:36px">全体の流れ</h3>
+    <div class="step-flow stagger fade-in">
+      <div class="step-item">
+        <div class="step-num-circle">1</div>
+        <h4>アカウント作成</h4>
+        <p>GitHubに登録</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">2</div>
+        <h4>リポジトリ作成</h4>
+        <p>ファイル保管場所を作る</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">3</div>
+        <h4>ファイルアップ</h4>
+        <p>HTMLを置く</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">4</div>
+        <h4>Pages有効化</h4>
+        <p>公開設定をON</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">5</div>
+        <h4>公開確認</h4>
+        <p>URLをチェック</p>
+      </div>
+    </div>
+
+    <div class="fun-fact fade-in">
+      <span class="fun-label">豆知識</span>
+      <p>GitHubは世界中で1億人以上が利用するソフトウェア開発プラットフォームです。2018年にMicrosoftが約8兆円で買収しました。GitHub Pagesを使えば、プログラミングの知識がなくてもWebサイトを公開できます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STEP 1 : GitHubアカウント作成
+     ============================================================ -->
+<section class="slide" id="step1">
+  <div class="deco deco-ring float1" style="width:70px;height:70px;top:12%;left:6%;border-color:rgba(56,189,248,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:70%;right:10%;background:var(--gold);opacity:.3"></div>
+  <div class="slide-inner">
+    <div class="section-illust fade-in">
+      <span class="big-emoji">👤</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+    <div class="slide-label"><span class="label-icon">1️⃣</span> STEP 1</div>
+    <h2 class="slide-title"><span class="gold">GitHub</span>アカウント作成</h2>
+    <p class="slide-subtitle">まずはGitHubのアカウントを作りましょう。メールアドレスだけで登録できます。</p>
+
+    <div class="card fade-in">
+      <div class="detail-step">
+        <div class="detail-num">1</div>
+        <div class="detail-body">
+          <h4>github.com にアクセス</h4>
+          <p>ブラウザ（Chrome、Safari等）で <code>github.com</code> を開きます。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">2</div>
+        <div class="detail-body">
+          <h4>「Sign up」をクリック</h4>
+          <p>画面右上にある緑色の「Sign up」ボタンを押します。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">3</div>
+        <div class="detail-body">
+          <h4>メールアドレスを入力</h4>
+          <p>普段お使いのメールアドレスを入力し、「Continue」を押します。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">4</div>
+        <div class="detail-body">
+          <h4>パスワードを設定</h4>
+          <p>安全なパスワードを作成します。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">5</div>
+        <div class="detail-body">
+          <h4>ユーザー名を入力</h4>
+          <p>英数字とハイフン（-）が使えます。他の人と重複しない名前を選んでください。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">6</div>
+        <div class="detail-body">
+          <h4>メール認証を完了</h4>
+          <p>入力したメールアドレスに確認メールが届きます。メール内のリンクをクリックすれば完了です。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point fade-in">
+      <strong>重要：</strong>ユーザー名は公開URLの一部になります。例えば、ユーザー名が <code>tanaka-taro</code> なら、公開URLは <code>tanaka-taro.github.io</code> になります。覚えやすい名前がおすすめです。
+    </div>
+
+    <!-- アコーディオン：パスワードのヒント -->
+    <div class="accordion fade-in" role="region" aria-label="パスワードのヒント">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="acc-password">
+        <span class="arrow">▶</span> パスワードのルールについて
+      </button>
+      <div class="accordion-content" id="acc-password">
+        <p>GitHubのパスワードは以下のいずれかの条件を満たす必要があります：</p>
+        <ul>
+          <li><strong>15文字以上</strong>（どんな文字でもOK）</li>
+          <li><strong>8文字以上</strong>で、数字と小文字のアルファベットを含む</li>
+        </ul>
+        <p>例：<code>MyCompany2026!</code>（12文字、数字+小文字+大文字+記号）</p>
+        <p>パスワードマネージャーの利用もおすすめです。</p>
+      </div>
+    </div>
+    <div class="accordion fade-in" role="region" aria-label="ユーザー名のヒント">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="acc-username">
+        <span class="arrow">▶</span> ユーザー名の選び方のコツ
+      </button>
+      <div class="accordion-content" id="acc-username">
+        <ul>
+          <li>会社名やブランド名を含めると分かりやすい（例：<code>tanaka-corp</code>）</li>
+          <li>短くて覚えやすいものがおすすめ</li>
+          <li>日本語は使えません（英数字とハイフンのみ）</li>
+          <li>あとから変更も可能ですが、URLも変わるので最初に決めるのがベストです</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STEP 2 : リポジトリ作成
+     ============================================================ -->
+<section class="slide" id="step2">
+  <div class="deco deco-circle float3" style="width:90px;height:90px;top:8%;right:6%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:50%;left:5%;background:var(--cyan);opacity:.3;animation-delay:.5s"></div>
+  <div class="slide-inner">
+    <div class="section-illust fade-in">
+      <span class="big-emoji">📁</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+    <div class="slide-label"><span class="label-icon">2️⃣</span> STEP 2</div>
+    <h2 class="slide-title"><span class="cyan">リポジトリ</span>作成</h2>
+    <p class="slide-subtitle">リポジトリは「ファイルを保管する場所」です。フォルダのようなものだと思ってください。</p>
+
+    <div class="card fade-in">
+      <div class="detail-step">
+        <div class="detail-num">1</div>
+        <div class="detail-body">
+          <h4>右上の「+」→「New repository」をクリック</h4>
+          <p>GitHubにログインした状態で、画面右上の「＋」ボタンを押し、「New repository」を選びます。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">2</div>
+        <div class="detail-body">
+          <h4>Repository name を入力</h4>
+          <p>リポジトリの名前を入力します。例：<code>my-website</code></p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">3</div>
+        <div class="detail-body">
+          <h4>「Public」を選択</h4>
+          <p>GitHub Pagesは<strong style="color:var(--gold)">Public（公開）</strong>リポジトリで無料で使えます。必ず「Public」を選んでください。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">4</div>
+        <div class="detail-body">
+          <h4>「Add a README file」にチェック</h4>
+          <p>チェックを入れると、リポジトリの説明ファイルが自動的に作られます。あると便利なのでチェックしておきましょう。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">5</div>
+        <div class="detail-body">
+          <h4>「Create repository」をクリック</h4>
+          <p>緑色のボタンを押せば、リポジトリの完成です。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point fade-in">
+      <strong>重要：</strong>リポジトリ名もURLの一部になります。公開URLは次の形式になります。
+    </div>
+    <div class="url-example fade-in">
+      https://<span class="highlight">ユーザー名</span>.github.io/<span class="highlight">リポジトリ名</span>/
+    </div>
+
+    <div class="accordion fade-in" role="region" aria-label="リポジトリ名のヒント">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="acc-reponame">
+        <span class="arrow">▶</span> リポジトリ名のつけ方のヒント
+      </button>
+      <div class="accordion-content" id="acc-reponame">
+        <ul>
+          <li>英数字とハイフン（-）を使いましょう</li>
+          <li>短くてわかりやすい名前がおすすめ（例：<code>company-site</code>、<code>product-page</code>）</li>
+          <li>日本語は使えません</li>
+          <li>スペース（空白）の代わりにハイフンを使います</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STEP 3 : HTMLファイルのアップロード
+     ============================================================ -->
+<section class="slide" id="step3">
+  <div class="deco deco-ring float2" style="width:80px;height:80px;bottom:15%;right:8%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:20%;left:10%;background:var(--gold);opacity:.3;animation-delay:1.5s"></div>
+  <div class="slide-inner">
+    <div class="section-illust fade-in">
+      <span class="big-emoji">📤</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+    <div class="slide-label"><span class="label-icon">3️⃣</span> STEP 3</div>
+    <h2 class="slide-title"><span class="purple">HTMLファイル</span>のアップロード</h2>
+    <p class="slide-subtitle">作成したHTMLファイルをリポジトリにアップロードします。ドラッグ&ドロップで簡単にできます。</p>
+
+    <div class="card fade-in">
+      <div class="detail-step">
+        <div class="detail-num">1</div>
+        <div class="detail-body">
+          <h4>リポジトリページで「Add file」→「Upload files」</h4>
+          <p>リポジトリのページで、緑色の「Add file」ボタンを押し、「Upload files」を選びます。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">2</div>
+        <div class="detail-body">
+          <h4>HTMLファイルをドラッグ&ドロップ</h4>
+          <p>パソコン上のHTMLファイルを、表示されたエリアにドラッグ&ドロップします。または「choose your files」をクリックしてファイルを選択します。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">3</div>
+        <div class="detail-body">
+          <h4>ファイル名は <code>index.html</code> にする</h4>
+          <p>アップロードするHTMLファイルの名前は必ず <strong style="color:var(--gold)">index.html</strong> にしてください。これがトップページとして認識されます。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">4</div>
+        <div class="detail-body">
+          <h4>「Commit changes」をクリック</h4>
+          <p>ページ下部にある緑色の「Commit changes」ボタンを押せば、アップロード完了です。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point fade-in">
+      <strong>重要：</strong>ファイル名は必ず <code>index.html</code> にしてください。これがWebサイトのトップページになります。大文字・小文字を間違えないようにしましょう（全て小文字です）。
+    </div>
+
+    <div class="accordion fade-in" role="region" aria-label="複数ファイルのアップロード">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="acc-multifile">
+        <span class="arrow">▶</span> 複数ファイルをアップロードしたい場合
+      </button>
+      <div class="accordion-content" id="acc-multifile">
+        <p>画像ファイルやCSSファイルなど、複数のファイルを同時にアップロードできます。</p>
+        <ul>
+          <li>複数ファイルをまとめてドラッグ&ドロップすればOK</li>
+          <li>画像は <code>images</code> フォルダを作って整理すると便利です</li>
+          <li>フォルダごとアップロードすることはできません。ファイルを個別に選択してください</li>
+        </ul>
+      </div>
+    </div>
+    <div class="accordion fade-in" role="region" aria-label="Commitとは">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="acc-commit">
+        <span class="arrow">▶</span> 「Commit」ってなに？
+      </button>
+      <div class="accordion-content" id="acc-commit">
+        <p>「Commit（コミット）」は、ファイルの変更を保存・記録する操作のことです。パソコンでいう「保存」に似ていますが、変更履歴が残るのが特徴です。いつ、何を変えたかが記録されるので、あとで元に戻すこともできます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STEP 4 : GitHub Pages有効化
+     ============================================================ -->
+<section class="slide" id="step4">
+  <div class="deco deco-circle float1" style="width:65px;height:65px;top:18%;right:12%;border-color:rgba(46,160,67,.12)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:75%;left:7%;background:var(--purple);opacity:.3;animation-delay:2s"></div>
+  <div class="slide-inner">
+    <div class="section-illust fade-in">
+      <span class="big-emoji">⚙️</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+    <div class="slide-label"><span class="label-icon">4️⃣</span> STEP 4</div>
+    <h2 class="slide-title"><span class="gold">GitHub Pages</span>有効化</h2>
+    <p class="slide-subtitle">アップロードしたHTMLを公開するための設定を行います。あと少しです！</p>
+
+    <div class="card fade-in">
+      <div class="detail-step">
+        <div class="detail-num">1</div>
+        <div class="detail-body">
+          <h4>リポジトリの「Settings」タブをクリック</h4>
+          <p>リポジトリページの上部にあるタブ群から「Settings」（歯車アイコン）を選びます。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">2</div>
+        <div class="detail-body">
+          <h4>左メニューから「Pages」を選択</h4>
+          <p>左側のメニューを下にスクロールし、「Pages」をクリックします。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">3</div>
+        <div class="detail-body">
+          <h4>「Source」→「Deploy from a branch」を選択</h4>
+          <p>「Build and deployment」セクションの「Source」で「Deploy from a branch」を選びます。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">4</div>
+        <div class="detail-body">
+          <h4>「Branch」→「main」を選択</h4>
+          <p>「Branch」のドロップダウンから「main」を選び、フォルダは「/ (root)」のままにします。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">5</div>
+        <div class="detail-body">
+          <h4>「Save」をクリック</h4>
+          <p>「Save」ボタンを押せば、設定完了です。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point fade-in">
+      <strong>注意：</strong>設定を保存してから、Webページが公開されるまで<strong style="color:var(--cyan)">1〜3分</strong>かかります。すぐに表示されなくても心配しないでください。
+    </div>
+
+    <div class="fun-fact fade-in">
+      <span class="fun-label">豆知識</span>
+      <p>GitHub Pagesは裏側でHTMLファイルをCDN（コンテンツ配信ネットワーク）に配置しています。これにより、世界中どこからアクセスしても高速にページが表示されます。企業のWebサイトでも使われている仕組みです。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STEP 5 : 公開URL確認
+     ============================================================ -->
+<section class="slide" id="step5">
+  <div class="deco deco-ring float3" style="width:100px;height:100px;top:10%;left:5%;border-color:rgba(212,168,67,.08)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:60%;right:12%;background:var(--green);opacity:.3"></div>
+  <div class="slide-inner">
+    <div class="section-illust fade-in">
+      <span class="big-emoji">🎉</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+    <div class="slide-label"><span class="label-icon">5️⃣</span> STEP 5</div>
+    <h2 class="slide-title"><span class="cyan">公開URL</span>を確認</h2>
+    <p class="slide-subtitle">いよいよ最後のステップです。あなたのWebページが世界に公開されました！</p>
+
+    <div class="card fade-in">
+      <div class="detail-step">
+        <div class="detail-num">1</div>
+        <div class="detail-body">
+          <h4>Settings → Pages に戻る</h4>
+          <p>先ほどと同じ「Settings」→「Pages」のページを開きます。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">2</div>
+        <div class="detail-body">
+          <h4>上部に公開URLが表示される</h4>
+          <p>「Your site is live at ...」というメッセージとともに、公開URLが表示されます。</p>
+        </div>
+      </div>
+      <div class="detail-step">
+        <div class="detail-num">3</div>
+        <div class="detail-body">
+          <h4>URLをクリックして確認</h4>
+          <p>表示されたURLをクリックして、あなたのWebページが正しく表示されるか確認しましょう。</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="fade-in" style="margin-top:28px">公開URLの形式</h3>
+    <div class="url-example fade-in">
+      https://<span class="highlight">ユーザー名</span>.github.io/<span class="highlight">リポジトリ名</span>/
+    </div>
+
+    <div class="glow-box fade-in scale-in" style="margin-top:32px">
+      <div class="glow-box-inner" style="text-align:center">
+        <span class="celebration-emoji">🎊</span>
+        <div class="celebration">おめでとうございます！</div>
+        <p style="font-size:1.05rem;color:var(--text);margin-bottom:8px">あなたのWebページが<strong style="color:var(--gold)">世界に公開</strong>されました！</p>
+        <p style="font-size:.84rem;color:var(--text-dim)">このURLを誰かに共有すれば、スマートフォンやパソコンからすぐにアクセスできます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FAQ
+     ============================================================ -->
+<section class="slide" id="faq">
+  <div class="deco deco-circle float2" style="width:55px;height:55px;top:15%;right:8%;border-color:rgba(56,189,248,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:85%;left:10%;background:var(--gold);opacity:.3"></div>
+  <div class="slide-inner">
+    <div class="section-illust fade-in">
+      <span class="big-emoji">❓</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+    <div class="slide-label"><span class="label-icon">💬</span> FAQ</div>
+    <h2 class="slide-title">よくある<span class="gold">質問</span></h2>
+    <p class="slide-subtitle">困ったときはこちらを確認してください。</p>
+
+    <div class="faq-item accordion fade-in" role="region" aria-label="FAQ: 公開までの時間">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="faq1">
+        <span class="arrow">▶</span> <span class="q-mark">Q.</span> 公開まで何分かかりますか？
+      </button>
+      <div class="accordion-content" id="faq1">
+        <p><strong style="color:var(--green)">A.</strong> 通常<strong>1〜3分</strong>で公開されます。最大でも10分程度です。もし10分以上経っても表示されない場合は、Settings → Pagesの設定を再確認してください。</p>
+      </div>
+    </div>
+
+    <div class="faq-item accordion fade-in" role="region" aria-label="FAQ: HTMLの更新">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="faq2">
+        <span class="arrow">▶</span> <span class="q-mark">Q.</span> HTMLを更新したいのですが？
+      </button>
+      <div class="accordion-content" id="faq2">
+        <p><strong style="color:var(--green)">A.</strong> Step 3と同じ手順で、更新したHTMLファイルを再度アップロードしてください。同じファイル名（<code>index.html</code>）でアップすれば、自動的に上書きされます。更新後、1〜3分で反映されます。</p>
+      </div>
+    </div>
+
+    <div class="faq-item accordion fade-in" role="region" aria-label="FAQ: ページが表示されない">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="faq3">
+        <span class="arrow">▶</span> <span class="q-mark">Q.</span> ページが表示されません。どうすれば？
+      </button>
+      <div class="accordion-content" id="faq3">
+        <p><strong style="color:var(--green)">A.</strong> 以下を順番に確認してください：</p>
+        <ul>
+          <li>ファイル名が <code>index.html</code> になっているか（大文字・小文字に注意）</li>
+          <li>Settings → Pages で Branch が「main」になっているか</li>
+          <li>リポジトリが「Public」になっているか</li>
+          <li>設定後、数分待ってからページを再読み込み（F5キー）してみる</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item accordion fade-in" role="region" aria-label="FAQ: 独自ドメイン">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="faq4">
+        <span class="arrow">▶</span> <span class="q-mark">Q.</span> 独自ドメイン（example.com等）は使えますか？
+      </button>
+      <div class="accordion-content" id="faq4">
+        <p><strong style="color:var(--green)">A.</strong> はい、使えます。Settings → Pages → Custom domain で独自ドメインを設定できます。ドメインのDNS設定も必要になるため、詳しくはGitHubの公式ドキュメントをご覧ください。</p>
+      </div>
+    </div>
+
+    <div class="faq-item accordion fade-in" role="region" aria-label="FAQ: 費用">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="faq5">
+        <span class="arrow">▶</span> <span class="q-mark">Q.</span> 費用はかかりますか？
+      </button>
+      <div class="accordion-content" id="faq5">
+        <p><strong style="color:var(--green)">A.</strong> <strong style="color:var(--gold)">完全無料</strong>です。Public（公開）リポジトリでGitHub Pagesを使う場合、費用は一切かかりません。クレジットカードの登録も不要です。</p>
+      </div>
+    </div>
+
+    <div class="faq-item accordion fade-in" role="region" aria-label="FAQ: 制限">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="faq6">
+        <span class="arrow">▶</span> <span class="q-mark">Q.</span> 何か制限はありますか？
+      </button>
+      <div class="accordion-content" id="faq6">
+        <p><strong style="color:var(--green)">A.</strong> 主な制限は以下の通りです：</p>
+        <ul>
+          <li>リポジトリの容量上限：1GB</li>
+          <li>月間の帯域幅上限：100GB</li>
+          <li>静的サイトのみ対応（データベースやサーバー処理は不可）</li>
+        </ul>
+        <p>個人のWebページや会社紹介サイトであれば、十分すぎる容量です。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>今日から使える Claude ― 経営者のためのAI入門｜別添え資料</p>
+  <p style="margin-top:8px;font-size:.7rem;color:var(--text-dim)">GitHub Pages 公開ガイド &copy; 2026</p>
+</footer>
+
+<!-- ===== PEEKER (mascot) ===== -->
+
+<script>
+(function(){
+  'use strict';
+
+  // Accordion
+  document.querySelectorAll('.accordion-trigger').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const expanded=btn.getAttribute('aria-expanded')==='true';
+      btn.setAttribute('aria-expanded',!expanded);
+      btn.classList.toggle('open');
+      const contentId=btn.getAttribute('aria-controls');
+      if(contentId){
+        const content=document.getElementById(contentId);
+        if(content) content.classList.toggle('open');
+      } else {
+        const content=btn.nextElementSibling;
+        if(content) content.classList.toggle('open');
+      }
+    });
+  });
+
+  // IntersectionObserver for animations
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.fade-in,.fade-in-left,.fade-in-right,.scale-in,.stagger').forEach(el=>observer.observe(el));
+
+  // Peeker
+  const peekerConfig=[
+    {sectionId:'step2', peekerId:'peeker-right'},
+    {sectionId:'step5', peekerId:'peeker-left'},
+  ];
+  peekerConfig.forEach(({sectionId,peekerId})=>{
+    const sec=document.getElementById(sectionId);
+    const pk=document.getElementById(peekerId);
+    if(!sec||!pk)return;
+    const po=new IntersectionObserver(e=>{
+      if(e[0].isIntersecting){
+        pk.classList.remove('peek');
+        void pk.offsetWidth;
+        pk.classList.add('peek');
+        po.disconnect();
+      }
+    },{threshold:.4});
+    po.observe(sec);
+  });
+
+  // Progress bar + nav hide
+  const pbar=document.getElementById('progressBar'),nav=document.getElementById('nav');
+  const secs=document.querySelectorAll('.slide[id]'),nlinks=document.querySelectorAll('.nav-links a');
+  let last=0,tick=false;
+  function onScroll(){
+    const y=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+    pbar.style.width=(y/h*100)+'%';
+    nav.classList.toggle('hidden',y>last&&y>100);
+    last=y;
+    let cur='';secs.forEach(s=>{if(y>=s.offsetTop-100)cur=s.id});
+    nlinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+cur));
+    tick=false;
+  }
+  window.addEventListener('scroll',()=>{if(!tick){requestAnimationFrame(onScroll);tick=true}},{passive:true});
+
+  // Hamburger
+  document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('mobile-open'));
+  document.querySelectorAll('.nav-links a').forEach(l=>l.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('mobile-open')));
+
+  // Particles for hero
+  const hero=document.querySelector('.hero');
+  if(hero){
+    const pc=document.createElement('div');pc.className='particles';
+    const colors=['var(--gold)','var(--cyan)','var(--purple)','var(--pink)'];
+    for(let i=0;i<20;i++){
+      const p=document.createElement('div');p.className='particle';
+      const s=Math.random()*4+2;
+      p.style.cssText='width:'+s+'px;height:'+s+'px;background:'+colors[i%4]+';top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation:float'+(i%3+1)+' '+(Math.random()*4+4)+'s ease-in-out infinite '+(Math.random()*3)+'s';
+      pc.appendChild(p);
+    }
+    hero.appendChild(pc);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日から使える Claude ― 経営者のためのAI入門</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:18px}
+body{font-family:'Noto Sans JP',sans-serif;background:#0b1628;color:#e8ecf1;line-height:2;overflow-x:hidden}
+
+/* ===== VARS ===== */
+:root{
+  --navy:#0b1628;--navy-light:#101d30;--navy-mid:#1a2a45;
+  --gold:#d4a843;--gold-light:#f0d078;--gold-dim:#8a7030;
+  --blue:#4a90d9;--cyan:#38bdf8;--purple:#a78bfa;--pink:#f472b6;
+  --green:#2ea043;--green-bg:rgba(46,160,67,.12);
+  --red:#f85149;--red-bg:rgba(248,81,73,.12);
+  --text:#e8ecf1;--text-dim:#8b95a5;
+  --card:#132035;--card-border:rgba(212,168,67,.18);
+  --max:1200px;--radius:14px;
+}
+
+/* ===== NAV ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(11,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:0 20px;transition:transform .3s}
+.nav.hidden{transform:translateY(-100%)}
+.nav-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px}
+.nav-title{font-size:.88rem;font-weight:700;color:var(--gold);white-space:nowrap}
+.nav-links{display:flex;gap:3px;overflow-x:auto}
+.nav-links a{font-size:.78rem;color:var(--text-dim);text-decoration:none;padding:7px 11px;border-radius:6px;white-space:nowrap;transition:.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(212,168,67,.1)}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer}
+.progress-bar{position:fixed;top:54px;left:0;z-index:999;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--purple));width:0%;transition:width .3s}
+
+/* ===== ACCESSIBILITY ===== */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+
+/* ===== SLIDES ===== */
+.slide{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px 60px;position:relative;overflow:hidden}
+.slide-inner{max-width:var(--max);width:100%;position:relative;z-index:2}
+
+/* ===== FLOATING DECORATIONS ===== */
+.deco{position:absolute;pointer-events:none;z-index:1}
+.deco-circle{border-radius:50%;border:1.5px solid}
+.deco-ring{border-radius:50%;border:2px solid;background:transparent}
+.deco-dot{width:6px;height:6px;border-radius:50%}
+.deco-cross{font-size:1.2rem;font-weight:300;opacity:.3}
+.deco-line{height:2px;border-radius:1px}
+@keyframes float1{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(8deg)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(-6deg)}}
+@keyframes float3{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-22px) scale(1.1)}}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.15)}}
+@keyframes dash{0%{stroke-dashoffset:200}100%{stroke-dashoffset:0}}
+.float1{animation:float1 6s ease-in-out infinite}
+.float2{animation:float2 5s ease-in-out infinite .5s}
+.float3{animation:float3 7s ease-in-out infinite 1s}
+.pulse-slow{animation:pulse 4s ease-in-out infinite}
+.spin-slow{animation:spin 20s linear infinite}
+
+/* ===== TYPOGRAPHY ===== */
+.slide-label{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;letter-spacing:.15em;color:var(--gold);background:rgba(212,168,67,.1);padding:6px 16px;border-radius:20px;margin-bottom:16px}
+.slide-label .label-icon{font-size:1rem}
+.slide-title{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;line-height:1.3;margin-bottom:18px}
+.slide-title .gold{color:var(--gold)}.slide-title .cyan{color:var(--cyan)}.slide-title .purple{color:var(--purple)}
+.slide-subtitle{font-size:clamp(1.05rem,2.2vw,1.3rem);color:var(--text-dim);margin-bottom:36px}
+h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
+
+/* ===== CARDS ===== */
+.card-grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:32px;transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0;transition:opacity .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(212,168,67,.12)}
+.card:hover::before{opacity:1}
+.card-icon{font-size:2.6rem;margin-bottom:14px;display:block}
+.card h4{font-size:1.15rem;font-weight:700;margin-bottom:10px;color:var(--gold-light)}
+.card p,.card li{font-size:1rem;color:var(--text-dim);line-height:1.85}
+.card ul{padding-left:1.2em}.card li{margin-bottom:6px}
+.card.highlight{border-color:var(--gold);background:linear-gradient(135deg,var(--navy-mid),var(--card))}
+
+/* ===== ILLUSTRATED CARD (new) ===== */
+.illust-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:36px;text-align:center;position:relative;overflow:hidden}
+.illust-card .illust{font-size:4.5rem;margin-bottom:18px;display:block;filter:drop-shadow(0 4px 12px rgba(212,168,67,.3))}
+.illust-card h4{font-size:1.2rem;font-weight:700;color:var(--gold-light);margin-bottom:8px}
+.illust-card p{font-size:1rem;color:var(--text-dim)}
+.illust-card::after{content:'';position:absolute;bottom:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.06),transparent);pointer-events:none}
+
+/* ===== COMPARISON TABLE ===== */
+.compare-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:1rem}
+.compare-table th{background:var(--navy-mid);color:var(--gold);font-weight:700;padding:15px 16px;text-align:left;border-bottom:2px solid var(--gold-dim)}
+.compare-table td{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-dim)}
+.compare-table tr:hover td{background:rgba(212,168,67,.04)}
+.compare-table .circle{color:var(--gold);font-weight:700}
+.compare-table .triangle{color:var(--cyan)}
+.compare-table .cross{color:var(--red)}
+
+/* ===== ACCORDION ===== */
+.accordion{margin-top:18px;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden}
+.accordion-trigger{width:100%;background:rgba(255,255,255,.03);border:none;color:var(--cyan);font-family:inherit;font-size:.98rem;font-weight:500;padding:14px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;transition:.2s}
+.accordion-trigger:hover{background:rgba(255,255,255,.06)}
+.accordion-trigger .arrow{transition:transform .3s;display:inline-block;font-size:.8rem}
+.accordion-trigger.open .arrow{transform:rotate(90deg)}
+.accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 20px;font-size:.98rem;color:var(--text-dim);line-height:2}
+.accordion-content.open{max-height:2000px;padding:18px 20px}
+.accordion-content p{margin-bottom:8px}
+.accordion-content ul{padding-left:1.2em}
+.accordion-content li{margin-bottom:4px}
+
+/* ===== STEP FLOW ===== */
+.step-flow{display:flex;gap:0;align-items:stretch;margin:24px 0;overflow-x:auto;padding-bottom:8px}
+.step-item{flex:1;min-width:165px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:24px 16px;text-align:center;position:relative}
+.step-item:not(:last-child)::after{content:'→';position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:1.3rem;font-weight:700;z-index:1}
+.step-num-circle{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 2px 12px rgba(212,168,67,.3)}
+.step-item h4{font-size:1rem;color:var(--gold-light);margin-bottom:6px}
+.step-item p{font-size:.9rem;color:var(--text-dim)}
+
+/* ===== PRICING ===== */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:24px}
+.pricing-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:32px 26px;text-align:center;position:relative;overflow:hidden}
+.pricing-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--card-border),var(--card-border))}
+.pricing-card.recommended{border-color:var(--gold);box-shadow:0 0 40px rgba(212,168,67,.12)}
+.pricing-card.recommended::before{background:linear-gradient(90deg,var(--gold),var(--cyan))}
+.pricing-card.recommended::after{content:'おすすめ';position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--gold),var(--gold-light));color:var(--navy);font-size:.82rem;font-weight:700;padding:5px 20px;border-radius:0 0 10px 10px}
+.pricing-card h4{font-size:1.4rem;color:var(--gold-light);margin-bottom:4px;margin-top:8px}
+.pricing-card .price{font-size:2.4rem;font-weight:900;margin:14px 0}
+.pricing-card .price small{font-size:.9rem;font-weight:400;color:var(--text-dim)}
+.pricing-card ul{text-align:left;list-style:none}
+.pricing-card li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.98rem;color:var(--text-dim)}
+.pricing-card li::before{content:'✓ ';color:var(--green);font-weight:700}
+.pricing-card li.limited::before{content:'△ ';color:var(--gold)}
+.pricing-card li.unavailable{opacity:.35}
+.pricing-card li.unavailable::before{content:'✕ ';color:var(--red)}
+
+/* ===== TIMELINE ===== */
+.timeline{position:relative;padding-left:44px;margin:24px 0}
+.timeline::before{content:'';position:absolute;left:17px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--cyan),var(--purple))}
+.timeline-item{position:relative;margin-bottom:28px;padding:18px 22px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;transition:transform .3s}
+.timeline-item:hover{transform:translateX(6px)}
+.timeline-item::before{content:'';position:absolute;left:-35px;top:22px;width:14px;height:14px;border-radius:50%;background:var(--gold);border:3px solid var(--navy);box-shadow:0 0 10px rgba(212,168,67,.4)}
+.timeline-item h4{color:var(--gold-light);font-size:1.1rem}
+.timeline-item .year{font-size:.85rem;color:var(--gold);font-weight:700;letter-spacing:.05em}
+.timeline-item p{font-size:.98rem;color:var(--text-dim);margin-top:6px}
+
+/* ===== BADGES ===== */
+.badge{display:inline-block;font-size:.8rem;font-weight:700;padding:4px 12px;border-radius:20px;margin-right:6px}
+.badge-gold{background:rgba(212,168,67,.15);color:var(--gold)}
+.badge-cyan{background:rgba(56,189,248,.15);color:var(--cyan)}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple)}
+
+/* ===== ANIMATIONS ===== */
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.fade-in-left{opacity:0;transform:translateX(-40px);transition:opacity .7s,transform .7s}
+.fade-in-left.visible{opacity:1;transform:translateX(0)}
+.fade-in-right{opacity:0;transform:translateX(40px);transition:opacity .7s,transform .7s}
+.fade-in-right.visible{opacity:1;transform:translateX(0)}
+.scale-in{opacity:0;transform:scale(.8);transition:opacity .6s,transform .6s}
+.scale-in.visible{opacity:1;transform:scale(1)}
+.stagger>*{opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s}
+.stagger.visible>*:nth-child(1){opacity:1;transform:translateY(0);transition-delay:0s}
+.stagger.visible>*:nth-child(2){opacity:1;transform:translateY(0);transition-delay:.08s}
+.stagger.visible>*:nth-child(3){opacity:1;transform:translateY(0);transition-delay:.16s}
+.stagger.visible>*:nth-child(4){opacity:1;transform:translateY(0);transition-delay:.24s}
+.stagger.visible>*:nth-child(5){opacity:1;transform:translateY(0);transition-delay:.32s}
+.stagger.visible>*:nth-child(6){opacity:1;transform:translateY(0);transition-delay:.4s}
+.stagger.visible>*:nth-child(7){opacity:1;transform:translateY(0);transition-delay:.48s}
+.stagger.visible>*:nth-child(8){opacity:1;transform:translateY(0);transition-delay:.56s}
+.stagger.visible>*:nth-child(9){opacity:1;transform:translateY(0);transition-delay:.64s}
+.stagger.visible>*:nth-child(10){opacity:1;transform:translateY(0);transition-delay:.72s}
+.count-up{font-variant-numeric:tabular-nums}
+
+/* ===== MASCOT (横切り) ===== */
+.mascot-container{position:fixed;bottom:0;left:-200px;z-index:900;pointer-events:none}
+.mascot-container.run{animation:mascotRun 4s ease-in-out forwards}
+@keyframes mascotRun{
+  0%{left:-200px;bottom:20px}
+  15%{bottom:45px}25%{bottom:20px}
+  40%{bottom:45px}50%{bottom:20px}
+  65%{bottom:45px}75%{bottom:20px}
+  100%{left:calc(100vw + 200px);bottom:30px}
+}
+.mascot{width:120px;height:120px;position:relative}
+.mascot-body{width:80px;height:80px;background:linear-gradient(135deg,var(--gold),#e8c168);border-radius:50%;position:absolute;bottom:0;left:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(212,168,67,.4)}
+.mascot-body::after{content:'';position:absolute;width:90px;height:90px;border-radius:50%;border:2px dashed rgba(212,168,67,.3);animation:spin 8s linear infinite}
+.mascot-face{font-size:2rem}
+.mascot-hat{width:30px;height:20px;background:var(--navy);border-radius:4px 4px 0 0;position:absolute;top:6px;left:45px;transform:rotate(-10deg)}
+.mascot-hat::before{content:'>';position:absolute;top:-10px;left:2px;color:var(--gold);font-size:.7rem;font-weight:900;font-family:monospace}
+.mascot-hat::after{content:'_';position:absolute;top:-10px;left:12px;color:var(--cyan);font-size:.7rem;font-weight:900;font-family:monospace;animation:blink 1s infinite}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+.mascot-speech{position:absolute;top:-24px;right:-50px;background:var(--navy-mid);border:1.5px solid var(--gold);border-radius:14px;padding:5px 12px;font-size:.65rem;color:var(--gold);white-space:nowrap;box-shadow:0 2px 12px rgba(212,168,67,.2)}
+
+/* ===== PEEKER (ひょこっと顔を出すキャラ) ===== */
+.peeker{
+  position:fixed;z-index:950;pointer-events:none;
+  opacity:0;transition:none;
+}
+.peeker img{
+  display:block;width:90px;height:auto;
+  filter:drop-shadow(0 2px 12px rgba(0,0,0,.5));
+}
+/* 右端から覗く */
+.peeker.from-right{
+  right:-100px;bottom:120px;
+}
+.peeker.from-right.peek{
+  animation:peekRight 5s ease-in-out forwards;
+}
+@keyframes peekRight{
+  0%  {right:-100px;opacity:0;transform:rotate(0deg)}
+  8%  {opacity:1}
+  15% {right:-20px;transform:rotate(-8deg)}         /* ひょこっと出る */
+  25% {right:-15px;transform:rotate(-5deg)}          /* ちょっと揺れる */
+  35% {right:-20px;transform:rotate(-8deg)}
+  70% {right:-20px;transform:rotate(-8deg);opacity:1} /* じーっと見る */
+  78% {right:-20px;transform:rotate(-3deg)}          /* びくっ */
+  88% {right:-18px;transform:rotate(-10deg);opacity:1}
+  100%{right:-100px;opacity:0;transform:rotate(0deg)} /* 引っ込む */
+}
+/* 左端から覗く */
+.peeker.from-left{
+  left:-100px;bottom:180px;
+}
+.peeker.from-left img{
+  transform:scaleX(-1);
+}
+.peeker.from-left.peek{
+  animation:peekLeft 5.5s ease-in-out forwards;
+}
+@keyframes peekLeft{
+  0%  {left:-100px;opacity:0;transform:rotate(0deg)}
+  8%  {opacity:1}
+  15% {left:-20px;transform:rotate(8deg)}
+  25% {left:-15px;transform:rotate(5deg)}
+  35% {left:-20px;transform:rotate(8deg)}
+  70% {left:-20px;transform:rotate(8deg);opacity:1}
+  78% {left:-20px;transform:rotate(3deg)}
+  88% {left:-18px;transform:rotate(10deg);opacity:1}
+  100%{left:-100px;opacity:0;transform:rotate(0deg)}
+}
+/* 下端から覗く */
+.peeker.from-bottom{
+  bottom:-100px;right:60px;
+}
+.peeker.from-bottom.peek{
+  animation:peekBottom 5s ease-in-out forwards;
+}
+@keyframes peekBottom{
+  0%  {bottom:-100px;opacity:0}
+  8%  {opacity:1}
+  18% {bottom:-30px}
+  28% {bottom:-35px}
+  38% {bottom:-30px}
+  70% {bottom:-30px;opacity:1}
+  80% {bottom:-28px}
+  100%{bottom:-100px;opacity:0}
+}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;padding-top:60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(212,168,67,.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(74,144,217,.05) 0%,transparent 60%),radial-gradient(ellipse at 50% 50%,rgba(167,139,250,.03) 0%,transparent 50%),var(--navy)}
+/* hero animated grid */
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(212,168,67,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,168,67,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
+.hero-content{position:relative;z-index:2;text-align:center}
+.hero-date{display:inline-flex;align-items:center;gap:8px;font-size:.95rem;font-weight:700;color:var(--gold);border:1px solid var(--gold-dim);padding:7px 26px;border-radius:30px;margin-bottom:28px;letter-spacing:.1em}
+.hero-main-title{font-size:clamp(2.6rem,7vw,4.8rem);font-weight:900;line-height:1.15;margin-bottom:10px}
+.hero-main-title .line1{color:var(--text)}
+.hero-main-title .line2{background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--cyan));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite}
+@keyframes shimmer{0%,100%{background-position:0% center}50%{background-position:100% center}}
+.hero-sub{font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--text-dim);margin:22px 0 40px}
+.hero-meta{display:flex;gap:30px;justify-content:center;flex-wrap:wrap;font-size:1rem;color:var(--text-dim)}
+.hero-meta span{display:flex;align-items:center;gap:8px}
+.hero-meta .icon{font-size:1.2rem}
+.hero-goal-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:44px;text-align:left}
+.hero-goal-card{background:rgba(255,255,255,.03);border:1px solid rgba(212,168,67,.12);border-radius:12px;padding:22px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
+.hero-goal-card:hover{transform:translateY(-3px);border-color:var(--gold)}
+.hero-goal-card::before{content:'';position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.08),transparent);pointer-events:none}
+.hero-goal-card .num{font-size:1.7rem;font-weight:900;color:var(--gold);line-height:1}
+.hero-goal-card .goal-icon{font-size:2rem;float:right;opacity:.6}
+.hero-goal-card p{font-size:.98rem;color:var(--text-dim);margin-top:8px}
+.scroll-indicator{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center;animation:scrollBounce 2s infinite}
+.scroll-indicator span{font-size:.85rem;color:var(--text-dim);display:block;margin-bottom:6px}
+.scroll-indicator .arrow-down{font-size:1.4rem;color:var(--gold)}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ===== KEY POINT ===== */
+.key-point{background:rgba(212,168,67,.06);border-left:4px solid var(--gold);padding:20px 24px;border-radius:0 10px 10px 0;margin:20px 0;font-size:1.02rem;color:var(--text);position:relative}
+.key-point::before{content:'💡';position:absolute;left:-16px;top:50%;transform:translateY(-50%);font-size:1.2rem;background:var(--navy);padding:2px}
+
+/* ===== FUN FACT BOX ===== */
+.fun-fact{background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(56,189,248,.05));border:1px solid rgba(167,139,250,.2);border-radius:var(--radius);padding:24px 28px;margin:22px 0;position:relative;overflow:hidden}
+.fun-fact::before{content:'📚';position:absolute;top:12px;right:16px;font-size:2.2rem;opacity:.3}
+.fun-fact .fun-label{font-size:.82rem;font-weight:700;color:var(--purple);letter-spacing:.1em;margin-bottom:8px;display:block}
+.fun-fact p{font-size:1.02rem;color:var(--text)}
+
+/* ===== TWO COL ===== */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+.info-row{display:flex;gap:24px;margin:20px 0;flex-wrap:wrap}
+.info-row>*{flex:1;min-width:260px}
+
+/* ===== TIMETABLE ===== */
+.timetable{width:100%;border-collapse:collapse;margin:20px 0}
+.timetable th{background:var(--navy-mid);color:var(--gold);padding:13px 16px;text-align:left;font-size:.92rem;font-weight:700;border-bottom:2px solid var(--gold-dim)}
+.timetable td{padding:14px 16px;font-size:.98rem;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-dim);vertical-align:top}
+.timetable tr.active td{background:rgba(212,168,67,.06);color:var(--text)}
+.timetable .time-col{color:var(--cyan);font-weight:700;white-space:nowrap;font-size:.92rem}
+.timetable .part-col{color:var(--gold-light);font-weight:700}
+.timetable .duration-col{white-space:nowrap}
+
+/* ===== WIFI ===== */
+.wifi-box{background:linear-gradient(135deg,var(--navy-mid),var(--card));border:2px solid var(--gold);border-radius:18px;padding:32px;text-align:center;margin:24px 0;position:relative;overflow:hidden}
+.wifi-box::after{content:'';position:absolute;top:-50%;right:-20%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.06),transparent);pointer-events:none}
+.wifi-box h3{font-size:1.3rem;margin-bottom:16px}
+.wifi-box .wifi-info{display:flex;gap:32px;justify-content:center;flex-wrap:wrap}
+.wifi-box .wifi-label{font-size:.88rem;color:var(--text-dim);display:block;margin-bottom:4px}
+.wifi-box .wifi-value{font-weight:900;font-size:1.7rem;color:var(--gold-light);letter-spacing:.1em}
+
+/* ===== DEMO CARD ===== */
+.demo-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
+.demo-card::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(212,168,67,.05),transparent);pointer-events:none}
+.demo-card .demo-num{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:1rem;margin-right:12px;box-shadow:0 2px 8px rgba(212,168,67,.3)}
+.demo-card h4{display:inline;font-size:1.15rem;color:var(--gold-light)}
+.demo-card p{margin-top:12px;font-size:1rem;color:var(--text-dim)}
+.demo-card .message{margin-top:14px;padding:12px 16px;background:rgba(46,160,67,.06);border:1px solid rgba(46,160,67,.15);border-radius:10px;font-size:.98rem;color:var(--green);font-weight:500}
+
+/* ===== CHAT MOCK ===== */
+.chat-mock{background:#1a2540;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px;margin-top:14px;max-width:480px}
+.chat-mock-header{display:flex;align-items:center;gap:6px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.chat-mock-dot{width:8px;height:8px;border-radius:50%}
+.chat-bubble{padding:12px 16px;border-radius:14px;font-size:.92rem;line-height:1.75;margin-bottom:10px;max-width:85%;position:relative}
+.chat-bubble.user{background:linear-gradient(135deg,var(--blue),#3a7bd5);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.chat-bubble.ai{background:rgba(255,255,255,.06);color:var(--text);border-bottom-left-radius:4px}
+.chat-bubble .sender{font-size:.75rem;font-weight:700;margin-bottom:4px;display:block}
+.chat-bubble.user .sender{color:rgba(255,255,255,.6)}
+.chat-bubble.ai .sender{color:var(--gold)}
+
+/* ===== STAT CARDS ===== */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:24px 0}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px 16px;text-align:center;position:relative;overflow:hidden}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0;transition:opacity .3s}
+.stat-card:hover::after{opacity:1}
+.stat-card .stat-num{font-size:2.8rem;font-weight:900;color:var(--gold);line-height:1}
+.stat-card .stat-unit{font-size:1rem;color:var(--gold-light);font-weight:700}
+.stat-card .stat-label{font-size:.88rem;color:var(--text-dim);margin-top:6px}
+
+/* ===== ABILITY FLOW ===== */
+.ability-flow{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
+.ability-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:32px 40px;text-align:center;transition:transform .3s,box-shadow .3s;min-width:140px}
+.ability-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,168,67,.1)}
+.ability-card .icon{font-size:3.5rem;display:block;margin-bottom:10px}
+.ability-card .label{font-size:1.15rem;color:var(--gold-light);font-weight:700}
+.ability-arrow{font-size:2rem;color:var(--gold);display:flex;align-items:center;padding:0 4px}
+
+/* ===== HANDSON INPUT LIST ===== */
+.input-list-card{background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(56,189,248,.04));border:1px solid var(--gold-dim);border-radius:var(--radius);padding:28px;margin:20px 0}
+.input-list-card h4{color:var(--gold);margin-bottom:16px}
+.input-list-card table{width:100%;font-size:.98rem}
+.input-list-card th{text-align:left;color:var(--gold-light);padding:10px 14px;border-bottom:1px solid var(--gold-dim);font-weight:700}
+.input-list-card td{padding:12px 14px;color:var(--text-dim);border-bottom:1px solid rgba(255,255,255,.04)}
+.input-list-card td:first-child{color:var(--text);font-weight:500}
+
+/* ===== FEATURE LIST ===== */
+.feature-list{list-style:none;padding:0}
+.feature-list li{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:1rem;color:var(--text-dim);display:flex;align-items:flex-start;gap:10px}
+.feature-list .check{color:var(--green);font-weight:700;flex-shrink:0}
+.feature-list .warn{color:var(--gold);flex-shrink:0}
+
+/* ===== SECTION DIVIDER ILLUSTRATION ===== */
+.section-illust{text-align:center;margin:20px 0 28px;position:relative}
+.section-illust .big-emoji{font-size:5rem;display:block;filter:drop-shadow(0 8px 24px rgba(212,168,67,.2));animation:float1 6s ease-in-out infinite}
+.section-illust .orbit{position:absolute;width:120px;height:120px;top:50%;left:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(212,168,67,.15);border-radius:50%;animation:spin 15s linear infinite}
+.section-illust .orbit-dot{position:absolute;width:8px;height:8px;background:var(--gold);border-radius:50%;top:-4px;left:50%;transform:translateX(-50%);box-shadow:0 0 8px rgba(212,168,67,.4)}
+
+/* ===== AI LOGO ===== */
+.ai-logo{width:72px;height:72px;border-radius:50%;object-fit:contain;display:block;margin:0 auto 12px;filter:drop-shadow(0 4px 16px rgba(0,0,0,.3));transition:transform .4s,filter .4s}
+.ai-logo:hover{transform:scale(1.12) rotate(5deg);filter:drop-shadow(0 6px 24px rgba(212,168,67,.3))}
+.ai-logo.lg{width:100px;height:100px}
+.ai-logo-bg{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;position:relative}
+.ai-logo-bg::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px dashed rgba(255,255,255,.1);animation:spin 12s linear infinite}
+.ai-logo-bg.claude-bg{background:linear-gradient(135deg,#e8754a22,#e8754a08)}
+.ai-logo-bg.chatgpt-bg{background:linear-gradient(135deg,#74aa9c22,#74aa9c08)}
+.ai-logo-bg.gemini-bg{background:linear-gradient(135deg,#4285f422,#4285f408)}
+.ai-logo-bg img{width:56px;height:56px;object-fit:contain}
+.timeline-logo{width:36px;height:36px;border-radius:50%;object-fit:contain;vertical-align:middle;margin-right:8px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+
+/* ===== GLOW BOX ===== */
+.glow-box{position:relative;border-radius:var(--radius);padding:3px}
+.glow-box::before{content:'';position:absolute;inset:-1px;border-radius:var(--radius);background:linear-gradient(135deg,var(--gold),var(--cyan),var(--purple),var(--gold));background-size:300% 300%;animation:glowRotate 6s linear infinite;z-index:0}
+.glow-box-inner{background:var(--card);border-radius:calc(var(--radius) - 2px);padding:28px;position:relative;z-index:1}
+@keyframes glowRotate{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ===== PARTICLE DOTS BG ===== */
+.particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.particle{position:absolute;border-radius:50%;opacity:.3}
+
+/* ===== DASHBOARD ===== */
+.dashboard{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px;position:relative;overflow:hidden}
+.dashboard-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.dashboard-header h4{font-size:.95rem;color:var(--gold-light);font-weight:700}
+.dashboard-live{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--green);font-weight:700}
+.dashboard-live::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.dashboard-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.dash-metric{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:14px 12px;text-align:center;position:relative}
+.dash-metric .dash-val{font-size:1.7rem;font-weight:900;line-height:1}
+.dash-metric .dash-label{font-size:.78rem;color:var(--text-dim);margin-top:5px;display:block}
+.dash-metric .dash-change{font-size:.72rem;font-weight:700;margin-top:4px;display:block}
+.dash-metric .dash-change.up{color:var(--green)}
+.dash-metric .dash-change.down{color:var(--red)}
+.dash-chart-row{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+.dash-chart{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:16px}
+.dash-chart-title{font-size:.85rem;color:var(--text-dim);margin-bottom:12px;font-weight:700}
+/* Bar chart animation */
+.dash-bars{display:flex;align-items:flex-end;gap:6px;height:100px}
+.dash-bar{flex:1;border-radius:4px 4px 0 0;position:relative;transform-origin:bottom;transform:scaleY(0);transition:transform 1s cubic-bezier(.4,0,.2,1)}
+.dash-bar .bar-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:.65rem;color:var(--text-dim);white-space:nowrap}
+.dash-bar .bar-val{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:.68rem;color:var(--text);font-weight:700;white-space:nowrap;opacity:0;transition:opacity .5s .8s}
+.dashboard.visible .dash-bar{transform:scaleY(1)}
+.dashboard.visible .dash-bar .bar-val{opacity:1}
+/* Donut chart */
+.dash-donut-wrap{display:flex;align-items:center;justify-content:center;gap:14px}
+.dash-donut{width:90px;height:90px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center}
+.dash-donut-center{font-size:.85rem;font-weight:700;color:var(--text);text-align:center;line-height:1.2;z-index:1}
+.dash-donut-legend{font-size:.75rem;color:var(--text-dim);line-height:2}
+.dash-donut-legend span{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:middle}
+/* Camera feed mock */
+.cam-feed{background:#0a0e18;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;position:relative;overflow:hidden}
+.cam-feed-header{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-dim);margin-bottom:8px}
+.cam-feed-header .rec{color:var(--red);font-weight:700;animation:pulse 1.5s infinite}
+.cam-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cam-box{aspect-ratio:16/10;background:linear-gradient(135deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.04);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;position:relative}
+.cam-box .cam-overlay{position:absolute;inset:0;pointer-events:none}
+.cam-box .cam-tag{position:absolute;bottom:4px;left:4px;font-size:.65rem;background:rgba(0,0,0,.6);color:var(--cyan);padding:3px 8px;border-radius:3px;font-weight:700}
+.cam-box .cam-count{position:absolute;top:4px;right:4px;font-size:.65rem;background:rgba(46,160,67,.2);color:var(--green);padding:3px 8px;border-radius:3px;font-weight:700}
+/* Scanning line */
+.cam-scan{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:camScan 3s linear infinite;opacity:.5}
+@keyframes camScan{0%{top:0}100%{top:100%}}
+/* Person detection boxes */
+.detect-box{position:absolute;border:1.5px solid var(--cyan);border-radius:3px;opacity:0;animation:detectPulse 4s ease-in-out infinite}
+@keyframes detectPulse{0%,100%{opacity:0;transform:scale(.95)}15%,85%{opacity:.8;transform:scale(1)}}
+
+/* ===== PREDICTION ENGINE ===== */
+.predict-engine{position:relative;padding:28px 0}
+.predict-flow{display:flex;align-items:stretch;gap:0;position:relative}
+.predict-stage{flex:1;min-width:0;position:relative;z-index:1}
+.predict-box{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:18px 14px;text-align:center;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.predict-box h5{font-size:.92rem;font-weight:700;margin-bottom:10px}
+.predict-box .p-icon{font-size:2.2rem;margin-bottom:10px}
+.predict-box ul{text-align:left;font-size:.82rem;color:var(--text-dim);padding-left:1em;margin:0}
+.predict-box ul li{margin-bottom:3px}
+.predict-arrow{width:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
+.predict-arrow-inner{color:var(--gold);font-size:1.2rem;font-weight:700;position:relative}
+/* Data particles flowing between stages */
+.predict-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.p-dot{position:absolute;width:5px;height:5px;border-radius:50%;opacity:0}
+@keyframes flowRight{0%{left:0;opacity:0}10%{opacity:.8}90%{opacity:.8}100%{left:100%;opacity:0}}
+/* Output cards */
+.predict-output{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.predict-card{background:linear-gradient(135deg,rgba(46,160,67,.06),rgba(46,160,67,.02));border:1px solid rgba(46,160,67,.2);border-radius:10px;padding:16px;text-align:center;position:relative;overflow:hidden}
+.predict-card h5{font-size:.95rem;color:var(--green);font-weight:700;margin-bottom:8px}
+.predict-card .p-num{font-size:1.8rem;font-weight:900;color:var(--text);line-height:1}
+.predict-card .p-sub{font-size:.78rem;color:var(--text-dim);margin-top:5px}
+.predict-card .confidence{font-size:.72rem;color:var(--cyan);font-weight:700;margin-top:7px}
+/* Animated confidence bar */
+.conf-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:6px;overflow:hidden}
+.conf-bar-fill{height:100%;border-radius:2px;transform-origin:left;transform:scaleX(0);transition:transform 1.5s cubic-bezier(.4,0,.2,1)}
+.predict-engine.visible .conf-bar-fill{transform:scaleX(1)}
+/* Pulse ring on predict output */
+.predict-card::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(46,160,67,.1);transform:translate(-50%,-50%);opacity:0}
+.predict-engine.visible .predict-card::after{animation:ringPulse 2s ease-out .5s}
+@keyframes ringPulse{0%{width:0;height:0;opacity:.4}100%{width:200px;height:200px;opacity:0}}
+
+/* ===== APPENDIX LINK ===== */
+.appendix-links{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px}
+.appendix-link{flex:1;min-width:260px;display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(56,189,248,.04));border:1px solid var(--gold-dim);border-radius:var(--radius);padding:20px 24px;text-decoration:none;color:var(--text);transition:transform .3s,border-color .3s,box-shadow .3s}
+.appendix-link:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 8px 28px rgba(212,168,67,.15)}
+.appendix-link .ap-icon{font-size:2.4rem;flex-shrink:0}
+.appendix-link .ap-body{flex:1}
+.appendix-link .ap-title{font-size:1.05rem;font-weight:700;color:var(--gold-light);margin-bottom:2px}
+.appendix-link .ap-desc{font-size:.88rem;color:var(--text-dim);line-height:1.6}
+.appendix-link .ap-arrow{font-size:1.2rem;color:var(--gold);flex-shrink:0;transition:transform .3s}
+.appendix-link:hover .ap-arrow{transform:translateX(4px)}
+/* Inline small link variant */
+.appendix-inline{display:inline-flex;align-items:center;gap:6px;background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.2);border-radius:8px;padding:6px 14px;text-decoration:none;color:var(--gold-light);font-size:.92rem;font-weight:500;margin-top:8px;transition:background .2s,border-color .2s}
+.appendix-inline:hover{background:rgba(212,168,67,.15);border-color:var(--gold)}
+.appendix-inline .ap-inline-icon{font-size:1.1rem}
+
+/* ===== SIDE TOC (目次サイドバー) ===== */
+.side-toc{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:990;display:flex;flex-direction:column;align-items:flex-end;gap:2px;transition:opacity .4s}
+.side-toc.hidden{opacity:0;pointer-events:none}
+.side-toc-item{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;text-decoration:none;position:relative}
+.side-toc-item .toc-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--text-dim);background:transparent;transition:all .3s;flex-shrink:0}
+.side-toc-item .toc-label{font-size:.72rem;color:var(--text-dim);opacity:0;transform:translateX(8px);transition:opacity .25s,transform .25s;white-space:nowrap;pointer-events:none;background:rgba(11,22,40,.92);padding:3px 10px;border-radius:6px;border:1px solid var(--card-border)}
+.side-toc-item:hover .toc-label{opacity:1;transform:translateX(0)}
+.side-toc-item.active .toc-dot{border-color:var(--gold);background:var(--gold);box-shadow:0 0 8px rgba(212,168,67,.5)}
+.side-toc-item.active .toc-label{opacity:1;transform:translateX(0);color:var(--gold);font-weight:700}
+/* connector line between dots */
+.side-toc-line{position:absolute;right:22px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent 0%,rgba(212,168,67,.15) 5%,rgba(212,168,67,.15) 95%,transparent 100%);z-index:-1;pointer-events:none}
+/* progress fill on line */
+.side-toc-progress{position:absolute;right:22px;top:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--cyan));z-index:-1;pointer-events:none;transition:height .3s;height:0}
+/* Part dividers */
+.side-toc-part{font-size:.55rem;color:var(--gold-dim);letter-spacing:.1em;font-weight:700;padding:6px 0 2px;text-align:right}
+
+/* ===== FOOTER ===== */
+.footer{text-align:center;padding:52px 24px;border-top:1px solid var(--card-border);font-size:.92rem;color:var(--text-dim)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .nav-links{display:none}.nav-hamburger{display:block}
+  .nav-links.mobile-open{display:flex;flex-direction:column;position:absolute;top:54px;left:0;right:0;background:rgba(11,22,40,.97);padding:12px;border-bottom:1px solid var(--card-border)}
+  .two-col{grid-template-columns:1fr}
+  .step-flow{flex-direction:column}
+  .step-item:not(:last-child)::after{content:'↓';right:auto;left:50%;top:auto;bottom:-18px;transform:translateX(-50%)}
+  .slide{padding:80px 16px 48px}
+  .hero-meta{flex-direction:column;gap:10px;align-items:center}
+  .pricing-grid{grid-template-columns:1fr}
+  .ability-flow{gap:8px}
+  .ability-card{padding:20px 24px;min-width:100px}
+  .ability-card .icon{font-size:2.5rem}
+  .ability-card .label{font-size:1rem}
+  .ability-arrow{font-size:1.5rem}
+  .dashboard-grid{grid-template-columns:repeat(2,1fr)}
+  .dash-chart-row{grid-template-columns:1fr}
+  .predict-flow{flex-direction:column;gap:12px}
+  .predict-arrow{transform:rotate(90deg);width:auto;height:30px}
+  .predict-output{grid-template-columns:1fr}
+  .cam-grid{grid-template-columns:1fr}
+  .side-toc{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-title">Claude AI入門</div>
+    <button class="nav-hamburger" id="hamburger" aria-label="メニュー">☰</button>
+    <div class="nav-links" id="navLinks">
+      <a href="#hero">TOP</a>
+      <a href="#timetable">タイムライン</a>
+      <a href="#setup">準備</a>
+      <a href="#ai-evolution">AI進化</a>
+      <a href="#basics">基礎編</a>
+      <a href="#demo1">デモ①</a>
+      <a href="#demo2">デモ②</a>
+      <a href="#handson">ハンズオン</a>
+      <a href="#input-list">入力情報</a>
+      <a href="#sharing">まとめ</a>
+    </div>
+  </div>
+</nav>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ===== SIDE TOC (サイド目次) ===== -->
+<div class="side-toc hidden" id="sideToc" aria-label="目次ナビゲーション">
+  <div class="side-toc-line"></div>
+  <div class="side-toc-progress" id="tocProgress"></div>
+  <div class="side-toc-part">INTRO</div>
+  <a class="side-toc-item" href="#hero" data-section="hero"><span class="toc-label">TOP</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#timetable" data-section="timetable"><span class="toc-label">タイムテーブル</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#opening" data-section="opening"><span class="toc-label">オープニング</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#setup" data-section="setup"><span class="toc-label">準備・セットアップ</span><span class="toc-dot"></span></a>
+  <div class="side-toc-part">PART 1</div>
+  <a class="side-toc-item" href="#ai-evolution" data-section="ai-evolution"><span class="toc-label">AI進化タイムライン</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#basics" data-section="basics"><span class="toc-label">Claude基礎編</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#platforms" data-section="platforms"><span class="toc-label">3つのプラットフォーム</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#opus46" data-section="opus46"><span class="toc-label">Opus 4.6</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#business" data-section="business"><span class="toc-label">ビジネス活用</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#pricing" data-section="pricing"><span class="toc-label">料金プラン</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#safety" data-section="safety"><span class="toc-label">安全性</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#prompt" data-section="prompt"><span class="toc-label">プロンプト術</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#hallucination" data-section="hallucination"><span class="toc-label">ハルシネーション</span><span class="toc-dot"></span></a>
+  <div class="side-toc-part">PART 2</div>
+  <a class="side-toc-item" href="#usecases" data-section="usecases"><span class="toc-label">業界別活用事例</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#store-ai" data-section="store-ai"><span class="toc-label">店舗AI分析</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#comparison" data-section="comparison"><span class="toc-label">AIツール比較</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#demo1" data-section="demo1"><span class="toc-label">デモ① テキスト</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#demo2" data-section="demo2"><span class="toc-label">デモ② 自動化</span><span class="toc-dot"></span></a>
+  <div class="side-toc-part">PART 3</div>
+  <a class="side-toc-item" href="#break" data-section="break"><span class="toc-label">休憩</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#handson" data-section="handson"><span class="toc-label">ハンズオン</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#input-list" data-section="input-list"><span class="toc-label">入力情報リスト</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#sharing" data-section="sharing"><span class="toc-label">まとめ・共有</span><span class="toc-dot"></span></a>
+</div>
+
+<!-- ===== MASCOT (横切り) ===== -->
+<div class="mascot-container" id="mascot">
+  <div class="mascot">
+    <div class="mascot-hat"></div>
+    <div class="mascot-body"><span class="mascot-face">🤖</span></div>
+    <div class="mascot-speech">一緒にやろう！</div>
+  </div>
+</div>
+
+<!-- ===== PEEKER (ひょこっと覗くキャラ) ===== -->
+<div class="peeker from-right" id="peeker-right">
+  <img src="claude-code-mascot.jpg" alt="">
+</div>
+<div class="peeker from-left" id="peeker-left">
+  <img src="claude-code-mascot.jpg" alt="">
+</div>
+<div class="peeker from-bottom" id="peeker-bottom">
+  <img src="claude-code-mascot.jpg" alt="">
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="slide hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <!-- floating decorations -->
+  <div class="deco deco-circle float1" style="width:80px;height:80px;top:15%;left:8%;border-color:rgba(212,168,67,.12)"></div>
+  <div class="deco deco-circle float2" style="width:50px;height:50px;top:25%;right:12%;border-color:rgba(56,189,248,.12)"></div>
+  <div class="deco deco-ring float3" style="width:100px;height:100px;bottom:20%;left:5%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:40%;right:8%;background:var(--gold);opacity:.4"></div>
+  <div class="deco deco-dot pulse-slow" style="top:60%;left:15%;background:var(--cyan);opacity:.3;animation-delay:1s"></div>
+  <div class="deco deco-dot pulse-slow" style="top:30%;left:45%;background:var(--purple);opacity:.2;animation-delay:2s"></div>
+  <svg class="deco spin-slow" style="top:70%;right:15%;width:40px;height:40px;opacity:.15" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--gold)" stroke-width="1"/></svg>
+  <svg class="deco float2" style="top:18%;left:65%;width:30px;height:30px;opacity:.12" viewBox="0 0 30 30"><rect x="5" y="5" width="20" height="20" rx="4" fill="none" stroke="var(--cyan)" stroke-width="1" transform="rotate(15 15 15)"/></svg>
+
+  <div class="slide-inner hero-content">
+    <div class="fade-in" style="margin-bottom:8px">
+      <img src="logo-claude.png" alt="Claude" class="ai-logo" style="width:64px;height:64px;animation:float1 6s ease-in-out infinite;margin:0 auto 16px">
+      <div class="hero-date">📅 2026年3月20日（金）</div>
+    </div>
+    <h1 class="hero-main-title fade-in">
+      <span class="line1">今日から使える</span><br>
+      <span class="line2">Claude</span>
+    </h1>
+    <p class="hero-sub fade-in">経営者のためのAI入門</p>
+    <div class="hero-meta fade-in">
+      <span><span class="icon">⏱</span><span class="count-up" data-target="3">0</span>時間</span>
+      <span><span class="icon">👥</span>10〜<span class="count-up" data-target="30">0</span>名</span>
+      <span><span class="icon">📍</span>沖縄県</span>
+    </div>
+
+    <div class="hero-goal-cards stagger">
+      <div class="hero-goal-card">
+        <span class="goal-icon">🎯</span>
+        <div class="num">01</div>
+        <p>Claudeアカウントを持ち<br>自分で操作できる状態になる</p>
+      </div>
+      <div class="hero-goal-card">
+        <span class="goal-icon">💡</span>
+        <div class="num">02</div>
+        <p>「自分のビジネスに何ができるか」<br>のイメージが持てる</p>
+      </div>
+      <div class="hero-goal-card">
+        <span class="goal-icon">🌐</span>
+        <div class="num">03</div>
+        <p>ハンズオンで自社HPを<br>1ページ作れた</p>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>スクロールして開始</span>
+    <div class="arrow-down">↓</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TIMETABLE
+     ============================================================ -->
+<section class="slide" id="timetable" style="background:var(--navy-light)">
+  <div class="deco deco-circle float1" style="width:60px;height:60px;top:10%;right:8%;border-color:rgba(212,168,67,.08)"></div>
+  <div class="deco deco-ring float2" style="width:40px;height:40px;bottom:15%;left:10%;border-color:rgba(56,189,248,.1)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">📋</span> TIMETABLE</span>
+    <h2 class="slide-title fade-in">本日の<span class="gold">タイムライン</span></h2>
+    <p class="slide-subtitle fade-in">3時間で「知る → 見る → 作る」を体験します</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">⏰</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="fade-in">
+      <table class="timetable">
+        <caption class="sr-only">本日のタイムライン</caption>
+        <thead><tr><th>時間</th><th>パート</th><th>内容</th><th>所要</th></tr></thead>
+        <tbody>
+          <tr><td class="time-col">0:00</td><td class="part-col">🎤 オープニング</td><td>自己紹介・ゴール確認・Wi-Fi接続</td><td class="duration-col">10分</td></tr>
+          <tr><td class="time-col">0:10</td><td class="part-col">🔧 準備</td><td>Claudeアカウント登録・アプリインストール</td><td class="duration-col">20分</td></tr>
+          <tr class="active"><td class="time-col">0:30</td><td class="part-col">📖 基礎編</td><td>Claudeとは・料金・安全性・プロンプトの基本</td><td class="duration-col">50分</td></tr>
+          <tr><td class="time-col">1:20</td><td class="part-col">🎬 活用デモ①</td><td>文章生成・壁打ち・分析資料</td><td class="duration-col">15分</td></tr>
+          <tr><td class="time-col">1:35</td><td class="part-col">🔗 活用デモ②</td><td>Google連携・アプリ制作</td><td class="duration-col">15分</td></tr>
+          <tr><td class="time-col">1:50</td><td class="part-col">☕ 休憩</td><td></td><td class="duration-col">10分</td></tr>
+          <tr class="active"><td class="time-col">2:00</td><td class="part-col">🛠 ハンズオン</td><td>自社HPをClaudeで作る</td><td class="duration-col">40分</td></tr>
+          <tr><td class="time-col">2:40</td><td class="part-col">🎉 シェアリング</td><td>作品発表・見せ合い</td><td class="duration-col">10分</td></tr>
+          <tr><td class="time-col">2:50</td><td class="part-col">📝 まとめ</td><td>活用3選・Q&A</td><td class="duration-col">10分</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：各パートの目的</button>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>基礎編（50分）</strong>：プロンプトの書き方がハンズオンの質に直結するため、ここで土台を固める</li>
+          <li><strong>デモ（計30分）</strong>：「百聞は一見にしかず」。実際に動くところを見て可能性を感じてもらう</li>
+          <li><strong>ハンズオン（40分）</strong>：本日のメインイベント。自社HPを1ページ作成する体験</li>
+          <li><strong>シェアリング（10分）</strong>：他の参加者の活用法から新たな気づきを得る</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     OPENING / WiFi
+     ============================================================ -->
+<section class="slide" id="opening">
+  <div class="deco deco-dot pulse-slow" style="top:20%;right:10%;background:var(--gold);opacity:.3"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">👋</span> OPENING</span>
+    <h2 class="slide-title fade-in">まずは<span class="gold">接続</span>しましょう</h2>
+
+    <div class="wifi-box fade-in">
+      <h3>📶 Wi-Fi情報</h3>
+      <div class="wifi-info">
+        <div><span class="wifi-label">SSID（ネットワーク名）</span><span class="wifi-value">TBD</span></div>
+        <div><span class="wifi-label">パスワード</span><span class="wifi-value">TBD</span></div>
+      </div>
+    </div>
+
+    <div class="key-point fade-in">
+      今日のゴール：「Claudeを使って自分のビジネスのホームページを作る」こと。プログラミング知識は一切不要です。
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：アイスブレイク・会場案内</button>
+      <div class="accordion-content">
+        <p><strong>アイスブレイク</strong></p>
+        <ul>
+          <li>「AIを使ったことがある方、手を挙げてみてください」</li>
+          <li>「ChatGPTやGeminiを使ったことがある方は？」</li>
+          <li>「今日はAI初体験の方も安心して参加できる内容です」</li>
+        </ul>
+        <p style="margin-top:12px"><strong>会場案内</strong></p>
+        <ul><li>トイレの場所・非常口の位置・飲食ルール</li><li>休憩は1:50〜2:00（10分間）</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SETUP
+     ============================================================ -->
+<section class="slide" id="setup" style="background:var(--navy-light)">
+  <div class="deco deco-ring float3" style="width:70px;height:70px;top:12%;left:6%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🔧</span> SETUP</span>
+    <h2 class="slide-title fade-in"><span class="gold">準備</span>しよう</h2>
+    <p class="slide-subtitle fade-in">Claudeを使うための環境を整えます（20分）</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🚀</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="step-flow stagger">
+      <div class="step-item"><div class="step-num-circle">1</div><h4>アカウント登録</h4><p>claude.ai にアクセスしてアカウントを作成</p></div>
+      <div class="step-item"><div class="step-num-circle">2</div><h4>Coworkインストール</h4><p>デスクトップアプリをDL＆インストール</p></div>
+      <div class="step-item"><div class="step-num-circle">3</div><h4>動作確認</h4><p>「こんにちは」と話しかけてみましょう</p></div>
+    </div>
+
+    <div class="fun-fact fade-in">
+      <span class="fun-label">TIPS</span>
+      <p>スマートフォンでも参加できます。ブラウザでclaude.aiにアクセスすればOK。ただしハンズオンはPC推奨です。</p>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：ステップバイステップ手順</button>
+      <div class="accordion-content">
+        <p><strong>ステップ1：Claudeアカウント登録</strong></p>
+        <ol style="padding-left:1.4em"><li>ブラウザで <strong>claude.ai</strong> を開く</li><li>「Sign up」をクリック</li><li>メールアドレスを入力 → 確認メール</li><li>リンクをクリックして認証完了</li><li>名前を入力してアカウント作成完了</li></ol>
+        <p style="margin-top:12px"><strong>ステップ2：Coworkのインストール</strong></p>
+        <ol style="padding-left:1.4em"><li>claude.ai/download からダウンロード</li><li>インストールしてログイン</li></ol>
+        <p style="margin-top:12px"><strong>Claude Code（希望者のみ）</strong></p>
+        <p>エンジニア向けのターミナルツール。サポートスタッフが個別にご案内します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     AI EVOLUTION TIMELINE
+     ============================================================ -->
+<section class="slide" id="ai-evolution">
+  <div class="deco deco-circle float1" style="width:90px;height:90px;top:10%;right:5%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="bottom:20%;left:8%;background:var(--cyan);opacity:.3"></div>
+  <svg class="deco spin-slow" style="bottom:30%;right:10%;width:50px;height:50px;opacity:.1" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--purple)" stroke-width="1"/></svg>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🕰</span> HISTORY</span>
+    <h2 class="slide-title fade-in">AIツールの<span class="purple">進化の流れ</span></h2>
+    <p class="slide-subtitle fade-in">わずか数年で世界が変わりました</p>
+
+    <div class="timeline fade-in">
+      <div class="timeline-item"><span class="year">2020年</span><h4>GPT-3 登場</h4><p>OpenAIが大規模言語モデルを公開。「AIが文章を書ける」ことが話題に。</p></div>
+      <div class="timeline-item"><span class="year">2022年11月</span><h4><img src="logo-chatgpt.jpg" alt="ChatGPT" class="timeline-logo">ChatGPT 公開</h4><p>誰でも無料で使えるAIチャットが登場。2ヶ月で<strong>1億ユーザー</strong>を突破。</p></div>
+      <div class="timeline-item"><span class="year">2023年3月</span><h4><img src="logo-claude.png" alt="Claude" class="timeline-logo">Claude 登場</h4><p>Anthropic社が「安全性」を重視したAI「Claude」を公開。長文処理と自然な日本語に強み。</p></div>
+      <div class="timeline-item"><span class="year">2023年12月</span><h4><img src="logo-gemini.jpg" alt="Gemini" class="timeline-logo">Gemini 登場</h4><p>GoogleがGeminiを公開。Google検索やGmail等との連携が強み。3大AIが揃い踏み。</p></div>
+      <div class="timeline-item" style="border-color:var(--gold)"><span class="year">2025〜2026年</span><h4>🚀 AIが「操作する」時代へ</h4><p>Opus 4.6・Cowork・Claude Code登場。AIがファイルを作り、メールを送り、コードを書く。<strong style="color:var(--gold)">「対話」から「協働」へ。</strong></p></div>
+    </div>
+
+    <div class="key-point fade-in">
+      今日学ぶClaudeは、この進化の<strong>最先端</strong>にいます。「使ったことがない」のは当然。今日がスタートです。
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     BASICS: CLAUDE とは
+     ============================================================ -->
+<section class="slide" id="basics" style="background:var(--navy-light)">
+  <div class="deco deco-ring float2" style="width:60px;height:60px;top:15%;left:8%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🤖</span> BASICS</span>
+    <h2 class="slide-title fade-in"><span class="gold">Claude</span>とは？</h2>
+    <p class="slide-subtitle fade-in">Anthropic社が開発した、仕事に使えるAIアシスタント</p>
+
+    <div class="section-illust scale-in">
+      <img src="logo-claude.png" alt="Claude" class="ai-logo lg" style="animation:float1 6s ease-in-out infinite">
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="card-grid stagger">
+      <div class="illust-card"><span class="illust">⚡</span><h4>Haiku</h4><p>高速・軽量。日常的な質問や簡単なタスクに最適。</p><span class="badge badge-cyan">高速</span></div>
+      <div class="illust-card" style="border-color:var(--gold)"><span class="illust">🎯</span><h4>Sonnet</h4><p>バランス型。ビジネス文書・分析・コード生成に。</p><span class="badge badge-gold">バランス</span></div>
+      <div class="illust-card"><span class="illust">🧠</span><h4>Opus</h4><p>最高性能。複雑な分析・長文処理・高度な推論。</p><span class="badge badge-purple">最高性能</span></div>
+    </div>
+
+    <div class="fun-fact fade-in" style="margin-top:24px">
+      <span class="fun-label">一言でいうと</span>
+      <p><strong>「賢いAIの相棒」</strong>。ChatGPTと並ぶ最先端AIで、特に文章の品質と安全性に定評があります。</p>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：ChatGPTとの違い</button>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>安全性重視：</strong>Anthropicは「AIの安全性」を企業理念に掲げる</li>
+          <li><strong>文章品質：</strong>日本語が自然で、ビジネスメールや報告書の品質が高い</li>
+          <li><strong>長文対応：</strong>大量の文書を一度に読み込んで分析できる（最大20万トークン）</li>
+          <li><strong>コード生成：</strong>プログラミングにも非常に強い</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3 PLATFORMS
+     ============================================================ -->
+<section class="slide" id="platforms">
+  <div class="deco deco-dot pulse-slow" style="top:15%;left:10%;background:var(--purple);opacity:.2"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">📱</span> PLATFORMS</span>
+    <h2 class="slide-title fade-in">3つの<span class="gold">プラットフォーム</span></h2>
+    <p class="slide-subtitle fade-in">目的に合わせて使い分けましょう</p>
+
+    <div class="card-grid stagger" style="margin-bottom:24px">
+      <div class="illust-card"><span class="illust">🌐</span><h4>ブラウザ版</h4><p>最も手軽。スマホからもOK。今日はこれを使います。</p><span class="badge badge-green">今日使う</span></div>
+      <div class="illust-card"><span class="illust">🖥</span><h4>Cowork</h4><p>デスクトップアプリ。ファイル操作・外部連携が可能。</p><span class="badge badge-cyan">上級者向け</span></div>
+      <div class="illust-card"><span class="illust">⌨️</span><h4>Claude Code</h4><p>ターミナル版。プロジェクト全体を理解してコードを書く。</p><span class="badge badge-purple">エンジニア向け</span></div>
+    </div>
+
+    <div class="fade-in" style="overflow-x:auto">
+      <table class="compare-table">
+        <caption class="sr-only">3つのプラットフォーム機能比較</caption>
+        <thead><tr><th>機能</th><th>🌐 ブラウザ版</th><th>🖥 Cowork</th><th>⌨️ Claude Code</th></tr></thead>
+        <tbody>
+          <tr><td>対話・質問応答</td><td class="circle">◎</td><td class="circle">◎</td><td class="circle">◎</td></tr>
+          <tr><td>ファイルアップロード</td><td class="circle">◎</td><td class="circle">◎</td><td class="circle">◎</td></tr>
+          <tr><td>PC操作の自動化</td><td class="cross">✕</td><td class="circle">◎</td><td class="circle">◎</td></tr>
+          <tr><td>外部サービス連携</td><td class="triangle">△</td><td class="circle">◎</td><td class="circle">◎</td></tr>
+          <tr><td>コード開発</td><td class="triangle">△</td><td class="triangle">△</td><td class="circle">◎</td></tr>
+          <tr><td>導入の簡単さ</td><td class="circle">◎ 最も簡単</td><td class="circle">◎</td><td class="triangle">△</td></tr>
+          <tr><td>スマホ対応</td><td class="circle">◎</td><td class="cross">✕</td><td class="cross">✕</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：それぞれの使いどころ</button>
+      <div class="accordion-content">
+        <p><strong>ブラウザ版</strong>：最も手軽。チャット形式で質問・文章生成・ファイル分析。</p>
+        <p><strong>Cowork</strong>：ファイル操作・外部サービス連携。デモ②のGoogle連携はこれ。</p>
+        <p><strong>Claude Code</strong>：エンジニア向け。この資料もClaude Codeで制作しています。</p>
+      </div>
+    </div>
+
+    <a class="appendix-inline fade-in" href="claude-code-guide.html">
+      <span class="ap-inline-icon">📎</span> Claude Code 解説書を見る →
+    </a>
+  </div>
+</section>
+
+<!-- ============================================================
+     OPUS 4.6
+     ============================================================ -->
+<section class="slide" id="opus46" style="background:var(--navy-light)">
+  <div class="deco deco-circle float3" style="width:70px;height:70px;bottom:15%;right:5%;border-color:rgba(56,189,248,.1)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">✨</span> NEW</span>
+    <h2 class="slide-title fade-in">Opus 4.6で<span class="cyan">できるようになったこと</span></h2>
+
+    <div class="card-grid stagger">
+      <div class="illust-card"><span class="illust">📄</span><h4>ファイル生成</h4><p>Word・Excel・PDF・HTMLなどを直接生成</p></div>
+      <div class="illust-card"><span class="illust">🔗</span><h4>外部ツール連携</h4><p>Gmail・Calendar・Slackと連携して自動操作</p></div>
+      <div class="illust-card"><span class="illust">🖥</span><h4>PC操作の自動化</h4><p>ブラウザ操作やファイル整理をClaudeに任せる</p></div>
+      <div class="illust-card"><span class="illust">🧠</span><h4>高度な推論力</h4><p>複雑な問題を段階的に考え、正確な回答を生成</p></div>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：以前のバージョンとの比較</button>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>ファイル出力：</strong>会話中にWord文書やExcelを直接作成・DL可能</li>
+          <li><strong>マルチモーダル強化：</strong>画像の理解・分析精度が大幅向上</li>
+          <li><strong>ツール連携：</strong>MCP（Model Context Protocol）でGmail・Calendar等と直接連携</li>
+          <li><strong>長文処理：</strong>大量の資料も一括分析可能</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     WHY BUSINESS
+     ============================================================ -->
+<section class="slide" id="business">
+  <div class="deco deco-ring float1" style="width:80px;height:80px;top:10%;right:8%;border-color:rgba(212,168,67,.08)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">💼</span> FOR BUSINESS</span>
+    <h2 class="slide-title fade-in">なぜ<span class="gold">仕事</span>で使えるのか</h2>
+
+    <div class="fade-in" style="text-align:center">
+      <div class="ability-flow">
+        <div class="ability-card"><div class="icon">📖</div><div class="label">読む</div></div>
+        <div class="ability-arrow">→</div>
+        <div class="ability-card"><div class="icon">💭</div><div class="label">考える</div></div>
+        <div class="ability-arrow">→</div>
+        <div class="ability-card"><div class="icon">✍️</div><div class="label">作る</div></div>
+        <div class="ability-arrow">→</div>
+        <div class="ability-card"><div class="icon">⚙️</div><div class="label">操作する</div></div>
+      </div>
+    </div>
+
+    <div class="key-point fade-in">
+      単なるチャットボットではなく、<strong>「一緒に仕事をする相手」</strong>。読む・考える・作る・操作するが一気通貫。
+    </div>
+
+    <div class="stat-grid stagger">
+      <div class="stat-card"><div class="stat-num"><span class="count-up" data-target="90">0</span><span class="stat-unit">%</span></div><div class="stat-label">メール作成の時間削減</div></div>
+      <div class="stat-card"><div class="stat-num"><span class="count-up" data-target="24">0</span><span class="stat-unit">h</span></div><div class="stat-label">いつでも相談可能</div></div>
+      <div class="stat-card"><div class="stat-num"><span class="count-up" data-target="200000">0</span></div><div class="stat-label">一度に読めるトークン数</div></div>
+    </div>
+
+    <div class="card-grid stagger" style="margin-top:16px">
+      <div class="card"><h4>⏰ 時間の削減</h4><p>報告書・メール・データ整理など日常作業を大幅に短縮。</p></div>
+      <div class="card"><h4>💰 コストの削減</h4><p>外注していた文章作成・翻訳・分析を社内で完結。</p></div>
+      <div class="card"><h4>💡 アイデアの壁打ち</h4><p>24時間いつでも相談できる「経営参謀」。</p></div>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：具体的な業務活用例</button>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>経営企画：</strong>事業計画書ドラフト、市場調査の要約、競合分析</li>
+          <li><strong>営業：</strong>提案書・見積書の作成支援、顧客メール生成</li>
+          <li><strong>人事：</strong>求人票、面接質問リスト、社内規程整備</li>
+          <li><strong>マーケティング：</strong>SNS投稿文、キャッチコピー、市場分析</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRICING
+     ============================================================ -->
+<section class="slide" id="pricing" style="background:var(--navy-light)">
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">💳</span> PRICING</span>
+    <h2 class="slide-title fade-in"><span class="gold">料金</span>プラン</h2>
+    <p class="slide-subtitle fade-in">無料で始めて、必要に応じてアップグレード</p>
+
+    <div class="pricing-grid stagger">
+      <div class="pricing-card">
+        <h4>Free</h4><div class="price">$0<small>/月</small></div>
+        <ul><li>基本的なチャット対話</li><li>Sonnetモデル利用</li><li>ファイルアップロード</li><li class="limited">利用回数に制限あり</li><li class="unavailable">Opusモデル</li><li class="unavailable">外部ツール連携</li></ul>
+      </div>
+      <div class="pricing-card recommended">
+        <h4>Pro</h4><div class="price">$20<small>/月</small></div>
+        <ul><li>全モデル利用可能</li><li>Opus 4.6アクセス</li><li>大幅に増えた利用回数</li><li>ファイル生成機能</li><li>外部ツール連携</li><li>優先アクセス</li></ul>
+      </div>
+      <div class="pricing-card">
+        <h4>Max</h4><div class="price">$100<small>/月</small></div>
+        <ul><li>Pro全機能を含む</li><li>Opusをほぼ無制限</li><li>大規模な業務利用に最適</li><li>Claude Code フル活用</li><li>チーム管理機能</li></ul>
+      </div>
+    </div>
+
+    <div class="key-point fade-in" style="margin-top:24px">まずは<strong>無料プラン</strong>で試してみましょう。「もっと使いたい」と感じたらProがおすすめです。</div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：有料プランに上げる判断基準</button>
+      <div class="accordion-content">
+        <p>以下の状況になったらPro切り替えを検討：</p>
+        <ul>
+          <li>「使いたい時に制限がかかる」が頻繁に起きる</li>
+          <li>Opusモデルを使いたい場面が増えた</li>
+          <li>Claudeで削減できた時間 × 時給 が月$20を超える</li>
+          <li>Gmail・Calendar連携を使いたい</li>
+        </ul>
+        <p style="margin-top:8px;color:var(--gold)">→ 月約3,000円で「優秀なアシスタント」が手に入る。投資対効果は非常に高いです。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SAFETY
+     ============================================================ -->
+<section class="slide" id="safety">
+  <div class="deco deco-circle float1" style="width:60px;height:60px;top:12%;right:10%;border-color:rgba(46,160,67,.1)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🛡</span> SAFETY</span>
+    <h2 class="slide-title fade-in"><span class="gold">安全性</span>とプライバシー</h2>
+    <p class="slide-subtitle fade-in">経営者として知っておくべきこと</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🛡</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="card-grid stagger">
+      <div class="card"><span class="card-icon">🔒</span><h4>データの取り扱い</h4><ul><li>入力データはAIの学習には使われません（Pro以上）</li><li>会話は暗号化されて保存・管理</li></ul></div>
+      <div class="card"><span class="card-icon">👁</span><h4>企業利用時の注意</h4><ul><li>顧客の個人情報はなるべく入力しない</li><li>社外秘の機密情報は取り扱いに注意</li><li>出力結果は必ず人間がチェック</li></ul></div>
+    </div>
+
+    <div class="fun-fact fade-in" style="margin-top:20px">
+      <span class="fun-label">POINT</span>
+      <p>Anthropicは<strong>「AIの安全性」</strong>を企業理念に掲げる会社。安心して使えますが、機密情報の入力には常識的な注意を。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROMPT
+     ============================================================ -->
+<section class="slide" id="prompt" style="background:var(--navy-light)">
+  <div class="deco deco-dot pulse-slow" style="top:25%;right:12%;background:var(--gold);opacity:.3"></div>
+  <svg class="deco float3" style="bottom:10%;left:5%;width:30px;height:30px;opacity:.1" viewBox="0 0 30 30"><circle cx="15" cy="15" r="12" fill="none" stroke="var(--cyan)" stroke-width="1" stroke-dasharray="4 4"/></svg>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">💬</span> PROMPT</span>
+    <h2 class="slide-title fade-in">話しかけ方の<span class="gold">3つのコツ</span></h2>
+    <p class="slide-subtitle fade-in">プロンプト = Claudeへの「お願いの仕方」</p>
+
+    <div class="step-flow stagger">
+      <div class="step-item"><div class="step-num-circle">1</div><h4>具体的に伝える</h4><p>「いい感じに」ではなく「箇条書きで3つ」</p></div>
+      <div class="step-item"><div class="step-num-circle">2</div><h4>役割を与える</h4><p>「あなたは経営コンサルタントです」</p></div>
+      <div class="step-item"><div class="step-num-circle">3</div><h4>背景・目的を添える</h4><p>「売上を伸ばしたい飲食店のため」</p></div>
+    </div>
+
+    <div class="info-row" style="margin-top:32px">
+      <div class="card fade-in-left" style="border-color:var(--red);border-left-width:3px">
+        <h4 style="color:var(--red)">❌ 良くない例</h4>
+        <p style="background:var(--red-bg);padding:12px;border-radius:8px;margin-top:8px;font-family:monospace;font-size:.98rem">売上を上げる方法を教えて</p>
+      </div>
+      <div class="card fade-in-right" style="border-color:var(--green);border-left-width:3px">
+        <h4 style="color:var(--green)">✅ 良い例</h4>
+        <p style="background:var(--green-bg);padding:12px;border-radius:8px;margin-top:8px;font-family:monospace;font-size:.98rem">あなたは飲食店の経営コンサルタントです。沖縄県那覇市で沖縄料理の居酒屋を経営しています。平日ランチの集客を増やしたいです。予算5万円以内で実施できる施策を3つ、優先度順に提案してください。</p>
+      </div>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：もっと上手に使うコツ</button>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>段階的に質問：</strong>一度に全部聞かず、対話で深掘り</li>
+          <li><strong>出力形式を指定：</strong>「表形式で」「箇条書きで」「〇〇文字以内で」</li>
+          <li><strong>例を示す：</strong>「例えばこんな感じで」と添える</li>
+          <li><strong>ダメ出しOK：</strong>「もっとカジュアルに」「別の案を3つ」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     HALLUCINATION
+     ============================================================ -->
+<section class="slide" id="hallucination">
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">⚠️</span> IMPORTANT</span>
+    <h2 class="slide-title fade-in">できること・<span class="gold">できないこと</span></h2>
+
+    <div class="two-col">
+      <div class="fade-in-left">
+        <h3 style="color:var(--green)">✅ 得意なこと</h3>
+        <ul class="feature-list">
+          <li><span class="check">✓</span>文章の作成・要約・翻訳</li>
+          <li><span class="check">✓</span>アイデア出し・ブレスト</li>
+          <li><span class="check">✓</span>データの整理・分析</li>
+          <li><span class="check">✓</span>コード・HTML・Excelの生成</li>
+          <li><span class="check">✓</span>長文の読解・要点抽出</li>
+          <li><span class="check">✓</span>ビジネスメール・提案書の作成</li>
+        </ul>
+      </div>
+      <div class="fade-in-right">
+        <h3 style="color:var(--red)">⚠️ 苦手なこと・注意点</h3>
+        <ul class="feature-list">
+          <li><span class="warn">⚠</span>最新ニュース・リアルタイム情報</li>
+          <li><span class="warn">⚠</span>正確な数値計算（電卓代わりは×）</li>
+          <li><span class="warn">⚠</span>事実の正確性（ハルシネーション）</li>
+          <li><span class="warn">⚠</span>社内独自ルール（教える必要あり）</li>
+          <li><span class="warn">⚠</span>感情の理解や共感（模倣はできる）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="glow-box fade-in" style="margin-top:24px">
+      <div class="glow-box-inner">
+        <h4>🤔 ハルシネーションとは？</h4>
+        <p style="font-size:1rem;color:var(--text-dim);margin-top:8px">AIが「もっともらしいが事実と異なる情報」を生成してしまう現象。特に固有名詞・数値・歴史的事実で注意。</p>
+        <p style="margin-top:10px;color:var(--gold);font-weight:700;font-size:.9rem">→ 重要な情報は必ず裏取り。AIの出力は「下書き」として扱おう。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     USE CASES
+     ============================================================ -->
+<section class="slide" id="usecases" style="background:var(--navy-light)">
+  <div class="deco deco-ring float2" style="width:50px;height:50px;bottom:20%;right:8%;border-color:rgba(212,168,67,.08)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🏢</span> USE CASES</span>
+    <h2 class="slide-title fade-in">業界別<span class="gold">活用事例</span></h2>
+    <p class="slide-subtitle fade-in">沖縄の中小企業に近い業種の具体例</p>
+
+    <div class="card-grid stagger">
+      <div class="illust-card"><span class="illust">🍽</span><h4>飲食業</h4><p>メニューのキャッチコピー・口コミ返信・仕入れ分析・SNS投稿</p></div>
+      <div class="illust-card"><span class="illust">🏨</span><h4>宿泊・観光業</h4><p>多言語案内・宿泊プラン企画・予約メール・観光コース提案</p></div>
+      <div class="illust-card"><span class="illust">🏗</span><h4>建設・不動産</h4><p>見積書下書き・物件説明文・安全マニュアル・契約書チェック</p></div>
+    </div>
+
+    <div class="stat-grid fade-in" style="margin-top:24px">
+      <div class="stat-card"><div class="stat-num"><span class="count-up" data-target="30">0</span><span class="stat-unit">分</span></div><div class="stat-label">従来のメール作成</div></div>
+      <div class="stat-card" style="border-color:var(--gold)"><div class="stat-num" style="color:var(--green)"><span class="count-up" data-target="3">0</span><span class="stat-unit">分</span></div><div class="stat-label">Claude使用時</div></div>
+      <div class="stat-card"><div class="stat-num"><span class="count-up" data-target="90">0</span><span class="stat-unit">%</span></div><div class="stat-label">時間削減</div></div>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：その他の業種</button>
+      <div class="accordion-content">
+        <p><strong>小売業：</strong>商品説明文、在庫レポート分析、アンケート集計</p>
+        <p><strong>サービス業：</strong>対応マニュアル、クレーム対応文、業務フロー改善</p>
+        <p><strong>士業：</strong>報告書下書き、法令変更の要約、提案資料</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STORE BUSINESS - DASHBOARD & PREDICTION
+     ============================================================ -->
+<section class="slide" id="store-ai">
+  <div class="deco deco-circle float1" style="width:70px;height:70px;top:8%;right:6%;border-color:rgba(46,160,67,.1)"></div>
+  <div class="deco deco-ring float3" style="width:90px;height:90px;bottom:12%;left:5%;border-color:rgba(56,189,248,.08)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:45%;left:10%;background:var(--green);opacity:.25"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🏪</span> ADVANCED USE CASE</span>
+    <h2 class="slide-title fade-in">店舗ビジネス × <span class="gold">AIダッシュボード</span></h2>
+    <p class="slide-subtitle fade-in">売上・POS・来店客・廃棄・人件費 ― データが揃えば「予測経営」ができる</p>
+
+    <!-- イントロ：データの種類 -->
+    <div class="fun-fact fade-in" style="margin-bottom:24px">
+      <span class="fun-label">POINT</span>
+      <p>店舗には毎日、膨大なデータが眠っています。これらを<strong style="color:var(--gold)">AIに渡すだけ</strong>で、人間では気づけないパターンを発見し、精密な分析と将来予測が可能になります。</p>
+    </div>
+
+    <!-- データソース カード -->
+    <h3 class="fade-in">店舗に眠るデータソース</h3>
+    <div class="card-grid stagger" style="margin-bottom:28px">
+      <div class="card">
+        <span class="card-icon">🧾</span>
+        <h4>POSデータ</h4>
+        <p>商品別売上・時間帯別販売数・客単価・セット率・決済方法</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📹</span>
+        <h4>来店者カメラ</h4>
+        <p>来店人数・性別/年齢層推定・滞在時間・動線分析・混雑度</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🗑️</span>
+        <h4>廃棄データ</h4>
+        <p>商品別廃棄量・廃棄率・時間帯別ロス・金額換算</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">👥</span>
+        <h4>人件費データ</h4>
+        <p>シフト時間・時給・人件費率・労働生産性・残業時間</p>
+      </div>
+    </div>
+
+    <!-- ===== LIVE DASHBOARD アニメーション ===== -->
+    <h3 class="fade-in">AIダッシュボード（イメージ）</h3>
+    <div class="dashboard fade-in" id="live-dashboard">
+      <div class="dashboard-header">
+        <h4>📊 店舗パフォーマンス ― リアルタイム</h4>
+        <div class="dashboard-live">LIVE</div>
+      </div>
+
+      <!-- KPI 4指標 -->
+      <div class="dashboard-grid">
+        <div class="dash-metric">
+          <div class="dash-val" style="color:var(--gold)"><span class="count-up" data-target="847">0</span><span style="font-size:.85rem">万</span></div>
+          <span class="dash-label">本日売上</span>
+          <span class="dash-change up">▲ 12.3% vs 先週</span>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-val" style="color:var(--cyan)"><span class="count-up" data-target="342">0</span><span style="font-size:.85rem">人</span></div>
+          <span class="dash-label">来店者数</span>
+          <span class="dash-change up">▲ 8.1% vs 先週</span>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-val" style="color:var(--green)"><span class="count-up" data-target="2476">0</span><span style="font-size:.85rem">円</span></div>
+          <span class="dash-label">客単価</span>
+          <span class="dash-change up">▲ 3.8%</span>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-val" style="color:var(--purple)"><span class="count-up" data-target="24">0</span><span style="font-size:.85rem">%</span></div>
+          <span class="dash-label">人件費率</span>
+          <span class="dash-change down">▼ 1.2pt 改善</span>
+        </div>
+      </div>
+
+      <!-- チャートエリア -->
+      <div class="dash-chart-row">
+        <!-- 棒グラフ：時間帯別売上 -->
+        <div class="dash-chart">
+          <div class="dash-chart-title">⏰ 時間帯別売上</div>
+          <div class="dash-bars" id="hourlyBars">
+            <div class="dash-bar" style="height:30%;background:var(--navy-mid);transition-delay:.1s"><span class="bar-val">12万</span><span class="bar-label">9時</span></div>
+            <div class="dash-bar" style="height:45%;background:var(--blue);transition-delay:.2s"><span class="bar-val">38万</span><span class="bar-label">10時</span></div>
+            <div class="dash-bar" style="height:90%;background:linear-gradient(to top,var(--gold),var(--gold-light));transition-delay:.3s"><span class="bar-val">89万</span><span class="bar-label">11時</span></div>
+            <div class="dash-bar" style="height:100%;background:linear-gradient(to top,var(--gold),var(--cyan));transition-delay:.4s"><span class="bar-val">102万</span><span class="bar-label">12時</span></div>
+            <div class="dash-bar" style="height:70%;background:var(--blue);transition-delay:.5s"><span class="bar-val">67万</span><span class="bar-label">13時</span></div>
+            <div class="dash-bar" style="height:40%;background:var(--navy-mid);transition-delay:.6s"><span class="bar-val">35万</span><span class="bar-label">14時</span></div>
+            <div class="dash-bar" style="height:55%;background:var(--blue);transition-delay:.7s"><span class="bar-val">51万</span><span class="bar-label">15時</span></div>
+            <div class="dash-bar" style="height:65%;background:var(--blue);transition-delay:.8s"><span class="bar-val">62万</span><span class="bar-label">16時</span></div>
+            <div class="dash-bar" style="height:95%;background:linear-gradient(to top,var(--gold),var(--gold-light));transition-delay:.9s"><span class="bar-val">95万</span><span class="bar-label">17時</span></div>
+            <div class="dash-bar" style="height:85%;background:linear-gradient(to top,var(--gold),var(--cyan));transition-delay:1s"><span class="bar-val">83万</span><span class="bar-label">18時</span></div>
+            <div class="dash-bar" style="height:75%;background:var(--blue);transition-delay:1.1s"><span class="bar-val">71万</span><span class="bar-label">19時</span></div>
+            <div class="dash-bar" style="height:50%;background:var(--navy-mid);transition-delay:1.2s"><span class="bar-val">46万</span><span class="bar-label">20時</span></div>
+          </div>
+        </div>
+        <!-- ドーナツ：来店者属性 -->
+        <div class="dash-chart">
+          <div class="dash-chart-title">📹 来店者属性（AI分析）</div>
+          <div class="dash-donut-wrap">
+            <div class="dash-donut" style="background:conic-gradient(var(--cyan) 0% 28%, var(--gold) 28% 52%, var(--purple) 52% 73%, var(--green) 73% 88%, var(--pink) 88% 100%)">
+              <div style="position:absolute;inset:18px;background:var(--card);border-radius:50%;display:flex;align-items:center;justify-content:center">
+                <div class="dash-donut-center"><span class="count-up" data-target="342">0</span><br><span style="font-size:.72rem;color:var(--text-dim)">人</span></div>
+              </div>
+            </div>
+            <div class="dash-donut-legend">
+              <div><span style="background:var(--cyan)"></span>20代女性 28%</div>
+              <div><span style="background:var(--gold)"></span>30代男性 24%</div>
+              <div><span style="background:var(--purple)"></span>40代女性 21%</div>
+              <div><span style="background:var(--green)"></span>50代以上 15%</div>
+              <div><span style="background:var(--pink)"></span>その他 12%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 下段：廃棄率 + カメラフィード -->
+      <div class="dash-chart-row">
+        <div class="dash-chart">
+          <div class="dash-chart-title">🗑️ カテゴリ別廃棄率 vs 目標</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-dim);margin-bottom:4px"><span>惣菜</span><span style="color:var(--red)">8.2%</span><span style="font-size:.72rem">目標 5%</span></div>
+              <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative">
+                <div class="conf-bar-fill" style="width:82%;background:linear-gradient(90deg,var(--gold),var(--red))"></div>
+                <div style="position:absolute;left:50%;top:0;height:100%;width:1.5px;background:var(--green);opacity:.6"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-dim);margin-bottom:4px"><span>弁当</span><span style="color:var(--gold)">4.7%</span><span style="font-size:.72rem">目標 5%</span></div>
+              <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative">
+                <div class="conf-bar-fill" style="width:47%;background:linear-gradient(90deg,var(--green),var(--gold))"></div>
+                <div style="position:absolute;left:50%;top:0;height:100%;width:1.5px;background:var(--green);opacity:.6"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-dim);margin-bottom:4px"><span>パン</span><span style="color:var(--green)">2.1%</span><span style="font-size:.72rem">目標 3%</span></div>
+              <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative">
+                <div class="conf-bar-fill" style="width:21%;background:var(--green)"></div>
+                <div style="position:absolute;left:30%;top:0;height:100%;width:1.5px;background:var(--green);opacity:.6"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-dim);margin-bottom:4px"><span>青果</span><span style="color:var(--red)">6.8%</span><span style="font-size:.72rem">目標 4%</span></div>
+              <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative">
+                <div class="conf-bar-fill" style="width:68%;background:linear-gradient(90deg,var(--gold),var(--red))"></div>
+                <div style="position:absolute;left:40%;top:0;height:100%;width:1.5px;background:var(--green);opacity:.6"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- カメラフィード -->
+        <div class="cam-feed">
+          <div class="cam-feed-header"><span class="rec">● REC</span> AIカメラ分析</div>
+          <div class="cam-grid">
+            <div class="cam-box">
+              🚶‍♂️🚶‍♀️
+              <div class="cam-scan"></div>
+              <div class="detect-box" style="width:28%;height:55%;top:15%;left:10%;animation-delay:0s"></div>
+              <div class="detect-box" style="width:25%;height:50%;top:20%;left:55%;animation-delay:1.5s"></div>
+              <span class="cam-tag">入口カメラ</span>
+              <span class="cam-count">2人検出</span>
+            </div>
+            <div class="cam-box">
+              🧑‍🤝‍🧑👨‍👩‍👧
+              <div class="cam-scan" style="animation-delay:1s"></div>
+              <div class="detect-box" style="width:22%;height:50%;top:18%;left:8%;animation-delay:.5s"></div>
+              <div class="detect-box" style="width:24%;height:48%;top:20%;left:38%;animation-delay:2s"></div>
+              <div class="detect-box" style="width:26%;height:52%;top:16%;left:65%;animation-delay:1s"></div>
+              <span class="cam-tag">店内カメラ</span>
+              <span class="cam-count">5人検出</span>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:.75rem;color:var(--text-dim);text-align:center">
+            属性推定精度: <span style="color:var(--green);font-weight:700">92.4%</span>｜動線分析・混雑予測に活用
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="key-point fade-in" style="margin-top:20px">
+      こうしたダッシュボードを<strong style="color:var(--gold)">Claudeに「作って」と指示するだけ</strong>で構築可能。データのCSVファイルを渡せば、分析・可視化・レポートまで自動生成します。
+    </div>
+
+    <!-- ===== 予測エンジン セクション ===== -->
+    <h3 class="fade-in" style="margin-top:36px">来店予測エンジン（イメージ）</h3>
+    <p class="fade-in" style="font-size:1rem;color:var(--text-dim);margin-bottom:22px">過去データを学習させることで、明日の来店数・売上・必要スタッフ数をAIが予測。「経験と勘」から「データ駆動」の経営へ。</p>
+
+    <div class="predict-engine fade-in" id="predict-engine">
+      <!-- 予測フロー図 -->
+      <div class="predict-flow">
+        <div class="predict-stage">
+          <div class="predict-box" style="border-color:var(--cyan)">
+            <div class="p-icon">📥</div>
+            <h5 style="color:var(--cyan)">データ入力</h5>
+            <ul>
+              <li>過去3年分の売上</li>
+              <li>天気・気温データ</li>
+              <li>イベント情報</li>
+              <li>周辺施設の予約状況</li>
+              <li>カメラ来店履歴</li>
+            </ul>
+          </div>
+        </div>
+        <div class="predict-arrow"><div class="predict-arrow-inner">→</div></div>
+        <div class="predict-stage">
+          <div class="predict-box" style="border-color:var(--gold);background:linear-gradient(135deg,var(--card),rgba(212,168,67,.05))">
+            <div class="p-icon" style="animation:pulse 2s infinite">🧠</div>
+            <h5 style="color:var(--gold)">AI分析エンジン</h5>
+            <ul>
+              <li>パターン認識</li>
+              <li>季節性・曜日性分析</li>
+              <li>天候相関モデル</li>
+              <li>異常値検出</li>
+              <li>トレンド予測</li>
+            </ul>
+          </div>
+        </div>
+        <div class="predict-arrow"><div class="predict-arrow-inner">→</div></div>
+        <div class="predict-stage">
+          <div class="predict-box" style="border-color:var(--green);background:linear-gradient(135deg,var(--card),rgba(46,160,67,.05))">
+            <div class="p-icon">📊</div>
+            <h5 style="color:var(--green)">予測アウトプット</h5>
+            <ul>
+              <li>明日の来店予測</li>
+              <li>時間帯別売上予測</li>
+              <li>最適スタッフ配置</li>
+              <li>発注量の提案</li>
+              <li>廃棄リスク警告</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- データ粒子アニメーション -->
+      <div class="predict-particles" id="predictParticles"></div>
+
+      <!-- 予測結果カード -->
+      <div class="predict-output stagger">
+        <div class="predict-card">
+          <h5>明日の来店予測</h5>
+          <div class="p-num"><span class="count-up" data-target="387">0</span><span style="font-size:.8rem">人</span></div>
+          <div class="p-sub">📍 前年同曜日比 +14%</div>
+          <div class="confidence">信頼度 93%</div>
+          <div class="conf-bar"><div class="conf-bar-fill" style="width:93%;background:linear-gradient(90deg,var(--cyan),var(--green))"></div></div>
+        </div>
+        <div class="predict-card">
+          <h5>明日の売上予測</h5>
+          <div class="p-num"><span class="count-up" data-target="912">0</span><span style="font-size:.8rem">万円</span></div>
+          <div class="p-sub">☀️ 晴れ予報で上方補正</div>
+          <div class="confidence">信頼度 87%</div>
+          <div class="conf-bar"><div class="conf-bar-fill" style="width:87%;background:linear-gradient(90deg,var(--cyan),var(--gold))"></div></div>
+        </div>
+        <div class="predict-card">
+          <h5>推奨スタッフ数</h5>
+          <div class="p-num"><span class="count-up" data-target="8">0</span><span style="font-size:.8rem">名</span></div>
+          <div class="p-sub">⏰ ピーク帯12名推奨</div>
+          <div class="confidence">人件費率 23.1% 見込み</div>
+          <div class="conf-bar"><div class="conf-bar-fill" style="width:78%;background:linear-gradient(90deg,var(--green),var(--gold))"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fun-fact fade-in" style="margin-top:20px">
+      <span class="fun-label">REAL IMPACT</span>
+      <p>このような予測エンジンは以前なら専門のデータサイエンティストと数千万円の開発費が必要でした。今は<strong style="color:var(--gold)">データを整理してClaude Codeに渡すだけ</strong>で、プロトタイプを数時間で構築できる時代です。</p>
+    </div>
+
+    <!-- 経営者メリットまとめ -->
+    <div class="glow-box fade-in" style="margin-top:24px">
+      <div class="glow-box-inner">
+        <h3 style="margin-bottom:14px">AI × 店舗データで実現できること</h3>
+        <div class="card-grid" style="gap:12px">
+          <div style="padding:14px;background:rgba(255,255,255,.02);border-radius:10px;text-align:center">
+            <span style="font-size:1.8rem">📉</span>
+            <p style="font-size:.95rem;color:var(--text);margin-top:4px"><strong style="color:var(--green)">廃棄率 40%削減</strong><br><span style="font-size:.88rem;color:var(--text-dim)">需要予測で発注を最適化</span></p>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,.02);border-radius:10px;text-align:center">
+            <span style="font-size:1.8rem">👥</span>
+            <p style="font-size:.95rem;color:var(--text);margin-top:4px"><strong style="color:var(--green)">人件費率 3pt改善</strong><br><span style="font-size:.88rem;color:var(--text-dim)">最適シフトで無駄を排除</span></p>
+          </div>
+          <div style="padding:14px;background:rgba(255,255,255,.02);border-radius:10px;text-align:center">
+            <span style="font-size:1.8rem">📈</span>
+            <p style="font-size:.95rem;color:var(--text);margin-top:4px"><strong style="color:var(--green)">売上 15%向上</strong><br><span style="font-size:.88rem;color:var(--text-dim)">属性分析で品揃えを最適化</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion fade-in" style="margin-top:16px">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細：具体的な構築ステップ</button>
+      <div class="accordion-content" role="region">
+        <p><strong>Step 1:</strong> POSデータ・勤怠データ・廃棄記録をCSVでエクスポート</p>
+        <p><strong>Step 2:</strong> Claude Codeに「このデータで売上分析ダッシュボードを作って」と指示</p>
+        <p><strong>Step 3:</strong> 自動でPython/HTMLのダッシュボードを生成、グラフ・KPIを可視化</p>
+        <p><strong>Step 4:</strong> 「来週の来店予測モデルを作って」と追加指示で予測機能を追加</p>
+        <p><strong>Step 5:</strong> 毎日データを更新すれば、予測精度が日々向上</p>
+        <p style="margin-top:8px"><strong>カメラ分析について：</strong> 来店者カメラはAI搭載のIPカメラ（数万円〜）で実現可能。クラウドサービスと連携し、来店人数・属性データをCSVで出力。このデータもダッシュボードに統合できます。</p>
+      </div>
+    </div>
+
+    <a class="appendix-inline fade-in" href="claude-code-guide.html">
+      <span class="ap-inline-icon">📎</span> Claude Code 解説書 — インストール・使い方はこちら →
+    </a>
+  </div>
+</section>
+
+<!-- ============================================================
+     AI COMPARISON
+     ============================================================ -->
+<section class="slide" id="comparison">
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">⚖️</span> COMPARISON</span>
+    <h2 class="slide-title fade-in">AI<span class="gold">ツール比較</span></h2>
+    <p class="slide-subtitle fade-in">どれを使えばいいか迷ったときの判断基準</p>
+
+    <div class="card-grid stagger" style="margin-bottom:20px">
+      <div class="illust-card">
+        <div class="ai-logo-bg claude-bg"><img src="logo-claude.png" alt="Claude"></div>
+        <h4>Claude</h4><p>文章・コード・安全性に強い</p>
+      </div>
+      <div class="illust-card">
+        <div class="ai-logo-bg chatgpt-bg"><img src="logo-chatgpt.jpg" alt="ChatGPT"></div>
+        <h4>ChatGPT</h4><p>画像生成・Web検索に強い</p>
+      </div>
+      <div class="illust-card">
+        <div class="ai-logo-bg gemini-bg"><img src="logo-gemini.jpg" alt="Gemini"></div>
+        <h4>Gemini</h4><p>Google連携に強い</p>
+      </div>
+    </div>
+
+    <div class="fade-in" style="overflow-x:auto">
+      <table class="compare-table">
+        <caption class="sr-only">AIツール比較表</caption>
+        <thead><tr><th>比較項目</th><th><img src="logo-claude.png" alt="" style="width:20px;height:20px;vertical-align:middle;margin-right:4px">Claude</th><th><img src="logo-chatgpt.jpg" alt="" style="width:20px;height:20px;vertical-align:middle;margin-right:4px">ChatGPT</th><th><img src="logo-gemini.jpg" alt="" style="width:20px;height:20px;vertical-align:middle;margin-right:4px">Gemini</th></tr></thead>
+        <tbody>
+          <tr><td>日本語の品質</td><td class="circle">◎</td><td class="circle">◎</td><td class="circle">○</td></tr>
+          <tr><td>文章作成</td><td class="circle">◎ 特に強い</td><td class="circle">◎</td><td class="circle">○</td></tr>
+          <tr><td>コード生成</td><td class="circle">◎ 特に強い</td><td class="circle">◎</td><td class="circle">○</td></tr>
+          <tr><td>画像生成</td><td class="cross">✕</td><td class="circle">◎</td><td class="circle">◎</td></tr>
+          <tr><td>Web検索</td><td class="triangle">△</td><td class="circle">◎</td><td class="circle">◎</td></tr>
+          <tr><td>安全性</td><td class="circle">◎ 最も慎重</td><td class="circle">○</td><td class="circle">○</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="key-point fade-in">結論：<strong>「どれか1つ」ではなく用途で使い分け</strong>。文章・分析ならClaude、画像生成ならChatGPT、Google連携ならGemini。</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     DEMO 1
+     ============================================================ -->
+<section class="slide" id="demo1" style="background:var(--navy-light)">
+  <div class="deco deco-circle float1" style="width:50px;height:50px;top:8%;left:6%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🎬</span> DEMO ①</span>
+    <h2 class="slide-title fade-in">活用デモ：<span class="gold">文章生成・壁打ち・分析</span></h2>
+    <p class="slide-subtitle fade-in">実際に動くところをご覧ください（15分）</p>
+
+    <div class="stagger">
+      <div class="demo-card">
+        <span class="demo-num">1</span><h4>メール文の作成</h4>
+        <p>条件を伝えるだけで、ビジネスメールが一瞬で完成。</p>
+        <div class="chat-mock">
+          <div class="chat-mock-header"><div class="chat-mock-dot" style="background:var(--red)"></div><div class="chat-mock-dot" style="background:var(--gold)"></div><div class="chat-mock-dot" style="background:var(--green)"></div><span style="font-size:.8rem;color:var(--text-dim);margin-left:8px">Claude</span></div>
+          <div class="chat-bubble user"><span class="sender">あなた</span>取引先に納品遅延のお詫びメールを書いて。丁寧だけど簡潔に。</div>
+          <div class="chat-bubble ai"><span class="sender">Claude</span>件名：納品遅延のお詫び<br>〇〇株式会社 △△様<br>平素より大変お世話になっております…</div>
+        </div>
+        <div class="message">💡 「書く時間」がゼロになる</div>
+      </div>
+      <div class="demo-card">
+        <span class="demo-num">2</span><h4>経営課題の壁打ち</h4>
+        <p>新規事業のアイデアや悩みをClaudeと対話しながら深掘り。</p>
+        <div class="message">💡 24時間使える経営参謀</div>
+      </div>
+      <div class="demo-card">
+        <span class="demo-num">3</span><h4>分析資料の作り方</h4>
+        <p>売上データや議事録を貼り付けて要約・分析・示唆出し。</p>
+        <div class="message">💡 読む・整理する作業をClaudeに任せる</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     DEMO 2
+     ============================================================ -->
+<section class="slide" id="demo2">
+  <div class="deco deco-dot pulse-slow" style="top:20%;right:8%;background:var(--cyan);opacity:.3"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🔗</span> DEMO ②</span>
+    <h2 class="slide-title fade-in">活用デモ：<span class="cyan">Google連携・アプリ制作</span></h2>
+    <p class="slide-subtitle fade-in">Claudeと外部サービスが繋がると…（15分）</p>
+
+    <div class="stagger">
+      <div class="demo-card">
+        <span class="demo-num">1</span><h4>📧 Gmail連携</h4>
+        <p>Claudeがメールを読み、下書きを作り、送信まで。</p>
+        <div class="chat-mock">
+          <div class="chat-mock-header"><div class="chat-mock-dot" style="background:var(--red)"></div><div class="chat-mock-dot" style="background:var(--gold)"></div><div class="chat-mock-dot" style="background:var(--green)"></div><span style="font-size:.8rem;color:var(--text-dim);margin-left:8px">Claude + Gmail</span></div>
+          <div class="chat-bubble user"><span class="sender">あなた</span>未読メールをチェックして、重要なものだけ要約して。</div>
+          <div class="chat-bubble ai"><span class="sender">Claude</span>📬 未読3件を確認しました：<br>1. 田中様：見積もり依頼（要返信）<br>2. 会計事務所：月次報告<br>3. ニュースレター</div>
+        </div>
+        <div class="message">💡 メール対応をClaudeが代行</div>
+      </div>
+      <div class="demo-card">
+        <span class="demo-num">2</span><h4>📅 Googleカレンダー連携</h4>
+        <p>スケジュール確認・会議提案・予定作成をClaudeが代行。</p>
+        <div class="message">💡 秘書のようにカレンダーを管理</div>
+      </div>
+      <div class="demo-card">
+        <span class="demo-num">3</span><h4>📱 アプリ制作</h4>
+        <p>Claudeに依頼して簡単なWebアプリのコードを生成。</p>
+        <div class="message">💡 エンジニアなしでアプリが作れる時代</div>
+      </div>
+    </div>
+
+    <div class="fun-fact fade-in" style="margin-top:20px">
+      <span class="fun-label">TECH NOTE</span>
+      <p>Gmail・Calendar連携は<strong>MCP（Model Context Protocol）</strong>で実現。MCPの仕組み・できること・活用シーンは別添えで詳しく解説しています。</p>
+    </div>
+
+    <a class="appendix-inline fade-in" href="claude-code-guide.html#mcp">
+      <span class="ap-inline-icon">📎</span> Claude Code 解説書（MCPサーバー）を見る →
+    </a>
+  </div>
+</section>
+
+<!-- ============================================================
+     BREAK
+     ============================================================ -->
+<section class="slide" id="break" style="min-height:50vh;background:var(--navy-light)">
+  <div class="slide-inner" style="text-align:center">
+    <div class="section-illust scale-in">
+      <span class="big-emoji" style="font-size:6rem">☕</span>
+      <div class="orbit" style="width:140px;height:140px"><div class="orbit-dot"></div></div>
+    </div>
+    <h2 class="slide-title fade-in"><span class="gold">休憩</span></h2>
+    <p class="slide-subtitle fade-in">10分間の休憩です。お手洗い・飲み物等どうぞ。</p>
+    <p class="fade-in" style="font-size:1.1rem;color:var(--cyan);font-weight:700;margin-top:16px">次はいよいよ<strong>ハンズオン</strong>です！🚀</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     HANDS-ON
+     ============================================================ -->
+<section class="slide" id="handson">
+  <div class="deco deco-circle float1" style="width:100px;height:100px;top:5%;right:3%;border-color:rgba(212,168,67,.08)"></div>
+  <div class="deco deco-ring float2" style="width:50px;height:50px;bottom:10%;left:5%;border-color:rgba(56,189,248,.1)"></div>
+  <svg class="deco spin-slow" style="top:60%;right:8%;width:40px;height:40px;opacity:.1" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--gold)" stroke-width="1"/></svg>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🛠</span> HANDS-ON</span>
+    <h2 class="slide-title fade-in">自分のビジネスの<span class="gold">ホームページ</span>を作ろう</h2>
+    <p class="slide-subtitle fade-in">Claudeと対話しながら、40分でWebサイトを完成させます</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🌐</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="step-flow stagger">
+      <div class="step-item"><div class="step-num-circle">1</div><h4>情報整理</h4><p>自社情報をまとめる</p><span class="badge badge-cyan">5分</span></div>
+      <div class="step-item"><div class="step-num-circle">2</div><h4>プロンプト作成</h4><p>Claudeにお願いする</p><span class="badge badge-cyan">5分</span></div>
+      <div class="step-item"><div class="step-num-circle">3</div><h4>初稿確認</h4><p>プレビューで確認</p><span class="badge badge-cyan">5分</span></div>
+      <div class="step-item"><div class="step-num-circle">4</div><h4>対話で磨く</h4><p>修正・追加を依頼</p><span class="badge badge-gold">22分</span></div>
+      <div class="step-item"><div class="step-num-circle">5</div><h4>保存</h4><p>コードをコピー保存</p><span class="badge badge-cyan">3分</span></div>
+    </div>
+
+    <div class="glow-box fade-in">
+      <div class="glow-box-inner" style="text-align:center">
+        <p style="font-size:1.1rem;font-weight:700">🎯 プログラミング知識は一切不要！</p>
+        <p style="font-size:.88rem;color:var(--text-dim);margin-top:4px">自分の言葉で「こんなホームページを作って」とお願いするだけ。</p>
+      </div>
+    </div>
+
+    <h3 class="fade-in" style="margin-top:28px">完成イメージ（5セクション構成）</h3>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+      <div class="illust-card" style="padding:18px"><span class="illust" style="font-size:2.5rem">🏠</span><h4 style="font-size:.95rem">① ヘッダー</h4><p style="font-size:.88rem">会社名・キャッチコピー</p></div>
+      <div class="illust-card" style="padding:18px"><span class="illust" style="font-size:2.5rem">💼</span><h4 style="font-size:.95rem">② サービス紹介</h4><p style="font-size:.88rem">提供サービスの概要</p></div>
+      <div class="illust-card" style="padding:18px"><span class="illust" style="font-size:2.5rem">🏢</span><h4 style="font-size:.95rem">③ 会社概要</h4><p style="font-size:.88rem">理念・沿革・強み</p></div>
+      <div class="illust-card" style="padding:18px"><span class="illust" style="font-size:2.5rem">📧</span><h4 style="font-size:.95rem">④ お問い合わせ</h4><p style="font-size:.88rem">連絡先情報</p></div>
+      <div class="illust-card" style="padding:18px"><span class="illust" style="font-size:2.5rem">📋</span><h4 style="font-size:.95rem">⑤ フッター</h4><p style="font-size:.88rem">著作権・SNS</p></div>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：ハンズオンの進め方ガイド</button>
+      <div class="accordion-content">
+        <p><strong>ステップ2 プロンプト例：</strong></p>
+        <p style="background:rgba(255,255,255,.04);padding:14px;border-radius:8px;margin:10px 0;font-size:.98rem">「私は沖縄県那覇市で沖縄料理の居酒屋を経営しています。モダンでおしゃれなホームページのHTMLを作ってください。【業種】飲食店【サービス】ランチ・ディナー・宴会プラン【強み】地元食材にこだわり…」</p>
+        <p style="margin-top:12px"><strong>ステップ4 修正の仕方：</strong></p>
+        <ul><li>「色をもっと暖かい感じにして」</li><li>「メニュー一覧のセクションを追加して」</li><li>「営業時間を目立たせて」</li></ul>
+      </div>
+    </div>
+
+    <div class="appendix-links fade-in" style="margin-top:20px">
+      <a class="appendix-link" href="github-pages-guide.html" style="flex:auto">
+        <img src="logo-github.jpg" alt="GitHub" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0">
+        <div class="ap-body">
+          <div class="ap-title">作ったHPを公開しよう！</div>
+          <div class="ap-desc">GitHub Pagesで無料公開する手順はこちら</div>
+        </div>
+        <span class="ap-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     INPUT LIST
+     ============================================================ -->
+<section class="slide" id="input-list" style="background:var(--navy-light)">
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">📝</span> REFERENCE</span>
+    <h2 class="slide-title fade-in"><span class="gold">入力情報</span>リスト</h2>
+    <p class="slide-subtitle fade-in">ハンズオンで使う自社情報を整理しましょう</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">📝</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="input-list-card fade-in">
+      <h4>📝 Claudeに伝える情報</h4>
+      <table>
+        <thead><tr><th>項目</th><th>記入例</th></tr></thead>
+        <tbody>
+          <tr><td>業種・事業内容</td><td>例：沖縄県那覇市の飲食店（沖縄料理・居酒屋）</td></tr>
+          <tr><td>主なサービスや商品</td><td>例：ランチ・ディナー・テイクアウト・宴会プラン</td></tr>
+          <tr><td>自社の強み・こだわり</td><td>例：地元食材にこだわり・アットホームな雰囲気</td></tr>
+          <tr><td>ターゲット顧客</td><td>例：地元のファミリー層・観光客・ビジネスマン</td></tr>
+          <tr><td>雰囲気・トーン</td><td>例：親しみやすい／高級感／プロフェッショナル</td></tr>
+          <tr><td>カラーイメージ</td><td>例：青系・ナチュラル系・コーポレートカラー</td></tr>
+          <tr><td>連絡先・住所</td><td>例：〇〇市〇〇町／TEL 098-XXX-XXXX</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fun-fact fade-in">
+      <span class="fun-label">TIPS</span>
+      <p>すべてを埋める必要なし！Claudeは足りない情報を補ってくれます。まずは<strong>業種・サービス・強み</strong>の3つだけでもOK。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SHARING & WRAP-UP
+     ============================================================ -->
+<section class="slide" id="sharing">
+  <div class="deco deco-circle float1" style="width:70px;height:70px;top:8%;right:6%;border-color:rgba(212,168,67,.08)"></div>
+  <div class="deco deco-dot pulse-slow" style="bottom:15%;left:10%;background:var(--purple);opacity:.2"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🎉</span> WRAP-UP</span>
+    <h2 class="slide-title fade-in">シェアリング＆<span class="gold">まとめ</span></h2>
+
+    <div class="card fade-in" style="margin-bottom:28px;border-color:var(--cyan)">
+      <h4>🎤 作品発表（10分）</h4>
+      <p>作ったホームページをスクリーンに映して、30秒〜1分で紹介。</p>
+      <ul style="margin-top:8px"><li>どんな業種・ビジネスか</li><li>Claudeへの指示で工夫した点</li><li>気に入っている部分</li></ul>
+    </div>
+
+    <h3 class="fade-in">明日から試せる業務活用3選</h3>
+    <div class="card-grid stagger" style="margin-top:12px">
+      <div class="illust-card" style="border-color:var(--gold)"><span class="illust">📧</span><h4>1. メール対応</h4><p>毎日の返信をClaudeに下書きしてもらう。1日1通から。</p></div>
+      <div class="illust-card" style="border-color:var(--gold)"><span class="illust">📊</span><h4>2. 資料の要約</h4><p>長い報告書を貼り付けて要点を3行でまとめてもらう。</p></div>
+      <div class="illust-card" style="border-color:var(--gold)"><span class="illust">💡</span><h4>3. アイデア壁打ち</h4><p>施策やキャンペーンのアイデアをブレインストーミング。</p></div>
+    </div>
+
+    <div class="accordion fade-in">
+      <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 詳細を見る：有料プランの使い分け</button>
+      <div class="accordion-content">
+        <p><strong>無料で十分：</strong>週に数回の質問・メール文作成程度</p>
+        <p><strong>Pro（$20/月）推奨：</strong>毎日活用・ファイル生成・外部連携</p>
+        <p><strong>Max（$100/月）：</strong>チーム利用・大量タスク・Claude Code本格活用</p>
+      </div>
+    </div>
+
+    <div class="glow-box fade-in" style="margin-top:28px">
+      <div class="glow-box-inner" style="text-align:center">
+        <div style="font-size:3rem;margin-bottom:8px">🎉</div>
+        <h4 style="font-size:1.3rem">お疲れさまでした！</h4>
+        <p style="margin-top:10px;color:var(--gold);font-weight:700;font-size:1.05rem">1週間後の目標：日常業務でClaudeを1回以上使ってみよう！</p>
+      </div>
+    </div>
+
+    <!-- 別添え資料リンク -->
+    <h3 class="fade-in" style="margin-top:36px">📎 別添え資料</h3>
+    <p class="fade-in" style="font-size:.98rem;color:var(--text-dim);margin-bottom:16px">本日の内容をさらに深掘りしたい方は、こちらの資料もご活用ください。</p>
+    <div class="appendix-links stagger">
+      <a class="appendix-link" href="claude-code-guide.html">
+        <span class="ap-icon">⌨️</span>
+        <div class="ap-body">
+          <div class="ap-title">Claude Code 解説書</div>
+          <div class="ap-desc">CLIとは何か・ターミナルの歴史・コーディングの変遷・MCPサーバー・インストール手順</div>
+        </div>
+        <span class="ap-arrow">→</span>
+      </a>
+      <a class="appendix-link" href="github-pages-guide.html">
+        <img src="logo-github.jpg" alt="GitHub" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0">
+        <div class="ap-body">
+          <div class="ap-title">GitHub Pages 公開ガイド</div>
+          <div class="ap-desc">今日作ったHPを無料で世界に公開する手順をステップバイステップで解説</div>
+        </div>
+        <span class="ap-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>今日から使える Claude ― 経営者のためのAI入門 | 2026年3月20日</p>
+  <p style="margin-top:4px">Powered by Claude</p>
+  <div style="margin-top:16px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+    <a href="claude-code-guide.html" style="color:var(--gold);text-decoration:none;font-size:.88rem">📎 Claude Code 解説書</a>
+    <a href="github-pages-guide.html" style="color:var(--gold);text-decoration:none;font-size:.88rem;display:inline-flex;align-items:center;gap:6px"><img src="logo-github.jpg" alt="" style="width:20px;height:20px;border-radius:50%;object-fit:cover"> GitHub Pages 公開ガイド</a>
+  </div>
+</footer>
+
+<!-- ===== JS ===== -->
+<script>
+(function(){
+  'use strict';
+
+  // Accordion accessibility
+  document.querySelectorAll('.accordion-trigger').forEach((btn,i) => {
+    const c = btn.nextElementSibling;
+    const id = 'acc-' + i;
+    c.id = id; c.setAttribute('role','region');
+    c.setAttribute('aria-labelledby','acc-btn-'+i);
+    btn.id = 'acc-btn-'+i;
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-controls',id);
+  });
+
+  window.toggleAccordion = function(btn) {
+    const c = btn.nextElementSibling;
+    const open = !c.classList.contains('open');
+    btn.classList.toggle('open',open);
+    c.classList.toggle('open',open);
+    btn.setAttribute('aria-expanded',String(open));
+  };
+
+  // Animation observer
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('.fade-in,.fade-in-left,.fade-in-right,.scale-in,.stagger').forEach(el => obs.observe(el));
+
+  // Count-up
+  function countUp(el){
+    const t=parseInt(el.dataset.target),d=1500,s=performance.now();
+    (function u(n){const p=Math.min((n-s)/d,1);el.textContent=Math.floor((1-Math.pow(1-p,3))*t);if(p<1)requestAnimationFrame(u)})(s);
+  }
+  document.querySelectorAll('.count-up[data-target]').forEach(el => {
+    const o=new IntersectionObserver(e=>{if(e[0].isIntersecting){countUp(el);o.disconnect()}},{threshold:.5});
+    o.observe(el);
+  });
+
+  // Mascot (横切り)
+  const mascotEl=document.getElementById('mascot');
+  [{id:'demo1',msg:'デモ開始！'},{id:'handson',msg:'いよいよ本番！'},{id:'sharing',msg:'お疲れさま！'}].forEach(({id,msg})=>{
+    const s=document.getElementById(id);if(!s)return;
+    const o=new IntersectionObserver(e=>{if(e[0].isIntersecting){
+      mascotEl.querySelector('.mascot-speech').textContent=msg;
+      mascotEl.classList.remove('run');void mascotEl.offsetWidth;mascotEl.classList.add('run');
+      o.disconnect();
+    }},{threshold:.3});
+    o.observe(s);
+  });
+
+  // Peeker (ひょこっと覗くキャラ)
+  const peekerConfig=[
+    {sectionId:'setup',    peekerId:'peeker-right'},
+    {sectionId:'prompt',   peekerId:'peeker-left'},
+    {sectionId:'break',    peekerId:'peeker-bottom'},
+    {sectionId:'usecases', peekerId:'peeker-right'},
+    {sectionId:'input-list',peekerId:'peeker-left'},
+  ];
+  peekerConfig.forEach(({sectionId,peekerId})=>{
+    const sec=document.getElementById(sectionId);
+    const pk=document.getElementById(peekerId);
+    if(!sec||!pk)return;
+    const po=new IntersectionObserver(e=>{
+      if(e[0].isIntersecting){
+        // 前のアニメーションが終わってから発動
+        pk.classList.remove('peek');
+        void pk.offsetWidth;
+        pk.classList.add('peek');
+        po.disconnect();
+      }
+    },{threshold:.4});
+    po.observe(sec);
+  });
+
+  // Side TOC
+  const sideToc=document.getElementById('sideToc');
+  const tocItems=sideToc?sideToc.querySelectorAll('.side-toc-item'):[];
+  const tocProgress=document.getElementById('tocProgress');
+  // Smooth scroll for toc links
+  tocItems.forEach(item=>{
+    item.addEventListener('click',e=>{
+      e.preventDefault();
+      const target=document.getElementById(item.dataset.section);
+      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  // Unified scroll
+  const pbar=document.getElementById('progressBar'),nav=document.getElementById('nav');
+  const secs=document.querySelectorAll('.slide[id]'),nlinks=document.querySelectorAll('.nav-links a');
+  let last=0,tick=false;
+  function onScroll(){
+    const y=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+    const pct=y/h*100;
+    pbar.style.width=pct+'%';
+    nav.classList.toggle('hidden',y>last&&y>100);
+    last=y;
+    // Show/hide side toc (visible after scrolling past hero)
+    if(sideToc)sideToc.classList.toggle('hidden',y<300);
+    // Determine current section
+    let cur='',curIdx=0;
+    secs.forEach((s,i)=>{if(y>=s.offsetTop-200){cur=s.id;curIdx=i}});
+    nlinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+cur));
+    // Update side toc active state + progress
+    if(tocItems.length){
+      let activeIdx=0;
+      tocItems.forEach((item,i)=>{
+        const isActive=item.dataset.section===cur;
+        item.classList.toggle('active',isActive);
+        if(isActive)activeIdx=i;
+      });
+      // Progress line height
+      if(tocProgress){
+        const ratio=(activeIdx+1)/tocItems.length*100;
+        tocProgress.style.height=ratio+'%';
+      }
+    }
+    tick=false;
+  }
+  window.addEventListener('scroll',()=>{if(!tick){requestAnimationFrame(onScroll);tick=true}},{passive:true});
+
+  // Hamburger
+  document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('mobile-open'));
+  document.querySelectorAll('.nav-links a').forEach(l=>l.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('mobile-open')));
+
+  // Generate particles for hero
+  const hero=document.querySelector('.hero');
+  if(hero){
+    const pc=document.createElement('div');pc.className='particles';
+    const colors=['var(--gold)','var(--cyan)','var(--purple)','var(--pink)'];
+    for(let i=0;i<20;i++){
+      const p=document.createElement('div');p.className='particle';
+      const s=Math.random()*4+2;
+      p.style.cssText=`width:${s}px;height:${s}px;background:${colors[i%4]};top:${Math.random()*100}%;left:${Math.random()*100}%;animation:float${(i%3)+1} ${Math.random()*4+4}s ease-in-out infinite ${Math.random()*3}s`;
+      pc.appendChild(p);
+    }
+    hero.appendChild(pc);
+  }
+
+  // Dashboard bar chart animation on scroll
+  const dashEl=document.getElementById('live-dashboard');
+  if(dashEl){
+    const dObs=new IntersectionObserver(e=>{
+      if(e[0].isIntersecting){dashEl.classList.add('visible');dObs.disconnect()}
+    },{threshold:.2});
+    dObs.observe(dashEl);
+  }
+
+  // Prediction engine animation
+  const predEl=document.getElementById('predict-engine');
+  if(predEl){
+    const pObs=new IntersectionObserver(e=>{
+      if(e[0].isIntersecting){
+        predEl.classList.add('visible');
+        // Generate flowing data particles
+        const container=document.getElementById('predictParticles');
+        if(container){
+          const pColors=['var(--cyan)','var(--gold)','var(--green)','var(--purple)'];
+          for(let w=0;w<3;w++){
+            setTimeout(()=>{
+              for(let i=0;i<8;i++){
+                const dot=document.createElement('div');
+                dot.className='p-dot';
+                const sz=Math.random()*4+3;
+                const yPos=30+Math.random()*40;
+                dot.style.cssText=`width:${sz}px;height:${sz}px;background:${pColors[i%4]};top:${yPos}%;animation:flowRight ${2+Math.random()}s ease-in-out ${i*.15}s forwards`;
+                container.appendChild(dot);
+                setTimeout(()=>dot.remove(),4000);
+              }
+            },w*2500);
+          }
+        }
+        pObs.disconnect();
+      }
+    },{threshold:.2});
+    pObs.observe(predEl);
+  }
+})();
+</script>
+</body>
+</html>
