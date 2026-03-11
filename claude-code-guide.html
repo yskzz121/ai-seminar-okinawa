@@ -369,6 +369,7 @@ h3{font-size:1.15rem;font-weight:700;margin-bottom:12px;color:var(--gold-light)}
       <a href="#evolution">AI進化</a>
       <a href="#what-is-cc">Claude Code</a>
       <a href="#mcp">MCP</a>
+      <a href="#subagent">サブエージェント</a>
       <a href="#install">インストール</a>
       <a href="#verify">動作確認</a>
     </div>
@@ -1197,6 +1198,203 @@ h3{font-size:1.15rem;font-weight:700;margin-bottom:12px;color:var(--gold-light)}
 </section>
 
 <!-- ============================================================
+     SECTION 3.5: サブエージェント
+     ============================================================ -->
+<section class="slide" id="subagent">
+  <div class="deco deco-ring float2" style="width:65px;height:65px;top:12%;right:7%;border-color:rgba(167,139,250,.12)"></div>
+  <div class="deco deco-dot pulse-slow" style="bottom:18%;left:6%;background:var(--gold);opacity:.2"></div>
+  <svg class="deco spin-slow" style="top:25%;left:10%;width:45px;height:45px;opacity:.08" viewBox="0 0 40 40"><polygon points="20,2 25,15 38,15 27,24 31,38 20,29 9,38 13,24 2,15 15,15" fill="none" stroke="var(--cyan)" stroke-width="1"/></svg>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🧩</span> SUB-AGENT</span>
+    <h2 class="slide-title fade-in"><span class="purple">サブエージェント</span>とは</h2>
+    <p class="slide-subtitle fade-in">Claude Codeの中に「専門チーム」を作る ― タスクの分業と並列処理</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🧩</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <!-- 概要カード -->
+    <div class="illust-card fade-in" style="max-width:650px;margin:0 auto 28px;border-color:var(--purple)">
+      <span class="illust">🤖→🤖🤖🤖</span>
+      <h4>AIが「部下」を生み出す</h4>
+      <p>サブエージェントとは、メインのClaude（親エージェント）が<strong style="color:var(--purple)">特定のタスクを専門の子エージェントに委任</strong>する仕組みです。それぞれが独立した専門知識とツールを持ち、<strong style="color:var(--cyan)">並列で同時作業</strong>できます。</p>
+    </div>
+
+    <!-- 仕組み図解 -->
+    <h3 class="fade-in" style="margin-bottom:16px">仕組み</h3>
+    <div class="mcp-flow fade-in" style="margin-bottom:32px">
+      <div class="mcp-node highlight">
+        <div class="icon">🤖</div>
+        <div class="label">親エージェント</div>
+      </div>
+      <div class="mcp-connector">→</div>
+      <div class="mcp-services">
+        <div class="mcp-node" style="border-color:var(--cyan)"><div class="icon">🔍</div><div class="label">調査係</div></div>
+        <div class="mcp-node" style="border-color:var(--purple)"><div class="icon">✍️</div><div class="label">執筆係</div></div>
+        <div class="mcp-node" style="border-color:var(--green)"><div class="icon">🧪</div><div class="label">テスト係</div></div>
+        <div class="mcp-node" style="border-color:var(--gold)"><div class="icon">🛡️</div><div class="label">検証係</div></div>
+      </div>
+    </div>
+
+    <!-- ステップ説明 -->
+    <div class="card fade-in" style="margin-bottom:28px">
+      <h4 style="margin-bottom:12px">動作の流れ</h4>
+      <div class="step-flow stagger">
+        <div class="step-item">
+          <span class="step-num">1</span>
+          <p>親が「このタスクはサブエージェント向き」と判断</p>
+        </div>
+        <div class="step-item">
+          <span class="step-num">2</span>
+          <p>専門のサブエージェントに指示を送る</p>
+        </div>
+        <div class="step-item">
+          <span class="step-num">3</span>
+          <p>サブエージェントが独立して作業（並列可能）</p>
+        </div>
+        <div class="step-item">
+          <span class="step-num">4</span>
+          <p>結果だけが親に返され、統合される</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ビルトインエージェント -->
+    <h3 class="fade-in">標準搭載のサブエージェント <span class="badge badge-cyan">組み込み</span></h3>
+    <div class="card-grid stagger" style="margin-bottom:28px">
+      <div class="card">
+        <span class="card-icon">🔍</span>
+        <h4>Explore（探索）</h4>
+        <p>コードベースの高速検索・分析に特化した<strong>読み取り専用</strong>エージェント。ファイル検索やキーワード調査を素早く実行します。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📋</span>
+        <h4>Plan（設計）</h4>
+        <p>実装計画を立てる<strong>設計専門</strong>エージェント。ファイル構成やアーキテクチャの検討を行い、ステップバイステップの計画を返します。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">⚙️</span>
+        <h4>General-purpose（汎用）</h4>
+        <p>複雑で<strong>複数ステップのタスク</strong>を自律実行する汎用エージェント。ファイル操作・コマンド実行・Web検索など全ツールにアクセス可能。</p>
+      </div>
+    </div>
+
+    <!-- カスタムサブエージェントの作り方 -->
+    <h3 class="fade-in">カスタムサブエージェント <span class="badge badge-gold">応用</span></h3>
+    <div class="card fade-in" style="margin-bottom:28px">
+      <p style="margin-bottom:12px">自分専用のサブエージェントも作成できます。プロジェクト内の <code>.claude/agents/</code> フォルダに定義ファイルを置くだけです。</p>
+      <div class="accordion">
+        <button class="accordion-trigger" onclick="toggleAccordion(this)"><span class="arrow">▶</span> 定義ファイルの例を見る</button>
+        <div class="accordion-content" role="region">
+          <p>Markdown + YAML形式で記述します。</p>
+          <pre><code>---
+name: security-checker
+description: コードのセキュリティ脆弱性をチェックする
+tools:
+  - Read
+  - Grep
+  - Glob
+---
+
+あなたはセキュリティ専門のレビュアーです。
+以下の観点でコードを分析してください：
+- SQLインジェクション
+- XSS（クロスサイトスクリプティング）
+- 認証・認可の不備
+- 機密情報のハードコード</code></pre>
+          <p>この定義ファイルを <code>.claude/agents/security-checker.md</code> として保存すると、Claudeが自動的にセキュリティチェック時にこのエージェントを呼び出します。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- メリット -->
+    <h3 class="fade-in">メリット <span class="badge badge-green">利点</span></h3>
+    <div class="card-grid stagger" style="margin-bottom:28px">
+      <div class="card">
+        <span class="card-icon">⚡</span>
+        <h4>並列処理で高速化</h4>
+        <p>最大<strong style="color:var(--cyan)">7つ</strong>のサブエージェントを同時実行可能。調査・実装・テストを並行して進め、作業時間を大幅に短縮。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🧠</span>
+        <h4>コンテキストの節約</h4>
+        <p>大量のログやテスト結果をサブエージェントが処理。親の会話が長大にならず、<strong>思考の質を維持</strong>できます。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🎯</span>
+        <h4>専門性の向上</h4>
+        <p>各エージェントに専門知識を与えることで、汎用的に聞くより<strong>精度の高い結果</strong>を得られます。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🔒</span>
+        <h4>エラーの隔離</h4>
+        <p>1つのサブエージェントが失敗しても他には影響しません。<strong>安全に試行錯誤</strong>できます。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">♻️</span>
+        <h4>再利用可能</h4>
+        <p>一度作ったカスタムエージェントは他のプロジェクトでも再利用OK。<strong>ナレッジの資産化</strong>が可能。</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📊</span>
+        <h4>複雑なワークフロー</h4>
+        <p>「調査→検証→レポート作成」のような多段階の業務フローを1つの指示で自動化できます。</p>
+      </div>
+    </div>
+
+    <!-- 経営者向け活用例 -->
+    <h3 class="fade-in">活用イメージ <span class="badge badge-gold">実例</span></h3>
+    <div class="glow-box fade-in" style="margin-bottom:28px">
+      <div class="glow-box-inner">
+        <h3 style="margin-bottom:16px">📊 経営者の活用シーン</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <p style="font-size:.82rem;font-weight:700;color:var(--cyan);margin-bottom:8px">💼 業務効率化</p>
+            <ul style="padding-left:1.2em;font-size:.84rem;line-height:2">
+              <li><strong>コードレビュー</strong>：セキュリティ・品質・テストを3つのエージェントが同時チェック</li>
+              <li><strong>データ分析</strong>：データ収集・分析・レポート作成を並列実行</li>
+              <li><strong>Web制作</strong>：デザイン・コーディング・テストを分担</li>
+            </ul>
+          </div>
+          <div>
+            <p style="font-size:.82rem;font-weight:700;color:var(--gold);margin-bottom:8px">🔬 高度な活用</p>
+            <ul style="padding-left:1.2em;font-size:.84rem;line-height:2">
+              <li><strong>市場調査</strong>：複数の情報源から並列で情報収集し、統合レポートを生成</li>
+              <li><strong>競合分析</strong>：各競合を別々のエージェントが調査し、比較表を自動作成</li>
+              <li><strong>決算分析</strong>：財務・外部環境・センチメントを3エージェントが並列調査</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 注意点 -->
+    <h3 class="fade-in">気をつけるべきポイント <span class="badge" style="background:var(--red-bg);color:var(--red)">注意</span></h3>
+    <div class="card fade-in" style="margin-bottom:28px;border-color:rgba(248,81,73,.2)">
+      <ul class="feature-list">
+        <li><span class="x-mark">⚠️</span><div><strong>親→子の情報共有は限定的</strong><br>サブエージェントは親の会話全体を見ることができません。必要な情報は指示の中で明確に伝える必要があります。</div></li>
+        <li><span class="x-mark">⚠️</span><div><strong>複雑な相互依存には不向き</strong><br>「Aの結果を見てBを決める、Bの結果でCを変える」のような密結合タスクは、1つのエージェントで処理した方が効率的です。</div></li>
+        <li><span class="x-mark">⚠️</span><div><strong>並列実行は最大7つまで</strong><br>同時に動かせるサブエージェントには上限があります。大規模なタスクは段階的に分ける必要があります。</div></li>
+        <li><span class="x-mark">⚠️</span><div><strong>権限管理に注意</strong><br>サブエージェントがファイル操作やコマンドを実行する場合、権限の確認が必要です。意図しない操作を防ぐため、読み取り専用に制限する設計も有効です。</div></li>
+        <li><span class="x-mark">⚠️</span><div><strong>結果の品質チェック</strong><br>サブエージェントの出力は必ず親が統合します。結果が不十分な場合は再度指示を出すか、手動で確認しましょう。</div></li>
+      </ul>
+    </div>
+
+    <!-- 分かりやすいたとえ -->
+    <div class="key-point fade-in" style="margin-bottom:28px">
+      <strong style="color:var(--gold)">💡 経営者にとっての「サブエージェント」とは？</strong><br>
+      社長（親エージェント）が、経理・営業・法務の各部門長（サブエージェント）に仕事を振るイメージです。各部門長は専門知識を持ち、独立して作業し、結果だけを社長に報告します。部門間の仕事は同時並行で進むので、全体のスピードが劇的に上がります。
+    </div>
+
+    <div class="fun-fact fade-in">
+      <span class="fun-label">この資料でも活用</span>
+      <p>この別添え資料の制作でも、サブエージェントを活用しています。CLI・ターミナル・コーディングの歴史調査を<strong style="color:var(--cyan)">調査エージェントが並列で情報収集</strong>し、メインエージェントが統合・執筆しています。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
      SECTION 4: インストール手順
      ============================================================ -->
 <section class="slide" id="install">
@@ -1459,7 +1657,7 @@ claude</code></pre>
 
   // Mascot (横切り)
   const mascotEl=document.getElementById('mascot');
-  [{id:'what-is-cli',msg:'CLIって面白い！'},{id:'coding-history',msg:'歴史を学ぼう！'},{id:'what-is-cc',msg:'Claude Code!'},{id:'install',msg:'インストールしよう！'},{id:'verify',msg:'確認してみよう！'}].forEach(({id,msg})=>{
+  [{id:'what-is-cli',msg:'CLIって面白い！'},{id:'coding-history',msg:'歴史を学ぼう！'},{id:'what-is-cc',msg:'Claude Code!'},{id:'subagent',msg:'チームワーク！'},{id:'install',msg:'インストールしよう！'},{id:'verify',msg:'確認してみよう！'}].forEach(({id,msg})=>{
     const s=document.getElementById(id);if(!s)return;
     const o=new IntersectionObserver(e=>{if(e[0].isIntersecting){
       mascotEl.querySelector('.mascot-speech').textContent=msg;
