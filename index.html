@@ -10,8 +10,8 @@
 <style>
 /* ===== RESET ===== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;font-size:18px}
-body{font-family:'Noto Sans JP',sans-serif;background:#0b1628;color:#e8ecf1;line-height:2;overflow-x:hidden}
+html{scroll-behavior:smooth;font-size:15px}
+body{font-family:'Noto Sans JP',sans-serif;background:#0b1628;color:#e8ecf1;line-height:1.8;overflow-x:hidden}
 
 /* ===== VARS ===== */
 :root{
@@ -28,20 +28,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:#0b1628;color:#e8ecf1;line
 /* ===== NAV ===== */
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(11,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--card-border);padding:0 20px;transition:transform .3s}
 .nav.hidden{transform:translateY(-100%)}
-.nav-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px}
-.nav-title{font-size:.88rem;font-weight:700;color:var(--gold);white-space:nowrap}
-.nav-links{display:flex;gap:3px;overflow-x:auto}
-.nav-links a{font-size:.78rem;color:var(--text-dim);text-decoration:none;padding:7px 11px;border-radius:6px;white-space:nowrap;transition:.2s}
+.nav-inner{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:50px}
+.nav-title{font-size:.82rem;font-weight:700;color:var(--gold);white-space:nowrap}
+.nav-links{display:flex;gap:2px;overflow-x:auto}
+.nav-links a{font-size:.72rem;color:var(--text-dim);text-decoration:none;padding:5px 9px;border-radius:6px;white-space:nowrap;transition:.2s}
 .nav-links a:hover,.nav-links a.active{color:var(--gold);background:rgba(212,168,67,.1)}
 .nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer}
-.progress-bar{position:fixed;top:54px;left:0;z-index:999;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--purple));width:0%;transition:width .3s}
+.progress-bar{position:fixed;top:50px;left:0;z-index:999;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--purple));width:0%;transition:width .3s}
 
 /* ===== ACCESSIBILITY ===== */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
 
 /* ===== SLIDES ===== */
-.slide{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px 60px;position:relative;overflow:hidden}
+.slide{min-height:auto;display:flex;align-items:center;justify-content:center;padding:56px 24px 44px;position:relative;overflow:hidden}
 .slide-inner{max-width:var(--max);width:100%;position:relative;z-index:2}
 
 /* ===== FLOATING DECORATIONS ===== */
@@ -64,87 +64,87 @@ body{font-family:'Noto Sans JP',sans-serif;background:#0b1628;color:#e8ecf1;line
 .spin-slow{animation:spin 20s linear infinite}
 
 /* ===== TYPOGRAPHY ===== */
-.slide-label{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;letter-spacing:.15em;color:var(--gold);background:rgba(212,168,67,.1);padding:6px 16px;border-radius:20px;margin-bottom:16px}
-.slide-label .label-icon{font-size:1rem}
-.slide-title{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;line-height:1.3;margin-bottom:18px}
+.slide-label{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;letter-spacing:.12em;color:var(--gold);background:rgba(212,168,67,.1);padding:5px 14px;border-radius:20px;margin-bottom:12px}
+.slide-label .label-icon{font-size:.9rem}
+.slide-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;line-height:1.3;margin-bottom:14px}
 .slide-title .gold{color:var(--gold)}.slide-title .cyan{color:var(--cyan)}.slide-title .purple{color:var(--purple)}
-.slide-subtitle{font-size:clamp(1.05rem,2.2vw,1.3rem);color:var(--text-dim);margin-bottom:36px}
-h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
+.slide-subtitle{font-size:clamp(.92rem,1.8vw,1.1rem);color:var(--text-dim);margin-bottom:28px}
+h3{font-size:1.1rem;font-weight:700;margin-bottom:12px;color:var(--gold-light)}
 
 /* ===== CARDS ===== */
-.card-grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:32px;transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
+.card-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px;transition:transform .3s,box-shadow .3s;position:relative;overflow:hidden}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0;transition:opacity .3s}
 .card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(212,168,67,.12)}
 .card:hover::before{opacity:1}
-.card-icon{font-size:2.6rem;margin-bottom:14px;display:block}
-.card h4{font-size:1.15rem;font-weight:700;margin-bottom:10px;color:var(--gold-light)}
-.card p,.card li{font-size:1rem;color:var(--text-dim);line-height:1.85}
-.card ul{padding-left:1.2em}.card li{margin-bottom:6px}
+.card-icon{font-size:2.2rem;margin-bottom:10px;display:block}
+.card h4{font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--gold-light)}
+.card p,.card li{font-size:.9rem;color:var(--text-dim);line-height:1.75}
+.card ul{padding-left:1.2em}.card li{margin-bottom:4px}
 .card.highlight{border-color:var(--gold);background:linear-gradient(135deg,var(--navy-mid),var(--card))}
 
 /* ===== ILLUSTRATED CARD (new) ===== */
-.illust-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:36px;text-align:center;position:relative;overflow:hidden}
-.illust-card .illust{font-size:4.5rem;margin-bottom:18px;display:block;filter:drop-shadow(0 4px 12px rgba(212,168,67,.3))}
-.illust-card h4{font-size:1.2rem;font-weight:700;color:var(--gold-light);margin-bottom:8px}
-.illust-card p{font-size:1rem;color:var(--text-dim)}
+.illust-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px;text-align:center;position:relative;overflow:hidden}
+.illust-card .illust{font-size:3.2rem;margin-bottom:12px;display:block;filter:drop-shadow(0 4px 12px rgba(212,168,67,.3))}
+.illust-card h4{font-size:1rem;font-weight:700;color:var(--gold-light);margin-bottom:6px}
+.illust-card p{font-size:.88rem;color:var(--text-dim)}
 .illust-card::after{content:'';position:absolute;bottom:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.06),transparent);pointer-events:none}
 
 /* ===== COMPARISON TABLE ===== */
-.compare-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:1rem}
-.compare-table th{background:var(--navy-mid);color:var(--gold);font-weight:700;padding:15px 16px;text-align:left;border-bottom:2px solid var(--gold-dim)}
-.compare-table td{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-dim)}
+.compare-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+.compare-table th{background:var(--navy-mid);color:var(--gold);font-weight:700;padding:10px 14px;text-align:left;border-bottom:2px solid var(--gold-dim)}
+.compare-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-dim)}
 .compare-table tr:hover td{background:rgba(212,168,67,.04)}
 .compare-table .circle{color:var(--gold);font-weight:700}
 .compare-table .triangle{color:var(--cyan)}
 .compare-table .cross{color:var(--red)}
 
 /* ===== ACCORDION ===== */
-.accordion{margin-top:18px;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden}
-.accordion-trigger{width:100%;background:rgba(255,255,255,.03);border:none;color:var(--cyan);font-family:inherit;font-size:.98rem;font-weight:500;padding:14px 20px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;transition:.2s}
+.accordion{margin-top:14px;border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden}
+.accordion-trigger{width:100%;background:rgba(255,255,255,.03);border:none;color:var(--cyan);font-family:inherit;font-size:.88rem;font-weight:500;padding:11px 18px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;transition:.2s}
 .accordion-trigger:hover{background:rgba(255,255,255,.06)}
 .accordion-trigger .arrow{transition:transform .3s;display:inline-block;font-size:.8rem}
 .accordion-trigger.open .arrow{transform:rotate(90deg)}
-.accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 20px;font-size:.98rem;color:var(--text-dim);line-height:2}
-.accordion-content.open{max-height:2000px;padding:18px 20px}
+.accordion-content{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;padding:0 18px;font-size:.88rem;color:var(--text-dim);line-height:1.8}
+.accordion-content.open{max-height:2000px;padding:14px 18px}
 .accordion-content p{margin-bottom:8px}
 .accordion-content ul{padding-left:1.2em}
 .accordion-content li{margin-bottom:4px}
 
 /* ===== STEP FLOW ===== */
-.step-flow{display:flex;gap:0;align-items:stretch;margin:24px 0;overflow-x:auto;padding-bottom:8px}
-.step-item{flex:1;min-width:165px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:24px 16px;text-align:center;position:relative}
+.step-flow{display:flex;gap:0;align-items:stretch;margin:20px 0;overflow-x:auto;padding-bottom:8px}
+.step-item{flex:1;min-width:140px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:18px 12px;text-align:center;position:relative}
 .step-item:not(:last-child)::after{content:'→';position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--gold);font-size:1.3rem;font-weight:700;z-index:1}
-.step-num-circle{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 2px 12px rgba(212,168,67,.3)}
-.step-item h4{font-size:1rem;color:var(--gold-light);margin-bottom:6px}
-.step-item p{font-size:.9rem;color:var(--text-dim)}
+.step-num-circle{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:.95rem;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 2px 12px rgba(212,168,67,.3)}
+.step-item h4{font-size:.9rem;color:var(--gold-light);margin-bottom:4px}
+.step-item p{font-size:.82rem;color:var(--text-dim)}
 
 /* ===== PRICING ===== */
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:24px}
-.pricing-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:32px 26px;text-align:center;position:relative;overflow:hidden}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.pricing-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px 20px;text-align:center;position:relative;overflow:hidden}
 .pricing-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--card-border),var(--card-border))}
 .pricing-card.recommended{border-color:var(--gold);box-shadow:0 0 40px rgba(212,168,67,.12)}
 .pricing-card.recommended::before{background:linear-gradient(90deg,var(--gold),var(--cyan))}
 .pricing-card.recommended::after{content:'おすすめ';position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--gold),var(--gold-light));color:var(--navy);font-size:.82rem;font-weight:700;padding:5px 20px;border-radius:0 0 10px 10px}
-.pricing-card h4{font-size:1.4rem;color:var(--gold-light);margin-bottom:4px;margin-top:8px}
-.pricing-card .price{font-size:2.4rem;font-weight:900;margin:14px 0}
-.pricing-card .price small{font-size:.9rem;font-weight:400;color:var(--text-dim)}
+.pricing-card h4{font-size:1.15rem;color:var(--gold-light);margin-bottom:4px;margin-top:8px}
+.pricing-card .price{font-size:2rem;font-weight:900;margin:10px 0}
+.pricing-card .price small{font-size:.82rem;font-weight:400;color:var(--text-dim)}
 .pricing-card ul{text-align:left;list-style:none}
-.pricing-card li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.98rem;color:var(--text-dim)}
+.pricing-card li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem;color:var(--text-dim)}
 .pricing-card li::before{content:'✓ ';color:var(--green);font-weight:700}
 .pricing-card li.limited::before{content:'△ ';color:var(--gold)}
 .pricing-card li.unavailable{opacity:.35}
 .pricing-card li.unavailable::before{content:'✕ ';color:var(--red)}
 
 /* ===== TIMELINE ===== */
-.timeline{position:relative;padding-left:44px;margin:24px 0}
-.timeline::before{content:'';position:absolute;left:17px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--cyan),var(--purple))}
-.timeline-item{position:relative;margin-bottom:28px;padding:18px 22px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;transition:transform .3s}
+.timeline{position:relative;padding-left:40px;margin:20px 0}
+.timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--cyan),var(--purple))}
+.timeline-item{position:relative;margin-bottom:20px;padding:14px 18px;background:var(--card);border:1px solid var(--card-border);border-radius:12px;transition:transform .3s}
 .timeline-item:hover{transform:translateX(6px)}
-.timeline-item::before{content:'';position:absolute;left:-35px;top:22px;width:14px;height:14px;border-radius:50%;background:var(--gold);border:3px solid var(--navy);box-shadow:0 0 10px rgba(212,168,67,.4)}
-.timeline-item h4{color:var(--gold-light);font-size:1.1rem}
-.timeline-item .year{font-size:.85rem;color:var(--gold);font-weight:700;letter-spacing:.05em}
-.timeline-item p{font-size:.98rem;color:var(--text-dim);margin-top:6px}
+.timeline-item::before{content:'';position:absolute;left:-33px;top:18px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:3px solid var(--navy);box-shadow:0 0 10px rgba(212,168,67,.4)}
+.timeline-item h4{color:var(--gold-light);font-size:.95rem}
+.timeline-item .year{font-size:.78rem;color:var(--gold);font-weight:700;letter-spacing:.05em}
+.timeline-item p{font-size:.88rem;color:var(--text-dim);margin-top:4px}
 
 /* ===== BADGES ===== */
 .badge{display:inline-block;font-size:.8rem;font-weight:700;padding:4px 12px;border-radius:20px;margin-right:6px}
@@ -262,41 +262,41 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
 }
 
 /* ===== HERO ===== */
-.hero{min-height:100vh;padding-top:60px;position:relative;overflow:hidden}
+.hero{min-height:100vh;padding-top:52px;position:relative;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(212,168,67,.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(74,144,217,.05) 0%,transparent 60%),radial-gradient(ellipse at 50% 50%,rgba(167,139,250,.03) 0%,transparent 50%),var(--navy)}
 /* hero animated grid */
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(212,168,67,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(212,168,67,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
 .hero-content{position:relative;z-index:2;text-align:center}
-.hero-date{display:inline-flex;align-items:center;gap:8px;font-size:.95rem;font-weight:700;color:var(--gold);border:1px solid var(--gold-dim);padding:7px 26px;border-radius:30px;margin-bottom:28px;letter-spacing:.1em}
-.hero-main-title{font-size:clamp(2.6rem,7vw,4.8rem);font-weight:900;line-height:1.15;margin-bottom:10px}
+.hero-date{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700;color:var(--gold);border:1px solid var(--gold-dim);padding:6px 22px;border-radius:30px;margin-bottom:22px;letter-spacing:.1em}
+.hero-main-title{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:900;line-height:1.15;margin-bottom:10px}
 .hero-main-title .line1{color:var(--text)}
 .hero-main-title .line2{background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--cyan));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite}
 @keyframes shimmer{0%,100%{background-position:0% center}50%{background-position:100% center}}
-.hero-sub{font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--text-dim);margin:22px 0 40px}
-.hero-meta{display:flex;gap:30px;justify-content:center;flex-wrap:wrap;font-size:1rem;color:var(--text-dim)}
+.hero-sub{font-size:clamp(.95rem,2vw,1.25rem);color:var(--text-dim);margin:16px 0 32px}
+.hero-meta{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;font-size:.9rem;color:var(--text-dim)}
 .hero-meta span{display:flex;align-items:center;gap:8px}
 .hero-meta .icon{font-size:1.2rem}
-.hero-goal-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:44px;text-align:left}
-.hero-goal-card{background:rgba(255,255,255,.03);border:1px solid rgba(212,168,67,.12);border-radius:12px;padding:22px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
+.hero-goal-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:36px;text-align:left}
+.hero-goal-card{background:rgba(255,255,255,.03);border:1px solid rgba(212,168,67,.12);border-radius:12px;padding:18px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
 .hero-goal-card:hover{transform:translateY(-3px);border-color:var(--gold)}
 .hero-goal-card::before{content:'';position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.08),transparent);pointer-events:none}
-.hero-goal-card .num{font-size:1.7rem;font-weight:900;color:var(--gold);line-height:1}
-.hero-goal-card .goal-icon{font-size:2rem;float:right;opacity:.6}
-.hero-goal-card p{font-size:.98rem;color:var(--text-dim);margin-top:8px}
+.hero-goal-card .num{font-size:1.4rem;font-weight:900;color:var(--gold);line-height:1}
+.hero-goal-card .goal-icon{font-size:1.6rem;float:right;opacity:.6}
+.hero-goal-card p{font-size:.88rem;color:var(--text-dim);margin-top:6px}
 .scroll-indicator{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);text-align:center;animation:scrollBounce 2s infinite}
 .scroll-indicator span{font-size:.85rem;color:var(--text-dim);display:block;margin-bottom:6px}
 .scroll-indicator .arrow-down{font-size:1.4rem;color:var(--gold)}
 @keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 
 /* ===== KEY POINT ===== */
-.key-point{background:rgba(212,168,67,.06);border-left:4px solid var(--gold);padding:20px 24px;border-radius:0 10px 10px 0;margin:20px 0;font-size:1.02rem;color:var(--text);position:relative}
+.key-point{background:rgba(212,168,67,.06);border-left:4px solid var(--gold);padding:14px 20px;border-radius:0 10px 10px 0;margin:16px 0;font-size:.9rem;color:var(--text);position:relative}
 .key-point::before{content:'💡';position:absolute;left:-16px;top:50%;transform:translateY(-50%);font-size:1.2rem;background:var(--navy);padding:2px}
 
 /* ===== FUN FACT BOX ===== */
-.fun-fact{background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(56,189,248,.05));border:1px solid rgba(167,139,250,.2);border-radius:var(--radius);padding:24px 28px;margin:22px 0;position:relative;overflow:hidden}
-.fun-fact::before{content:'📚';position:absolute;top:12px;right:16px;font-size:2.2rem;opacity:.3}
-.fun-fact .fun-label{font-size:.82rem;font-weight:700;color:var(--purple);letter-spacing:.1em;margin-bottom:8px;display:block}
-.fun-fact p{font-size:1.02rem;color:var(--text)}
+.fun-fact{background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(56,189,248,.05));border:1px solid rgba(167,139,250,.2);border-radius:var(--radius);padding:18px 22px;margin:18px 0;position:relative;overflow:hidden}
+.fun-fact::before{content:'📚';position:absolute;top:10px;right:14px;font-size:1.8rem;opacity:.3}
+.fun-fact .fun-label{font-size:.75rem;font-weight:700;color:var(--purple);letter-spacing:.1em;margin-bottom:6px;display:block}
+.fun-fact p{font-size:.9rem;color:var(--text)}
 
 /* ===== TWO COL ===== */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
@@ -304,35 +304,35 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
 .info-row>*{flex:1;min-width:260px}
 
 /* ===== TIMETABLE ===== */
-.timetable{width:100%;border-collapse:collapse;margin:20px 0}
-.timetable th{background:var(--navy-mid);color:var(--gold);padding:13px 16px;text-align:left;font-size:.92rem;font-weight:700;border-bottom:2px solid var(--gold-dim)}
-.timetable td{padding:14px 16px;font-size:.98rem;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-dim);vertical-align:top}
+.timetable{width:100%;border-collapse:collapse;margin:16px 0}
+.timetable th{background:var(--navy-mid);color:var(--gold);padding:10px 14px;text-align:left;font-size:.82rem;font-weight:700;border-bottom:2px solid var(--gold-dim)}
+.timetable td{padding:10px 14px;font-size:.88rem;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text-dim);vertical-align:top}
 .timetable tr.active td{background:rgba(212,168,67,.06);color:var(--text)}
 .timetable .time-col{color:var(--cyan);font-weight:700;white-space:nowrap;font-size:.92rem}
 .timetable .part-col{color:var(--gold-light);font-weight:700}
 .timetable .duration-col{white-space:nowrap}
 
 /* ===== WIFI ===== */
-.wifi-box{background:linear-gradient(135deg,var(--navy-mid),var(--card));border:2px solid var(--gold);border-radius:18px;padding:32px;text-align:center;margin:24px 0;position:relative;overflow:hidden}
+.wifi-box{background:linear-gradient(135deg,var(--navy-mid),var(--card));border:2px solid var(--gold);border-radius:16px;padding:24px;text-align:center;margin:20px 0;position:relative;overflow:hidden}
 .wifi-box::after{content:'';position:absolute;top:-50%;right:-20%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,67,.06),transparent);pointer-events:none}
-.wifi-box h3{font-size:1.3rem;margin-bottom:16px}
-.wifi-box .wifi-info{display:flex;gap:32px;justify-content:center;flex-wrap:wrap}
-.wifi-box .wifi-label{font-size:.88rem;color:var(--text-dim);display:block;margin-bottom:4px}
-.wifi-box .wifi-value{font-weight:900;font-size:1.7rem;color:var(--gold-light);letter-spacing:.1em}
+.wifi-box h3{font-size:1.1rem;margin-bottom:12px}
+.wifi-box .wifi-info{display:flex;gap:28px;justify-content:center;flex-wrap:wrap}
+.wifi-box .wifi-label{font-size:.8rem;color:var(--text-dim);display:block;margin-bottom:4px}
+.wifi-box .wifi-value{font-weight:900;font-size:1.4rem;color:var(--gold-light);letter-spacing:.1em}
 
 /* ===== DEMO CARD ===== */
-.demo-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
+.demo-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:22px;margin-bottom:16px;position:relative;overflow:hidden}
 .demo-card::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;background:radial-gradient(circle,rgba(212,168,67,.05),transparent);pointer-events:none}
-.demo-card .demo-num{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:1rem;margin-right:12px;box-shadow:0 2px 8px rgba(212,168,67,.3)}
-.demo-card h4{display:inline;font-size:1.15rem;color:var(--gold-light)}
-.demo-card p{margin-top:12px;font-size:1rem;color:var(--text-dim)}
-.demo-card .message{margin-top:14px;padding:12px 16px;background:rgba(46,160,67,.06);border:1px solid rgba(46,160,67,.15);border-radius:10px;font-size:.98rem;color:var(--green);font-weight:500}
+.demo-card .demo-num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:.9rem;margin-right:10px;box-shadow:0 2px 8px rgba(212,168,67,.3)}
+.demo-card h4{display:inline;font-size:1rem;color:var(--gold-light)}
+.demo-card p{margin-top:10px;font-size:.88rem;color:var(--text-dim)}
+.demo-card .message{margin-top:10px;padding:10px 14px;background:rgba(46,160,67,.06);border:1px solid rgba(46,160,67,.15);border-radius:10px;font-size:.88rem;color:var(--green);font-weight:500}
 
 /* ===== CHAT MOCK ===== */
-.chat-mock{background:#1a2540;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px;margin-top:14px;max-width:480px}
+.chat-mock{background:#1a2540;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;margin-top:12px;max-width:440px}
 .chat-mock-header{display:flex;align-items:center;gap:6px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
 .chat-mock-dot{width:8px;height:8px;border-radius:50%}
-.chat-bubble{padding:12px 16px;border-radius:14px;font-size:.92rem;line-height:1.75;margin-bottom:10px;max-width:85%;position:relative}
+.chat-bubble{padding:10px 14px;border-radius:12px;font-size:.84rem;line-height:1.7;margin-bottom:8px;max-width:85%;position:relative}
 .chat-bubble.user{background:linear-gradient(135deg,var(--blue),#3a7bd5);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
 .chat-bubble.ai{background:rgba(255,255,255,.06);color:var(--text);border-bottom-left-radius:4px}
 .chat-bubble .sender{font-size:.75rem;font-weight:700;margin-bottom:4px;display:block}
@@ -340,40 +340,40 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
 .chat-bubble.ai .sender{color:var(--gold)}
 
 /* ===== STAT CARDS ===== */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:24px 0}
-.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px 16px;text-align:center;position:relative;overflow:hidden}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:18px 0}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:18px 12px;text-align:center;position:relative;overflow:hidden}
 .stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0;transition:opacity .3s}
 .stat-card:hover::after{opacity:1}
-.stat-card .stat-num{font-size:2.8rem;font-weight:900;color:var(--gold);line-height:1}
-.stat-card .stat-unit{font-size:1rem;color:var(--gold-light);font-weight:700}
-.stat-card .stat-label{font-size:.88rem;color:var(--text-dim);margin-top:6px}
+.stat-card .stat-num{font-size:2.2rem;font-weight:900;color:var(--gold);line-height:1}
+.stat-card .stat-unit{font-size:.88rem;color:var(--gold-light);font-weight:700}
+.stat-card .stat-label{font-size:.8rem;color:var(--text-dim);margin-top:4px}
 
 /* ===== ABILITY FLOW ===== */
-.ability-flow{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:36px}
-.ability-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:32px 40px;text-align:center;transition:transform .3s,box-shadow .3s;min-width:140px}
+.ability-flow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+.ability-card{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:22px 30px;text-align:center;transition:transform .3s,box-shadow .3s;min-width:120px}
 .ability-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(212,168,67,.1)}
-.ability-card .icon{font-size:3.5rem;display:block;margin-bottom:10px}
-.ability-card .label{font-size:1.15rem;color:var(--gold-light);font-weight:700}
-.ability-arrow{font-size:2rem;color:var(--gold);display:flex;align-items:center;padding:0 4px}
+.ability-card .icon{font-size:2.6rem;display:block;margin-bottom:8px}
+.ability-card .label{font-size:.95rem;color:var(--gold-light);font-weight:700}
+.ability-arrow{font-size:1.6rem;color:var(--gold);display:flex;align-items:center;padding:0 2px}
 
 /* ===== HANDSON INPUT LIST ===== */
-.input-list-card{background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(56,189,248,.04));border:1px solid var(--gold-dim);border-radius:var(--radius);padding:28px;margin:20px 0}
-.input-list-card h4{color:var(--gold);margin-bottom:16px}
-.input-list-card table{width:100%;font-size:.98rem}
-.input-list-card th{text-align:left;color:var(--gold-light);padding:10px 14px;border-bottom:1px solid var(--gold-dim);font-weight:700}
-.input-list-card td{padding:12px 14px;color:var(--text-dim);border-bottom:1px solid rgba(255,255,255,.04)}
+.input-list-card{background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(56,189,248,.04));border:1px solid var(--gold-dim);border-radius:var(--radius);padding:22px;margin:16px 0}
+.input-list-card h4{color:var(--gold);margin-bottom:12px;font-size:.95rem}
+.input-list-card table{width:100%;font-size:.88rem}
+.input-list-card th{text-align:left;color:var(--gold-light);padding:8px 12px;border-bottom:1px solid var(--gold-dim);font-weight:700;font-size:.82rem}
+.input-list-card td{padding:8px 12px;color:var(--text-dim);border-bottom:1px solid rgba(255,255,255,.04)}
 .input-list-card td:first-child{color:var(--text);font-weight:500}
 
 /* ===== FEATURE LIST ===== */
 .feature-list{list-style:none;padding:0}
-.feature-list li{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:1rem;color:var(--text-dim);display:flex;align-items:flex-start;gap:10px}
+.feature-list li{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem;color:var(--text-dim);display:flex;align-items:flex-start;gap:8px}
 .feature-list .check{color:var(--green);font-weight:700;flex-shrink:0}
 .feature-list .warn{color:var(--gold);flex-shrink:0}
 
 /* ===== SECTION DIVIDER ILLUSTRATION ===== */
-.section-illust{text-align:center;margin:20px 0 28px;position:relative}
-.section-illust .big-emoji{font-size:5rem;display:block;filter:drop-shadow(0 8px 24px rgba(212,168,67,.2));animation:float1 6s ease-in-out infinite}
-.section-illust .orbit{position:absolute;width:120px;height:120px;top:50%;left:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(212,168,67,.15);border-radius:50%;animation:spin 15s linear infinite}
+.section-illust{text-align:center;margin:14px 0 20px;position:relative}
+.section-illust .big-emoji{font-size:3.5rem;display:block;filter:drop-shadow(0 6px 18px rgba(212,168,67,.2));animation:float1 6s ease-in-out infinite}
+.section-illust .orbit{position:absolute;width:90px;height:90px;top:50%;left:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(212,168,67,.15);border-radius:50%;animation:spin 15s linear infinite}
 .section-illust .orbit-dot{position:absolute;width:8px;height:8px;background:var(--gold);border-radius:50%;top:-4px;left:50%;transform:translateX(-50%);box-shadow:0 0 8px rgba(212,168,67,.4)}
 
 /* ===== AI LOGO ===== */
@@ -391,7 +391,7 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
 /* ===== GLOW BOX ===== */
 .glow-box{position:relative;border-radius:var(--radius);padding:3px}
 .glow-box::before{content:'';position:absolute;inset:-1px;border-radius:var(--radius);background:linear-gradient(135deg,var(--gold),var(--cyan),var(--purple),var(--gold));background-size:300% 300%;animation:glowRotate 6s linear infinite;z-index:0}
-.glow-box-inner{background:var(--card);border-radius:calc(var(--radius) - 2px);padding:28px;position:relative;z-index:1}
+.glow-box-inner{background:var(--card);border-radius:calc(var(--radius) - 2px);padding:22px;position:relative;z-index:1}
 @keyframes glowRotate{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
 /* ===== PARTICLE DOTS BG ===== */
@@ -399,7 +399,7 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
 .particle{position:absolute;border-radius:50%;opacity:.3}
 
 /* ===== DASHBOARD ===== */
-.dashboard{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:24px;position:relative;overflow:hidden}
+.dashboard{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
 .dashboard-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06)}
 .dashboard-header h4{font-size:.95rem;color:var(--gold-light);font-weight:700}
 .dashboard-live{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--green);font-weight:700}
@@ -476,16 +476,16 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
 
 /* ===== APPENDIX LINK ===== */
 .appendix-links{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px}
-.appendix-link{flex:1;min-width:260px;display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(56,189,248,.04));border:1px solid var(--gold-dim);border-radius:var(--radius);padding:20px 24px;text-decoration:none;color:var(--text);transition:transform .3s,border-color .3s,box-shadow .3s}
+.appendix-link{flex:1;min-width:240px;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(56,189,248,.04));border:1px solid var(--gold-dim);border-radius:var(--radius);padding:16px 20px;text-decoration:none;color:var(--text);transition:transform .3s,border-color .3s,box-shadow .3s}
 .appendix-link:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 8px 28px rgba(212,168,67,.15)}
-.appendix-link .ap-icon{font-size:2.4rem;flex-shrink:0}
+.appendix-link .ap-icon{font-size:2rem;flex-shrink:0}
 .appendix-link .ap-body{flex:1}
-.appendix-link .ap-title{font-size:1.05rem;font-weight:700;color:var(--gold-light);margin-bottom:2px}
-.appendix-link .ap-desc{font-size:.88rem;color:var(--text-dim);line-height:1.6}
+.appendix-link .ap-title{font-size:.92rem;font-weight:700;color:var(--gold-light);margin-bottom:2px}
+.appendix-link .ap-desc{font-size:.8rem;color:var(--text-dim);line-height:1.6}
 .appendix-link .ap-arrow{font-size:1.2rem;color:var(--gold);flex-shrink:0;transition:transform .3s}
 .appendix-link:hover .ap-arrow{transform:translateX(4px)}
 /* Inline small link variant */
-.appendix-inline{display:inline-flex;align-items:center;gap:6px;background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.2);border-radius:8px;padding:6px 14px;text-decoration:none;color:var(--gold-light);font-size:.92rem;font-weight:500;margin-top:8px;transition:background .2s,border-color .2s}
+.appendix-inline{display:inline-flex;align-items:center;gap:5px;background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.2);border-radius:8px;padding:5px 12px;text-decoration:none;color:var(--gold-light);font-size:.82rem;font-weight:500;margin-top:8px;transition:background .2s,border-color .2s}
 .appendix-inline:hover{background:rgba(212,168,67,.15);border-color:var(--gold)}
 .appendix-inline .ap-inline-icon{font-size:1.1rem}
 
@@ -506,31 +506,187 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
 .side-toc-part{font-size:.55rem;color:var(--gold-dim);letter-spacing:.1em;font-weight:700;padding:6px 0 2px;text-align:right}
 
 /* ===== FOOTER ===== */
-.footer{text-align:center;padding:52px 24px;border-top:1px solid var(--card-border);font-size:.92rem;color:var(--text-dim)}
+.footer{text-align:center;padding:40px 24px;border-top:1px solid var(--card-border);font-size:.82rem;color:var(--text-dim)}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
+  html{font-size:14px}
+  body{line-height:1.75}
   .nav-links{display:none}.nav-hamburger{display:block}
-  .nav-links.mobile-open{display:flex;flex-direction:column;position:absolute;top:54px;left:0;right:0;background:rgba(11,22,40,.97);padding:12px;border-bottom:1px solid var(--card-border)}
+  .nav-links.mobile-open{display:flex;flex-direction:column;position:absolute;top:50px;left:0;right:0;background:rgba(11,22,40,.97);padding:10px;border-bottom:1px solid var(--card-border)}
+  .nav-links.mobile-open a{padding:10px 16px;font-size:.85rem}
   .two-col{grid-template-columns:1fr}
-  .step-flow{flex-direction:column}
-  .step-item:not(:last-child)::after{content:'↓';right:auto;left:50%;top:auto;bottom:-18px;transform:translateX(-50%)}
-  .slide{padding:80px 16px 48px}
-  .hero-meta{flex-direction:column;gap:10px;align-items:center}
+  .step-flow{flex-direction:column;gap:10px}
+  .step-item{min-width:auto;padding:16px 12px}
+  .step-item:not(:last-child)::after{content:'↓';right:auto;left:50%;top:auto;bottom:-14px;transform:translateX(-50%);font-size:1rem}
+  .slide{padding:52px 14px 36px}
+  .hero{padding-top:48px}
+  .hero-main-title{font-size:1.8rem}
+  .hero-sub{font-size:.92rem;margin:12px 0 24px}
+  .hero-meta{flex-direction:column;gap:8px;align-items:center;font-size:.85rem}
+  .hero-goal-cards{grid-template-columns:1fr;gap:10px}
+  .hero-goal-card{padding:14px}
+  .slide-title{font-size:1.4rem;margin-bottom:10px}
+  .slide-subtitle{font-size:.88rem;margin-bottom:20px}
+  .section-illust .big-emoji{font-size:2.6rem}
+  .section-illust .orbit{width:70px;height:70px}
+  .card-grid{grid-template-columns:1fr;gap:12px}
+  .card{padding:18px}
+  .card h4{font-size:.92rem}
+  .card p,.card li{font-size:.85rem}
+  .illust-card{padding:18px}
+  .illust-card .illust{font-size:2.4rem;margin-bottom:8px}
+  .illust-card h4{font-size:.92rem}
+  .illust-card p{font-size:.82rem}
   .pricing-grid{grid-template-columns:1fr}
-  .ability-flow{gap:8px}
-  .ability-card{padding:20px 24px;min-width:100px}
-  .ability-card .icon{font-size:2.5rem}
-  .ability-card .label{font-size:1rem}
-  .ability-arrow{font-size:1.5rem}
-  .dashboard-grid{grid-template-columns:repeat(2,1fr)}
+  .pricing-card{padding:20px 16px}
+  .pricing-card .price{font-size:1.7rem}
+  .pricing-card li{font-size:.82rem;padding:6px 0}
+  .ability-flow{gap:6px}
+  .ability-card{padding:14px 18px;min-width:80px}
+  .ability-card .icon{font-size:2rem}
+  .ability-card .label{font-size:.82rem}
+  .ability-arrow{font-size:1.2rem}
+  .stat-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .stat-card{padding:14px 8px}
+  .stat-card .stat-num{font-size:1.6rem}
+  .stat-card .stat-label{font-size:.72rem}
+  .timeline{padding-left:32px}
+  .timeline-item{padding:12px 14px;margin-bottom:14px}
+  .timeline-item h4{font-size:.88rem}
+  .timeline-item p{font-size:.82rem}
+  .compare-table{font-size:.78rem}
+  .compare-table th{padding:8px 10px;font-size:.75rem}
+  .compare-table td{padding:8px 10px}
+  .timetable th{padding:8px 10px;font-size:.75rem}
+  .timetable td{padding:8px 10px;font-size:.82rem}
+  .key-point{padding:12px 16px;font-size:.85rem}
+  .fun-fact{padding:14px 16px}
+  .fun-fact p{font-size:.85rem}
+  .demo-card{padding:16px}
+  .demo-card h4{font-size:.92rem}
+  .demo-card p{font-size:.82rem}
+  .chat-mock{padding:10px;max-width:100%}
+  .chat-bubble{font-size:.78rem;padding:8px 12px}
+  .glow-box-inner{padding:16px}
+  .accordion-trigger{padding:10px 14px;font-size:.82rem}
+  .accordion-content{font-size:.82rem}
+  .accordion-content.open{padding:12px 14px}
+  .dashboard{padding:14px}
+  .dashboard-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .dash-metric .dash-val{font-size:1.3rem}
+  .dash-metric .dash-label{font-size:.68rem}
   .dash-chart-row{grid-template-columns:1fr}
-  .predict-flow{flex-direction:column;gap:12px}
-  .predict-arrow{transform:rotate(90deg);width:auto;height:30px}
+  .predict-flow{flex-direction:column;gap:10px}
+  .predict-arrow{transform:rotate(90deg);width:auto;height:24px}
   .predict-output{grid-template-columns:1fr}
+  .predict-card .p-num{font-size:1.4rem}
   .cam-grid{grid-template-columns:1fr}
   .side-toc{display:none}
+  .wifi-box{padding:18px}
+  .wifi-box .wifi-value{font-size:1.2rem}
+  .appendix-link{padding:14px 16px;min-width:auto}
+  .appendix-link .ap-title{font-size:.85rem}
+  .appendix-link .ap-desc{font-size:.75rem}
+  .feature-list li{font-size:.82rem;padding:7px 0}
+  .prompt-example{padding:14px;font-size:.8rem}
+  .prompt-example pre{font-size:.78rem}
+  .prompt-point{font-size:.8rem;padding:8px 14px}
+  .layer-model{grid-template-columns:1fr}
+  .layer-item{padding:14px}
+  .layer-item h5{font-size:.85rem}
+  .layer-item p{font-size:.78rem}
+  .layer-item .layer-example{font-size:.75rem;padding-left:28px}
+  .zoom-levels{grid-template-columns:1fr;gap:12px}
+  .zoom-card{min-height:auto;padding:18px 14px}
+  .zoom-card .zoom-icon{font-size:1.8rem}
+  .zoom-card .zoom-prompt{font-size:.8rem}
+  .desk-visual{grid-template-columns:1fr;gap:12px}
+  .desk-card{padding:18px}
+  .desk-card .desk-icon{font-size:2rem}
+  .desk-card h4{font-size:.88rem}
+  .desk-card p{font-size:.8rem}
+  .principle-card{padding:16px;margin:10px 0}
+  .principle-card h4{font-size:.88rem}
+  .principle-card .example-good,.principle-card .example-bad{font-size:.8rem;padding:7px 12px}
+  .scenario-card{padding:16px;margin:12px 0}
+  .scenario-card h4{font-size:.88rem}
+  .info-row{gap:12px}
+  .footer{padding:28px 16px;font-size:.78rem}
 }
+@media(max-width:480px){
+  html{font-size:13px}
+  .slide{padding:44px 12px 28px}
+  .hero-main-title{font-size:1.5rem}
+  .slide-title{font-size:1.2rem}
+  .card-grid{gap:10px}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .ability-flow{flex-direction:column;align-items:center}
+  .ability-arrow{transform:rotate(90deg);font-size:1rem}
+  .dashboard-grid{grid-template-columns:1fr}
+}
+
+/* ===== PROMPT EXAMPLE ===== */
+.prompt-example{background:#0f1a2e;border:1px solid var(--card-border);border-left:4px solid var(--cyan);border-radius:0 var(--radius) var(--radius) 0;padding:18px;margin:14px 0;position:relative;font-family:'Noto Sans JP',monospace;font-size:.85rem;line-height:1.8;color:var(--text-dim)}
+.prompt-example .prompt-label{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:700;color:var(--cyan);letter-spacing:.08em;margin-bottom:8px}
+.prompt-example pre{white-space:pre-wrap;word-break:break-word;font-family:'Noto Sans JP',monospace;font-size:.82rem;color:var(--text);margin:0;line-height:1.8}
+.prompt-example .bad{border-left-color:var(--red)}
+.prompt-example .bad .prompt-label{color:var(--red)}
+.prompt-example.good{border-left-color:var(--green)}
+.prompt-example.good .prompt-label{color:var(--green)}
+.prompt-example.bad{border-left-color:var(--red)}
+.prompt-example.bad .prompt-label{color:var(--red)}
+.prompt-example .copy-btn{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:var(--text-dim);font-size:.75rem;padding:4px 10px;cursor:pointer;transition:.2s;font-family:'Noto Sans JP',sans-serif}
+.prompt-example .copy-btn:hover{background:var(--cyan);color:var(--navy);border-color:var(--cyan)}
+.prompt-point{background:rgba(212,168,67,.06);border-left:3px solid var(--gold);padding:10px 16px;border-radius:0 8px 8px 0;margin:8px 0 18px;font-size:.85rem;color:var(--gold-light)}
+
+/* ===== LAYER MODEL ===== */
+.layer-model{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:24px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--card-border)}
+.layer-item{padding:18px;border-bottom:1px solid rgba(255,255,255,.05);position:relative}
+.layer-item:nth-child(odd){background:rgba(212,168,67,.04)}
+.layer-item:nth-child(even){background:var(--card)}
+.layer-item .layer-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-weight:900;font-size:.8rem;margin-right:8px;flex-shrink:0}
+.layer-item:nth-child(1) .layer-num,.layer-item:nth-child(2) .layer-num{background:rgba(212,168,67,.2);color:var(--gold)}
+.layer-item:nth-child(3) .layer-num,.layer-item:nth-child(4) .layer-num{background:rgba(56,189,248,.2);color:var(--cyan)}
+.layer-item:nth-child(5) .layer-num,.layer-item:nth-child(6) .layer-num{background:rgba(46,160,67,.2);color:var(--green)}
+.layer-item:nth-child(7) .layer-num,.layer-item:nth-child(8) .layer-num{background:rgba(167,139,250,.2);color:var(--purple)}
+.layer-item h5{display:inline;font-size:.92rem;font-weight:700;color:var(--gold-light)}
+.layer-item p{font-size:.84rem;color:var(--text-dim);margin-top:6px}
+.layer-item .layer-example{font-size:.8rem;color:var(--text-dim);font-style:italic;margin-top:5px;padding-left:36px}
+
+/* ===== ZOOM LEVELS ===== */
+.zoom-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:24px 0}
+.zoom-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:22px 18px;text-align:center;position:relative;overflow:hidden;min-height:160px;display:flex;flex-direction:column;justify-content:center}
+.zoom-card .zoom-icon{font-size:2.2rem;margin-bottom:10px}
+.zoom-card .zoom-level{font-size:.75rem;font-weight:700;letter-spacing:.1em;margin-bottom:6px}
+.zoom-card:nth-child(1){border-top:3px solid var(--red)}
+.zoom-card:nth-child(1) .zoom-level{color:var(--red)}
+.zoom-card:nth-child(2){border-top:3px solid var(--gold)}
+.zoom-card:nth-child(2) .zoom-level{color:var(--gold)}
+.zoom-card:nth-child(3){border-top:3px solid var(--green)}
+.zoom-card:nth-child(3) .zoom-level{color:var(--green)}
+.zoom-card .zoom-prompt{font-size:.84rem;color:var(--text-dim);margin-top:6px;line-height:1.65}
+.zoom-card .zoom-result{font-size:.78rem;color:var(--text-dim);margin-top:8px;font-style:italic}
+
+/* ===== DESK METAPHOR ===== */
+.desk-visual{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0}
+.desk-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:22px;text-align:center}
+.desk-card .desk-icon{font-size:2.4rem;margin-bottom:10px;display:block}
+.desk-card h4{color:var(--gold-light);font-size:.92rem;margin-bottom:6px}
+.desk-card p{font-size:.84rem;color:var(--text-dim)}
+
+/* ===== PRINCIPLE CARDS ===== */
+.principle-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:22px;margin:14px 0}
+.principle-card h4{color:var(--gold-light);font-size:.95rem;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.principle-card .principle-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--navy);font-weight:900;font-size:.78rem;flex-shrink:0}
+.principle-card .example-good,.principle-card .example-bad{padding:8px 14px;border-radius:8px;font-size:.84rem;margin:6px 0;line-height:1.7}
+.principle-card .example-good{background:var(--green-bg);border-left:3px solid var(--green);color:var(--green)}
+.principle-card .example-bad{background:var(--red-bg);border-left:3px solid var(--red);color:var(--red)}
+
+/* ===== SCENARIO CARD ===== */
+.scenario-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:22px;margin:16px 0;position:relative;overflow:hidden}
+.scenario-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cyan))}
+.scenario-card h4{color:var(--gold-light);font-size:.95rem;margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -546,6 +702,9 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
       <a href="#setup">準備</a>
       <a href="#ai-evolution">AI進化</a>
       <a href="#basics">基礎編</a>
+      <a href="#context-window">コンテキスト</a>
+      <a href="#features">主要機能</a>
+      <a href="#prompt-advanced">プロンプト応用</a>
       <a href="#demo1">デモ①</a>
       <a href="#demo2">デモ②</a>
       <a href="#handson">ハンズオン</a>
@@ -568,13 +727,16 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
   <div class="side-toc-part">PART 1</div>
   <a class="side-toc-item" href="#ai-evolution" data-section="ai-evolution"><span class="toc-label">AI進化タイムライン</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#basics" data-section="basics"><span class="toc-label">Claude基礎編</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#context-window" data-section="context-window"><span class="toc-label">コンテキストウィンドウ</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#platforms" data-section="platforms"><span class="toc-label">3つのプラットフォーム</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#opus46" data-section="opus46"><span class="toc-label">Opus 4.6</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#features" data-section="features"><span class="toc-label">主要機能</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#business" data-section="business"><span class="toc-label">ビジネス活用</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#pricing" data-section="pricing"><span class="toc-label">料金プラン</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#safety" data-section="safety"><span class="toc-label">安全性</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#prompt" data-section="prompt"><span class="toc-label">プロンプト術</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#hallucination" data-section="hallucination"><span class="toc-label">ハルシネーション</span><span class="toc-dot"></span></a>
+  <a class="side-toc-item" href="#prompt-advanced" data-section="prompt-advanced"><span class="toc-label">プロンプト応用</span><span class="toc-dot"></span></a>
   <div class="side-toc-part">PART 2</div>
   <a class="side-toc-item" href="#usecases" data-section="usecases"><span class="toc-label">業界別活用事例</span><span class="toc-dot"></span></a>
   <a class="side-toc-item" href="#store-ai" data-section="store-ai"><span class="toc-label">店舗AI分析</span><span class="toc-dot"></span></a>
@@ -856,6 +1018,117 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
 </section>
 
 <!-- ============================================================
+     CONTEXT WINDOW
+     ============================================================ -->
+<section class="slide" id="context-window">
+  <div class="deco deco-circle float1" style="width:70px;height:70px;top:12%;right:10%;border-color:rgba(56,189,248,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:35%;left:8%;background:var(--gold);opacity:.25"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🖥️</span> CONTEXT WINDOW</span>
+    <h2 class="slide-title fade-in"><span class="gold">コンテキストウィンドウ</span>の概念</h2>
+    <p class="slide-subtitle fade-in">Claudeの「作業デスク」を理解しよう</p>
+
+    <!-- デスク比喩 -->
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🗂️</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="glow-box fade-in">
+      <div class="glow-box-inner">
+        <h4>📎 「作業デスク」の比喩</h4>
+        <p style="font-size:1rem;color:var(--text-dim);margin-top:10px;line-height:2">
+          コンテキストウィンドウは、Claudeの<strong style="color:var(--gold)">「作業デスク」</strong>のようなもの。<br>
+          デスクの上に広げた資料だけを見ながら仕事をしている——デスクに載っていない資料は<strong style="color:var(--red)">「見えない＝存在しない」</strong>のと同じです。
+        </p>
+      </div>
+    </div>
+
+    <div class="desk-visual stagger" style="margin-top:24px">
+      <div class="desk-card">
+        <span class="desk-icon">📐</span>
+        <h4>デスクが広い</h4>
+        <p>一度に多くの資料を広げられる → 複雑な仕事ができる</p>
+      </div>
+      <div class="desk-card">
+        <span class="desk-icon">📌</span>
+        <h4>デスクが狭い</h4>
+        <p>少しの資料しか置けない → 単純な質問向き</p>
+      </div>
+    </div>
+
+    <div class="key-point fade-in" style="margin-top:18px">
+      古い資料からデスクの端に落ちていく——会話が長くなるほど、冒頭の指示は薄れていきます。
+    </div>
+
+    <div class="fun-fact fade-in" style="margin-top:20px">
+      <span class="fun-label">トークンとは？</span>
+      <p>Claudeの現行モデルは<strong style="color:var(--gold)">約200,000トークン</strong>のコンテキストウィンドウを持ちます。「トークン」とは単語の断片のようなもの。日本語では<strong>1文字 ≒ 1〜2トークン</strong>が目安です。つまり、おおよそ10〜20万文字を一度に扱えます。</p>
+    </div>
+
+    <!-- ウィンドウの広さと情報量 -->
+    <h3 class="fade-in" style="margin-top:36px">🔍 デスクの状態と実用的な意味</h3>
+
+    <div class="fade-in">
+      <table class="compare-table">
+        <thead>
+          <tr><th>状況</th><th>デスクの状態</th><th>実用上の意味</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--green)">短い質問1往復</strong></td>
+            <td>デスクはガラ空き。余裕たっぷり</td>
+            <td>単発の質問・翻訳・要約に最適</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--cyan)">長文資料を貼り付けて質問</strong></td>
+            <td>デスク半分が資料で埋まる</td>
+            <td>資料の分析や要点抽出に向く</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--gold)">長い会話（数十往復）</strong></td>
+            <td>デスクが溢れかけている</td>
+            <td>初期の指示や文脈が押し出される危険あり</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--red)">システムプロンプト＋資料＋長い会話</strong></td>
+            <td>デスクの大半が占有済み</td>
+            <td>回答の質が落ちやすい。分割を検討</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="key-point fade-in" style="margin-top:18px">
+      コンテキストウィンドウは<strong>有限資源</strong>です。「何をデスクに載せるか」を設計することが、AIの成果を左右します。
+    </div>
+
+    <!-- 3つの原則 -->
+    <h3 class="fade-in" style="margin-top:36px">📏 情報の順番と指示の出し方 ― 3つの原則</h3>
+
+    <div class="principle-card fade-in">
+      <h4><span class="principle-num">1</span> 重要な指示は「最初」と「最後」に置く</h4>
+      <p style="font-size:.95rem;color:var(--text-dim);margin-bottom:12px">心理学の「初頭効果・親近効果」と同じ原理。中盤に埋もれた指示は見落とされやすい。</p>
+      <div class="example-good">✅ 良い例：冒頭で「あなたは上間天ぷらの経営分析アシスタントです」→ 中盤にデータ → 末尾で「以上を踏まえ、週次KPIレポートを作成してください」</div>
+      <div class="example-bad">❌ 悪い例：データの途中に「ところでレポート形式で出力してね」と紛れ込ませる</div>
+    </div>
+
+    <div class="principle-card fade-in">
+      <h4><span class="principle-num">2</span> 否定指示は具体的な代替とセットで</h4>
+      <p style="font-size:.95rem;color:var(--text-dim);margin-bottom:12px">「〜するな」だけでなく「代わりに〜してください」と書くと精度が上がります。</p>
+      <div class="example-good">✅「箇条書きではなく、ですます調の文章で記述してください」</div>
+      <div class="example-bad">❌「箇条書きを使うな」（何で書けばいいか曖昧）</div>
+    </div>
+
+    <div class="principle-card fade-in">
+      <h4><span class="principle-num">3</span> 会話が長くなったら指示をリマインドする</h4>
+      <p style="font-size:.95rem;color:var(--text-dim);margin-bottom:12px">20往復を超えるような長い会話では、重要な前提条件を途中で再提示しましょう。</p>
+      <div class="example-good">✅「改めて確認ですが、出力は日本語のみ、ですます調、データ根拠を必ず添えてください」</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
      3 PLATFORMS
      ============================================================ -->
 <section class="slide" id="platforms">
@@ -928,6 +1201,127 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
           <li><strong>長文処理：</strong>大量の資料も一括分析可能</li>
         </ul>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURES
+     ============================================================ -->
+<section class="slide" id="features">
+  <div class="deco deco-ring float2" style="width:55px;height:55px;top:12%;left:6%;border-color:rgba(167,139,250,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:25%;right:10%;background:var(--cyan);opacity:.25"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">⚙️</span> FEATURES</span>
+    <h2 class="slide-title fade-in">Claudeの<span class="gold">主要機能</span></h2>
+    <p class="slide-subtitle fade-in">知っておくと活用の幅が広がる4つの機能</p>
+
+    <div class="section-illust scale-in">
+      <span class="big-emoji">🔧</span>
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+    <div class="card-grid stagger">
+      <!-- System Prompt -->
+      <div class="card">
+        <span class="card-icon">📋</span>
+        <h4>仕様書（System Prompt）</h4>
+        <p>Claudeの「人格設定書」。会話が始まる前にClaudeが必ず読み込む指示で、すべての回答のベースになります。</p>
+        <ul style="margin-top:12px">
+          <li>Claude.aiの「プロジェクト」機能で設定可能</li>
+          <li>コンテキストウィンドウの最上位に常駐</li>
+          <li>例：「あなたは株式会社上間の経営企画担当です。回答はすべて日本語、ですます調で行ってください」</li>
+        </ul>
+        <div class="fun-fact" style="margin-top:14px;padding:14px 16px">
+          <span class="fun-label">活用例</span>
+          <p style="font-size:.92rem">上間天ぷらの週次レポート作成プロジェクトでは、仕様書にブランドカラー（白・#CC2200・#F5C518）、KPI定義、出力フォーマットを定義。毎回指示し直す手間が省けます。</p>
+        </div>
+      </div>
+
+      <!-- Markdown Files -->
+      <div class="card">
+        <span class="card-icon">📄</span>
+        <h4>マークダウンファイル</h4>
+        <p>プロジェクトに添付できる参考資料。業務マニュアル、用語集、テンプレートなどを.mdファイルとしてアップロードすると、Claudeがその内容を踏まえて回答します。</p>
+        <ul style="margin-top:12px">
+          <li>コンテキストウィンドウの容量を消費する点に注意</li>
+          <li>必要な情報だけを厳選して添付するのがコツ</li>
+        </ul>
+        <div class="fun-fact" style="margin-top:14px;padding:14px 16px">
+          <span class="fun-label">活用例</span>
+          <p style="font-size:.92rem">「店舗別売上CSVのカラム定義書」をマークダウンで添付 → データ分析時にカラム名の意味を毎回説明する必要がなくなります。</p>
+        </div>
+      </div>
+
+      <!-- Memory -->
+      <div class="card">
+        <span class="card-icon">🧠</span>
+        <h4>メモリ機能</h4>
+        <p>Claudeが会話をまたいで覚えておく情報のこと。ユーザーの名前、仕事の背景、好みの回答スタイルなどを蓄積し、次回以降の会話に自動的に反映されます。</p>
+        <ul style="margin-top:12px">
+          <li>自動学習と、明示的に「覚えて」と指示するものがある</li>
+          <li>プライバシー配慮：設定からオフにすることも可能</li>
+          <li>覚えた内容は「メモリの管理」画面で確認・削除可能</li>
+        </ul>
+        <div class="fun-fact" style="margin-top:14px;padding:14px 16px">
+          <span class="fun-label">活用例</span>
+          <p style="font-size:.92rem">「私は沖縄のうるま市在住で、上間天ぷらの代表です」と一度伝えておけば、次回から前提説明なしに業務相談ができます。</p>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="card highlight">
+        <span class="card-icon">🛠️</span>
+        <h4>Skills（スキル）</h4>
+        <p>Claude Codeが持つ「専門スキルセット」。Word、Excel、PowerPoint、PDFなどの作成・編集を、専用スキルに沿って高品質に実行できる仕組みです。</p>
+        <ul style="margin-top:12px">
+          <li>スキルはClaude内部のベストプラクティス集</li>
+          <li>ユーザーが意識しなくても自動で適用される</li>
+          <li>カスタムスキルの作成も可能</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Skills 詳細テーブル -->
+    <h3 class="fade-in" style="margin-top:36px">🛠️ Skills ― 具体的な活用例</h3>
+
+    <div class="fade-in">
+      <table class="compare-table">
+        <thead>
+          <tr><th>スキル名</th><th>できること</th><th>業務活用例</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-cyan">docx</span></td>
+            <td>Word文書の作成・編集・テンプレート反映</td>
+            <td>コンサル報告書、融資申請書類、議事録の自動生成</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">xlsx</span></td>
+            <td>スプレッドシートの作成・データ加工・グラフ生成</td>
+            <td>店舗別売上分析表、損益シミュレーション</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-gold">pptx</span></td>
+            <td>プレゼン資料の作成・スライドデザイン</td>
+            <td>経営計画発表、セミナー資料、投資家向けピッチ</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-purple">pdf</span></td>
+            <td>PDF読取・結合・フォーム入力・作成</td>
+            <td>契約書PDF化、複数資料の統合、決算書の分析</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-gold">frontend-design</span></td>
+            <td>HTML/CSS/Reactの高品質UIデザイン</td>
+            <td>業務ダッシュボード、決算報告レポート（HTML版）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="key-point fade-in" style="margin-top:20px">
+      Skillsは「魔法の杖」ではなく<strong>「熟練職人の手順書」</strong>。指示の質が高ければ高いほど、Skillsの力を引き出せます。
     </div>
   </div>
 </section>
@@ -1131,6 +1525,290 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
         <h4>🤔 ハルシネーションとは？</h4>
         <p style="font-size:1rem;color:var(--text-dim);margin-top:8px">AIが「もっともらしいが事実と異なる情報」を生成してしまう現象。特に固有名詞・数値・歴史的事実で注意。</p>
         <p style="margin-top:10px;color:var(--gold);font-weight:700;font-size:.9rem">→ 重要な情報は必ず裏取り。AIの出力は「下書き」として扱おう。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROMPT ENGINEERING ADVANCED
+     ============================================================ -->
+<section class="slide" id="prompt-advanced">
+  <div class="deco deco-circle float2" style="width:65px;height:65px;top:8%;left:12%;border-color:rgba(212,168,67,.1)"></div>
+  <div class="deco deco-dot pulse-slow" style="top:20%;right:6%;background:var(--purple);opacity:.2"></div>
+  <div class="slide-inner">
+    <span class="slide-label fade-in"><span class="label-icon">🎯</span> PROMPT ADVANCED</span>
+    <h2 class="slide-title fade-in">プロンプトエンジニアリング<span class="gold">応用編</span></h2>
+    <p class="slide-subtitle fade-in">業務シチュエーション別の指示出しテクニック</p>
+
+    <!-- ===== 3-a: 業務シチュエーション別事例 ===== -->
+    <h3 class="fade-in" style="margin-top:20px">📝 業務シチュエーション別・プロンプト事例集</h3>
+
+    <!-- 事例1 -->
+    <div class="scenario-card fade-in">
+      <h4>事例1：売上データの分析を依頼する</h4>
+      <div class="prompt-example bad">
+        <span class="prompt-label">❌ ありがちな指示</span>
+        <pre>このCSVを分析して</pre>
+      </div>
+      <div class="prompt-example good">
+        <span class="prompt-label">✅ 改善した指示</span>
+        <button class="copy-btn" onclick="copyPrompt(this)">コピー</button>
+        <pre>添付の上間天ぷら週次売上CSV（2026年3月第2週）を分析してください。
+・店舗別の売上前週比を算出
+・曜日別の売上傾向（平日 vs 土日）を比較
+・廃棄率が5%を超えた店舗をハイライト
+・出力形式：HTML形式のKPIカードで、ブランドカラー（白・#CC2200・#F5C518）を使用</pre>
+      </div>
+      <div class="prompt-point">💡 対象データの特定、分析の切り口、閾値、出力形式を明示することで「何を・どの粒度で・どんな形で」が一意に定まる。</div>
+    </div>
+
+    <!-- 事例2 -->
+    <div class="scenario-card fade-in">
+      <h4>事例2：メール文面の作成</h4>
+      <div class="prompt-example bad">
+        <span class="prompt-label">❌ ありがちな指示</span>
+        <pre>取引先にお礼メールを書いて</pre>
+      </div>
+      <div class="prompt-example good">
+        <span class="prompt-label">✅ 改善した指示</span>
+        <button class="copy-btn" onclick="copyPrompt(this)">コピー</button>
+        <pre>以下の条件でビジネスメールを作成してください。
+・宛先：名鉄観光 二宮優衣様
+・目的：先日の沖縄社員旅行の手配へのお礼
+・トーン：丁寧かつ温かみのある文体
+・含める内容：①旅程全体の満足度が高かった旨 ②特に海洋体験の手配が好評だった点 ③次回（2026年秋予定）も相談したい旨
+・長さ：300字程度</pre>
+      </div>
+      <div class="prompt-point">💡 宛先・目的・トーン・含めるべき要素・長さの5点を指定すると、一発で使えるメールが生成される。</div>
+    </div>
+
+    <!-- 事例3 -->
+    <div class="scenario-card fade-in">
+      <h4>事例3：経営レポートのドラフト作成</h4>
+      <div class="prompt-example bad">
+        <span class="prompt-label">❌ ありがちな指示</span>
+        <pre>経営レポートを作って</pre>
+      </div>
+      <div class="prompt-example good">
+        <span class="prompt-label">✅ 改善した指示</span>
+        <button class="copy-btn" onclick="copyPrompt(this)">コピー</button>
+        <pre>株式会社上間の月次経営レポート（2026年3月分）をWord形式で作成してください。
+【構成】
+1. エグゼクティブサマリー（半ページ）
+2. 売上実績 vs 計画（店舗別テーブル）
+3. 主要KPI推移（前月比・前年同月比）
+4. 課題と対策（箇条書き3〜5点）
+5. 来月のアクションプラン
+
+【スタイル】ですます調、A4縦、フォントはゴシック系
+【注意】数値はすべてカンマ区切り、金額は千円単位で表記</pre>
+      </div>
+      <div class="prompt-point">💡 文書構成をアウトライン形式で与え、スタイルガイドを指定することでClaudeは「構造」と「装飾」の両方を同時に実行できる。</div>
+    </div>
+
+    <!-- 事例4 -->
+    <div class="scenario-card fade-in">
+      <h4>事例4：競合分析・リサーチ</h4>
+      <div class="prompt-example bad">
+        <span class="prompt-label">❌ ありがちな指示</span>
+        <pre>沖縄の弁当市場について調べて</pre>
+      </div>
+      <div class="prompt-example good">
+        <span class="prompt-label">✅ 改善した指示</span>
+        <button class="copy-btn" onclick="copyPrompt(this)">コピー</button>
+        <pre>沖縄県の弁当・惣菜市場について以下の観点で調査してください。
+1. 市場規模と成長率（直近3年のトレンド）
+2. 主要プレイヤー（売上上位5社の概要）
+3. 消費者トレンド（健康志向・価格帯の変化）
+4. 上間天ぷら（売上6億円・8店舗展開）にとっての機会と脅威
+
+Web検索を使い、出典を明記してください。
+情報が見つからない項目は「該当データなし」と記載してください。</pre>
+      </div>
+      <div class="prompt-point">💡 調査フレームワークを先に提示し、自社の文脈（規模感）を与えることで「一般論」ではなく「自社に関連する分析」が返ってくる。「情報がない場合の振る舞い」を指定するのもハルシネーション防止に有効。</div>
+    </div>
+
+    <!-- 事例5 -->
+    <div class="scenario-card fade-in">
+      <h4>事例5：プレゼン資料の作成</h4>
+      <div class="prompt-example bad">
+        <span class="prompt-label">❌ ありがちな指示</span>
+        <pre>セミナーのスライドを作って</pre>
+      </div>
+      <div class="prompt-example good">
+        <span class="prompt-label">✅ 改善した指示</span>
+        <button class="copy-btn" onclick="copyPrompt(this)">コピー</button>
+        <pre>観光DX実践セミナー用のPowerPointを作成してください。
+【対象者】沖縄の中小観光事業者（ITリテラシーは低め）
+【スライド構成（10枚以内）】
+1. タイトル「現場事例で学ぶ観光DX実践セミナー」
+2. なぜ今DXなのか（課題提起）
+3-6. 上間天ぷらの事例（Before/After形式）
+   - POS導入による廃棄削減
+   - データに基づく仕入れ最適化
+   - SNS活用の成果
+7-8. 明日からできる3ステップ
+9. Q&amp;A
+10. 連絡先
+
+【デザイン】シンプル、文字は大きめ、1スライド1メッセージ
+【禁止】アニメーション、細かい表、専門用語（使う場合は注釈必須）</pre>
+      </div>
+      <div class="prompt-point">💡「対象者のレベル」と「禁止事項」を明記することで、Claudeがアウトプットの"解像度"を自動調整できる。</div>
+    </div>
+
+    <!-- ===== 3-b: スコープ絞り込み ===== -->
+    <h3 class="fade-in" style="margin-top:44px">🔬 スコープ絞り込みのテクニック</h3>
+    <p class="slide-subtitle fade-in" style="margin-bottom:24px">「スコープを絞る」とは、Claudeへの指示の解像度を上げること</p>
+
+    <div class="glow-box fade-in">
+      <div class="glow-box-inner">
+        <h4>📐 「5W1H＋制約」フレームワーク</h4>
+        <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+          <div style="background:rgba(212,168,67,.06);padding:12px 16px;border-radius:8px;border-left:3px solid var(--gold)">
+            <strong style="color:var(--gold)">WHO</strong><span style="color:var(--text-dim);font-size:.92rem"> → 誰に向けた出力か？</span>
+          </div>
+          <div style="background:rgba(56,189,248,.06);padding:12px 16px;border-radius:8px;border-left:3px solid var(--cyan)">
+            <strong style="color:var(--cyan)">WHAT</strong><span style="color:var(--text-dim);font-size:.92rem"> → 何を作る／答えるのか？</span>
+          </div>
+          <div style="background:rgba(46,160,67,.06);padding:12px 16px;border-radius:8px;border-left:3px solid var(--green)">
+            <strong style="color:var(--green)">WHY</strong><span style="color:var(--text-dim);font-size:.92rem"> → 何のためか（目的・背景）？</span>
+          </div>
+          <div style="background:rgba(167,139,250,.06);padding:12px 16px;border-radius:8px;border-left:3px solid var(--purple)">
+            <strong style="color:var(--purple)">WHEN</strong><span style="color:var(--text-dim);font-size:.92rem"> → いつの情報・いつまでに？</span>
+          </div>
+          <div style="background:rgba(244,114,182,.06);padding:12px 16px;border-radius:8px;border-left:3px solid var(--pink)">
+            <strong style="color:var(--pink)">WHERE</strong><span style="color:var(--text-dim);font-size:.92rem"> → どこで使う（媒体・場面）？</span>
+          </div>
+          <div style="background:rgba(56,189,248,.06);padding:12px 16px;border-radius:8px;border-left:3px solid var(--cyan)">
+            <strong style="color:var(--cyan)">HOW</strong><span style="color:var(--text-dim);font-size:.92rem"> → どんな形式・スタイルで？</span>
+          </div>
+          <div style="background:rgba(248,81,73,.06);padding:12px 16px;border-radius:8px;border-left:3px solid var(--red);grid-column:1/-1">
+            <strong style="color:var(--red)">＋制約</strong><span style="color:var(--text-dim);font-size:.92rem"> → やってはいけないこと / 出力の長さ・言語・トーン</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ズームイン比喩 -->
+    <h3 class="fade-in" style="margin-top:36px">🔎 解像度の段階 ― ズームイン・ズームアウト</h3>
+
+    <div class="zoom-levels stagger">
+      <div class="zoom-card">
+        <div class="zoom-icon">🌏</div>
+        <div class="zoom-level">LEVEL 1 ― ズームアウト（概要）</div>
+        <div class="zoom-prompt">「沖縄経済について教えて」</div>
+        <div class="zoom-result">→ 百科事典的な一般回答が返る</div>
+      </div>
+      <div class="zoom-card">
+        <div class="zoom-icon">🏢</div>
+        <div class="zoom-level">LEVEL 2 ― 標準ズーム（焦点あり）</div>
+        <div class="zoom-prompt">「沖縄の中小飲食業の2025年の経営課題を3つ挙げて」</div>
+        <div class="zoom-result">→ 的を絞った回答が返る</div>
+      </div>
+      <div class="zoom-card">
+        <div class="zoom-icon">🔍</div>
+        <div class="zoom-level">LEVEL 3 ― ズームイン（高解像度）</div>
+        <div class="zoom-prompt">「沖縄の弁当・惣菜製造小売業（売上1〜10億円規模）が2025年に直面した人件費上昇への対応策を、実際の事例やデータを交えて3つ提案してください」</div>
+        <div class="zoom-result">→ 実用的で具体的な回答が返る</div>
+      </div>
+    </div>
+
+    <!-- ===== 3-c: 4層構造モデル ===== -->
+    <h3 class="fade-in" style="margin-top:44px">🏗️ プロンプトの4層構造モデル</h3>
+    <p class="slide-subtitle fade-in" style="margin-bottom:20px">構造は同じでも、中身を差し替えればどんな業務にも使えます</p>
+
+    <div class="layer-model fade-in">
+      <!-- 第1層 -->
+      <div class="layer-item">
+        <span class="layer-num">1</span>
+        <h5>役割（Role）</h5>
+        <p>Claudeの思考モード・語彙を設定する</p>
+        <div class="layer-example">上間天ぷら例：「あなたは飲食チェーンの経営コンサルタントです」</div>
+      </div>
+      <div class="layer-item">
+        <span class="layer-num">1</span>
+        <h5>役割（Role）― 別業種</h5>
+        <p>別の業種でも同じ構造が使える</p>
+        <div class="layer-example">不動産例：「あなたは沖縄の不動産鑑定士です」</div>
+      </div>
+      <!-- 第2層 -->
+      <div class="layer-item">
+        <span class="layer-num">2</span>
+        <h5>文脈（Context）</h5>
+        <p>判断材料を過不足なく与える</p>
+        <div class="layer-example">上間天ぷら例：「売上6億円・8店舗展開。3月の売上データを添付」</div>
+      </div>
+      <div class="layer-item">
+        <span class="layer-num">2</span>
+        <h5>文脈（Context）― 別業種</h5>
+        <p>背景情報・前提条件・対象データ</p>
+        <div class="layer-example">不動産例：「那覇市おもろまち、築15年、3LDK、75平米のマンション」</div>
+      </div>
+      <!-- 第3層 -->
+      <div class="layer-item">
+        <span class="layer-num">3</span>
+        <h5>指示（Instruction）</h5>
+        <p>具体的なアクション・出力形式を指定</p>
+        <div class="layer-example">上間天ぷら例：「店舗別の廃棄率を分析し、改善提案を3つ出して」</div>
+      </div>
+      <div class="layer-item">
+        <span class="layer-num">3</span>
+        <h5>指示（Instruction）― 別業種</h5>
+        <p>何を作る・何を分析するか</p>
+        <div class="layer-example">不動産例：「適正売却価格を査定し、根拠をテーブル形式で示して」</div>
+      </div>
+      <!-- 第4層 -->
+      <div class="layer-item">
+        <span class="layer-num">4</span>
+        <h5>制約（Constraints）</h5>
+        <p>品質の下限を保証するガードレール</p>
+        <div class="layer-example">上間天ぷら例：「日本語、ですます調、数値はカンマ区切り」</div>
+      </div>
+      <div class="layer-item">
+        <span class="layer-num">4</span>
+        <h5>制約（Constraints）― 別業種</h5>
+        <p>禁止事項・長さ・トーン・例外処理</p>
+        <div class="layer-example">不動産例：「A4 1枚以内、専門用語には注釈、税込表記」</div>
+      </div>
+    </div>
+
+    <!-- 応用テンプレート -->
+    <h3 class="fade-in" style="margin-top:36px">📋 コピーして使える応用テンプレート</h3>
+
+    <div class="prompt-example good fade-in">
+      <span class="prompt-label">📝 汎用プロンプトテンプレート</span>
+      <button class="copy-btn" onclick="copyPrompt(this)">コピー</button>
+      <pre>あなたは[役割]です。
+
+## 背景
+[この仕事の目的・前提情報をここに記載]
+
+## 作業内容
+[具体的に何をしてほしいかを箇条書きで記載]
+
+## 出力条件
+- 形式：[Word / HTML / テーブル / 箇条書き 等]
+- 言語：日本語
+- トーン：[ですます調 / である調 / カジュアル]
+- 長さ：[目安の文字数や枚数]
+
+## 注意事項
+- [やってはいけないこと]
+- [データがない場合の振る舞い]
+- [必ず含めるべき要素]</pre>
+    </div>
+
+    <div class="glow-box fade-in" style="margin-top:28px">
+      <div class="glow-box-inner" style="text-align:center;padding:32px">
+        <h4 style="font-size:1.3rem;margin-bottom:12px">💡 覚えておきたい一言</h4>
+        <p style="font-size:1.15rem;color:var(--gold-light);font-weight:700;line-height:1.8">
+          「良いプロンプトとは、良い仕事の依頼書と同じ」
+        </p>
+        <p style="font-size:1rem;color:var(--text-dim);margin-top:10px">
+          相手（Claude）が迷わず動ける情報を、構造化して渡すこと。<br>この原則さえ押さえれば、どんな業務でも応用が利きます。
+        </p>
       </div>
     </div>
   </div>
@@ -1967,6 +2645,20 @@ h3{font-size:1.3rem;font-weight:700;margin-bottom:14px;color:var(--gold-light)}
     pObs.observe(predEl);
   }
 })();
+
+// Copy prompt text
+function copyPrompt(btn){
+  const pre=btn.closest('.prompt-example').querySelector('pre');
+  if(!pre)return;
+  navigator.clipboard.writeText(pre.textContent).then(()=>{
+    const orig=btn.textContent;
+    btn.textContent='コピー済み';
+    btn.style.background='var(--green)';
+    btn.style.color='#fff';
+    btn.style.borderColor='var(--green)';
+    setTimeout(()=>{btn.textContent=orig;btn.style.background='';btn.style.color='';btn.style.borderColor='';},1500);
+  });
+}
 </script>
 </body>
 </html>
